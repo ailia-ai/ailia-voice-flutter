@@ -4391,6 +4391,15 @@ final class _AILIAVoiceApiCallback extends ffi.Struct {
   external AILIA_VOICE_USER_API_AILIA_AUDIO_GET_RESAMPLE_LEN
       ailiaAudioGetResampleLen;
 
+  external AILIA_VOICE_USER_API_AILIA_AUDIO_GET_FRAME_LEN
+      ailiaAudioGetFrameLen;
+
+  external AILIA_VOICE_USER_API_AILIA_AUDIO_GET_SPECTROGRAM
+      ailiaAudioGetSpectrogram;
+
+  external AILIA_VOICE_USER_API_AILIA_AUDIO_GET_MEL_SPECTROGRAM
+      ailiaAudioGetMelSpectrogram;
+
   external AILIA_VOICE_USER_API_AILIA_CREATE ailiaCreate;
 
   external AILIA_VOICE_USER_API_AILIA_OPEN_WEIGHT_FILE_A ailiaOpenWeightFileA;
@@ -4449,6 +4458,57 @@ typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_RESAMPLE_LENFunction = ffi.Int
     Function(ffi.Pointer<ffi.Int>, ffi.Int, ffi.Int, ffi.Int);
 typedef DartAILIA_VOICE_USER_API_AILIA_AUDIO_GET_RESAMPLE_LENFunction = int
     Function(ffi.Pointer<ffi.Int>, int, int, int);
+typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_FRAME_LEN = ffi.Pointer<
+    ffi
+    .NativeFunction<AILIA_VOICE_USER_API_AILIA_AUDIO_GET_FRAME_LENFunction>>;
+typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_FRAME_LENFunction = ffi.Int
+    Function(ffi.Pointer<ffi.Int>, ffi.Int, ffi.Int, ffi.Int, ffi.Int);
+typedef DartAILIA_VOICE_USER_API_AILIA_AUDIO_GET_FRAME_LENFunction = int
+    Function(ffi.Pointer<ffi.Int>, int, int, int, int);
+typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_SPECTROGRAM = ffi.Pointer<
+    ffi
+    .NativeFunction<AILIA_VOICE_USER_API_AILIA_AUDIO_GET_SPECTROGRAMFunction>>;
+typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_SPECTROGRAMFunction = ffi.Int
+    Function(
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Void>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Float,
+        ffi.Int);
+typedef DartAILIA_VOICE_USER_API_AILIA_AUDIO_GET_SPECTROGRAMFunction = int
+    Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int, int, int, int,
+        int, int, int, double, int);
+typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_MEL_SPECTROGRAM = ffi.Pointer<
+    ffi.NativeFunction<
+        AILIA_VOICE_USER_API_AILIA_AUDIO_GET_MEL_SPECTROGRAMFunction>>;
+typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_MEL_SPECTROGRAMFunction = ffi.Int
+    Function(
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Void>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Float,
+        ffi.Int,
+        ffi.Float,
+        ffi.Float,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int);
+typedef DartAILIA_VOICE_USER_API_AILIA_AUDIO_GET_MEL_SPECTROGRAMFunction = int
+    Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int, int, int, int,
+        int, int, int, int, double, int, double, double, int, int, int);
 typedef AILIA_VOICE_USER_API_AILIA_CREATE = ffi
     .Pointer<ffi.NativeFunction<AILIA_VOICE_USER_API_AILIA_CREATEFunction>>;
 typedef AILIA_VOICE_USER_API_AILIA_CREATEFunction = ffi.Int Function(
@@ -4840,4 +4900,4 @@ const int AILIA_VOICE_G2P_TYPE_GPT_SOVITS_JA = 2;
 
 const int AILIA_VOICE_TEXT_POST_PROCESS_APPEND_PUNCTUATION = 2;
 
-const int AILIA_VOICE_API_CALLBACK_VERSION = 2;
+const int AILIA_VOICE_API_CALLBACK_VERSION = 3;

@@ -107,6 +107,51 @@ class AiliaVoiceModel {
               ffi.Int,
               ffi.Int,
             )>>('ailiaAudioGetResampleLen');
+    callback.ref.ailiaAudioGetFrameLen = ailiaAudio!.lookup<
+        ffi.NativeFunction<
+            ffi.Int Function(
+              ffi.Pointer<ffi.Int>,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+            )>>('ailiaAudioGetFrameLen');
+    callback.ref.ailiaAudioGetSpectrogram = ailiaAudio!.lookup<
+        ffi.NativeFunction<
+            ffi.Int Function(
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Float,
+              ffi.Int,
+            )>>('ailiaAudioGetSpectrogram');
+    callback.ref.ailiaAudioGetMelSpectrogram = ailiaAudio!.lookup<
+        ffi.NativeFunction<
+            ffi.Int Function(
+              ffi.Pointer<ffi.Void>,
+              ffi.Pointer<ffi.Void>,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+              ffi.Float,
+              ffi.Int,
+              ffi.Float,
+              ffi.Float,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int,
+            )>>('ailiaAudioGetMelSpectrogram');
     callback.ref.ailiaCreate = ailia!.lookup<
         ffi.NativeFunction<
             ffi.Int Function(
