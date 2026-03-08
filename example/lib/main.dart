@@ -5,8 +5,6 @@ import 'package:ailia/ailia_license.dart';
 import 'utils/download_model.dart';
 import 'text_to_speech.dart';
 
-import 'package:ailia_voice/ailia_voice.dart' as ailia_voice_dart;
-
 void main() {
   runApp(const MyApp());
 }
@@ -19,97 +17,58 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _predictText = 'Model Downloading...';
+  String _statusText = '';
   final _textToSpeech = TextToSpeech();
   final bool _userDictionary = true;
+  bool _isRunning = false;
 
-  @override
-  void initState() {
-    super.initState();
+  int _selectedModelType = TextToSpeech.MODEL_TYPE_GPT_SOVITS_JA;
 
-    _ailiaVoiceDownloadModel();
-  }
+  static const Map<int, String> _modelTypeNames = {
+    TextToSpeech.MODEL_TYPE_TACOTRON2: "Tacotron2",
+    TextToSpeech.MODEL_TYPE_GPT_SOVITS_JA: "GPT-SoVITS V1 (JA)",
+    TextToSpeech.MODEL_TYPE_GPT_SOVITS_EN: "GPT-SoVITS V1 (EN)",
+    TextToSpeech.MODEL_TYPE_GPT_SOVITS_ZH: "GPT-SoVITS V1 (ZH)",
+    TextToSpeech.MODEL_TYPE_GPT_SOVITS_V2_JA: "GPT-SoVITS V2 (JA)",
+    TextToSpeech.MODEL_TYPE_GPT_SOVITS_V2_EN: "GPT-SoVITS V2 (EN)",
+    TextToSpeech.MODEL_TYPE_GPT_SOVITS_V2_ZH: "GPT-SoVITS V2 (ZH)",
+    TextToSpeech.MODEL_TYPE_GPT_SOVITS_V3_JA: "GPT-SoVITS V3 (JA)",
+    TextToSpeech.MODEL_TYPE_GPT_SOVITS_V3_EN: "GPT-SoVITS V3 (EN)",
+    TextToSpeech.MODEL_TYPE_GPT_SOVITS_V3_ZH: "GPT-SoVITS V3 (ZH)",
+    TextToSpeech.MODEL_TYPE_GPT_SOVITS_V2_PRO_JA: "GPT-SoVITS V2Pro (JA)",
+    TextToSpeech.MODEL_TYPE_GPT_SOVITS_V2_PRO_EN: "GPT-SoVITS V2Pro (EN)",
+    TextToSpeech.MODEL_TYPE_GPT_SOVITS_V2_PRO_ZH: "GPT-SoVITS V2Pro (ZH)",
+  };
 
-  int _downloadCnt = 0;
-  List<String> modelList = List<String>.empty(growable: true);
-
-  //int modelType = TextToSpeech.MODEL_TYPE_TACOTRON2;
-  int modelType = TextToSpeech.MODEL_TYPE_GPT_SOVITS_JA;
-  //int modelType = TextToSpeech.MODEL_TYPE_GPT_SOVITS_EN;
-
-  void _ailiaVoiceDownloadModel() {
-    modelList = _textToSpeech.getModelList(modelType);
-    if (_userDictionary){
-      modelList.add("open_jtalk");
-      modelList.add("userdic.dic");
-    }
-    _ailiaVoiceDownloadModelOne();
-  }
-
-  void _ailiaVoiceDownloadModelOne() {
-    String url =
-        "https://storage.googleapis.com/ailia-models/${modelList[_downloadCnt + 0]}/${modelList[_downloadCnt + 1]}";
-    downloadModel(url, modelList[_downloadCnt + 1], (file) {
-      _downloadCnt = _downloadCnt + 2;
-      if (_downloadCnt >= modelList.length) {
-        _ailiaVoiceTest();
-      } else {
-        _ailiaVoiceDownloadModelOne();
-      }
-    });
-  }
-
-  void _ailiaVoiceTest() async {
-    // Check and download ailia SDK license
-    await AiliaLicense.checkAndDownloadLicense();
-
-    // Prepare model file
-    String encoderFile = "";
-    String decoderFile = "";
-    String postnetFile = "";
-    String waveglowFile = "";
-    String? sslFile;
-
-    if (modelType == TextToSpeech.MODEL_TYPE_TACOTRON2){
-      encoderFile = await getModelPath("encoder.onnx");
-      decoderFile = await getModelPath("decoder_iter.onnx");
-      postnetFile = await getModelPath("postnet.onnx");
-      waveglowFile = await getModelPath("waveglow.onnx");
-    }
-
-    if (modelType == TextToSpeech.MODEL_TYPE_GPT_SOVITS_JA || modelType == TextToSpeech.MODEL_TYPE_GPT_SOVITS_EN) {
-      encoderFile = await getModelPath("t2s_encoder.onnx");
-      decoderFile = await getModelPath("t2s_fsdec.onnx");
-      postnetFile = await getModelPath("t2s_sdec.opt3.onnx");
-      waveglowFile = await getModelPath("vits.onnx");
-      sslFile = await getModelPath("cnhubert.onnx");
-    }
-
-    String? dicFolderOpenJtalk;
-    String? dicFolderG2PEn;
-    String? userDictPath;
-    if (modelType == TextToSpeech.MODEL_TYPE_GPT_SOVITS_JA || modelType == TextToSpeech.MODEL_TYPE_GPT_SOVITS_EN) {
-      dicFolderOpenJtalk = await getModelPath("open_jtalk_dic_utf_8-1.11/");
-      if (_userDictionary){
-        userDictPath = await getModelPath("userdic.dic");
-      }
-    }
-    if (modelType == TextToSpeech.MODEL_TYPE_GPT_SOVITS_EN){
-      dicFolderG2PEn = await getModelPath("/");
-    }
-
-    String targetText = "Hello world.";
-    if (_userDictionary && modelType == TextToSpeech.MODEL_TYPE_GPT_SOVITS_JA){
-      targetText = "超電磁砲";
-    }
-    String outputPath = await getModelPath("temp.wav");
-
-    await _textToSpeech.inference(targetText, outputPath, encoderFile,
-        decoderFile, postnetFile, waveglowFile, sslFile, dicFolderOpenJtalk, dicFolderG2PEn, userDictPath, modelType);
-
+  void _onRun() async {
+    if (_isRunning) return;
     setState(() {
-      _predictText = "finish";
+      _isRunning = true;
+      _statusText = 'Model Downloading...';
     });
+
+    try {
+      await AiliaLicense.checkAndDownloadLicense();
+
+      await _textToSpeech.downloadModels(_selectedModelType, userDictionary: _userDictionary);
+
+      setState(() {
+        _statusText = 'Running inference...';
+      });
+
+      String outputPath = await getModelPath("temp.wav");
+      await _textToSpeech.run(_selectedModelType, outputPath, userDictionary: _userDictionary);
+
+      setState(() {
+        _statusText = "finish";
+        _isRunning = false;
+      });
+    } catch (e) {
+      setState(() {
+        _statusText = "Error: $e";
+        _isRunning = false;
+      });
+    }
   }
 
   @override
@@ -119,8 +78,39 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('ailia Voice Sample'),
         ),
-        body: Center(
-          child: Text('Running on: $_predictText\n'),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Model Type:', style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 8),
+              DropdownButton<int>(
+                value: _selectedModelType,
+                isExpanded: true,
+                onChanged: _isRunning ? null : (int? value) {
+                  if (value != null) {
+                    setState(() {
+                      _selectedModelType = value;
+                    });
+                  }
+                },
+                items: _modelTypeNames.entries.map((entry) {
+                  return DropdownMenuItem<int>(
+                    value: entry.key,
+                    child: Text(entry.value),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _isRunning ? null : _onRun,
+                child: const Text('Run'),
+              ),
+              const SizedBox(height: 16),
+              Text(_statusText, style: const TextStyle(fontSize: 14)),
+            ],
+          ),
         ),
       ),
     );
