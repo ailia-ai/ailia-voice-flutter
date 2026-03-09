@@ -6,26 +6,26 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: e1a2bf81baf26566cc9e80bc4a0e8069fd6666d5
+      resolved-ref: dd8e0c8fe96c3afc97ab4c2be50e98b477966314
       url: "https://github.com/axinc-ai/ailia-sdk-flutter.git"
     source: git
-    version: "1.4.0"
+    version: "1.6.1"
   ailia_audio:
     dependency: "direct main"
     description:
       path: "."
       ref: main
-      resolved-ref: "41a06a031a3b0414f0b6d7517cb686f8c8d779a9"
+      resolved-ref: bf7bddbf789c99db6b2104db28d8b442db50a167
       url: "https://github.com/axinc-ai/ailia-audio-flutter.git"
     source: git
-    version: "1.4.0"
+    version: "1.6.1"
   ailia_voice:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "1.4.0"
+    version: "1.5.0"
   async:
     dependency: transitive
     description:
