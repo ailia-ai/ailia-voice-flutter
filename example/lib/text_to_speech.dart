@@ -349,14 +349,14 @@ class TextToSpeech {
     }
     for (int i = 0; i < list.length; i += 2) {
       String url = "https://storage.googleapis.com/ailia-models/${list[i]}/${list[i + 1]}";
-      await _downloadFile(url, list[i + 1]);
+      await _downloadFile(url, "${list[i]}/${list[i + 1]}");
     }
 
     // G2PW data files (different URL base)
     if (needsG2PW(modelType)){
       const String g2pwDataUrl = "https://raw.githubusercontent.com/axinc-ai/ailia-models/master/audio_processing/gpt-sovits-v2/text/g2pw/";
-      await _downloadFile("${g2pwDataUrl}polyphonic.rep", "polyphonic.rep");
-      await _downloadFile("${g2pwDataUrl}polyphonic-fix.rep", "polyphonic-fix.rep");
+      await _downloadFile("${g2pwDataUrl}polyphonic.rep", "g2pw/1.1/polyphonic.rep");
+      await _downloadFile("${g2pwDataUrl}polyphonic-fix.rep", "g2pw/1.1/polyphonic-fix.rep");
     }
   }
 
@@ -563,73 +563,78 @@ class TextToSpeech {
   // モデルパスの準備と推論を一括で実行
   Future<void> run(int modelType, String outputPath, {bool userDictionary = false, bool playAudio = true}) async {
     String targetText = _getTargetText(modelType, userDictionary: userDictionary);
-    String dicFolderOpenJtalk = await getModelPath("open_jtalk_dic_utf_8-1.11/");
+    String dicFolderOpenJtalk = await getModelPath("open_jtalk/open_jtalk_dic_utf_8-1.11/");
     String? userDictPath;
     if (userDictionary && (isJA(modelType) || modelType == MODEL_TYPE_TACOTRON2)){
-      userDictPath = await getModelPath("userdic.dic");
+      userDictPath = await getModelPath("open_jtalk/userdic.dic");
     }
+    String dicFolderG2PEn = await getModelPath("g2p_en/");
+    String dicFolderG2PCn = await getModelPath("g2p_cn/");
+    String dicFolderG2PW = await getModelPath("g2pw/1.1/");
 
     if (modelType == MODEL_TYPE_TACOTRON2) {
       openTacotron2(
-          await getModelPath("encoder.onnx"),
-          await getModelPath("decoder_iter.onnx"),
-          await getModelPath("postnet.onnx"),
-          await getModelPath("waveglow.onnx"),
+          await getModelPath("tacotron2/encoder.onnx"),
+          await getModelPath("tacotron2/decoder_iter.onnx"),
+          await getModelPath("tacotron2/postnet.onnx"),
+          await getModelPath("tacotron2/waveglow.onnx"),
           dicFolderOpenJtalk,
           userDictPath: userDictPath);
     } else if (isV1(modelType)) {
+      String folder = getModelFolder(modelType);
       openGPTSoVITSV1(
-          await getModelPath("t2s_encoder.onnx"),
-          await getModelPath("t2s_fsdec.onnx"),
-          await getModelPath("t2s_sdec.opt3.onnx"),
-          await getModelPath("vits.onnx"),
-          await getModelPath("cnhubert.onnx"),
+          await getModelPath("$folder/t2s_encoder.onnx"),
+          await getModelPath("$folder/t2s_fsdec.onnx"),
+          await getModelPath("$folder/t2s_sdec.opt3.onnx"),
+          await getModelPath("$folder/vits.onnx"),
+          await getModelPath("$folder/cnhubert.onnx"),
           dicFolderOpenJtalk,
-          await getModelPath("/"),
-          dicFolderG2PCn: needsCN(modelType) ? await getModelPath("/") : null,
+          dicFolderG2PEn,
+          dicFolderG2PCn: needsCN(modelType) ? dicFolderG2PCn : null,
           userDictPath: userDictPath);
     } else if (isV2(modelType)) {
+      String folder = getModelFolder(modelType);
       openGPTSoVITSV2(
-          await getModelPath("t2s_encoder.onnx"),
-          await getModelPath("t2s_fsdec.onnx"),
-          await getModelPath("t2s_sdec.opt.onnx"),
-          await getModelPath("vits.onnx"),
-          await getModelPath("cnhubert.onnx"),
-          await getModelPath("chinese-roberta.onnx"),
-          await getModelPath("vocab.txt"),
+          await getModelPath("$folder/t2s_encoder.onnx"),
+          await getModelPath("$folder/t2s_fsdec.onnx"),
+          await getModelPath("$folder/t2s_sdec.opt.onnx"),
+          await getModelPath("$folder/vits.onnx"),
+          await getModelPath("$folder/cnhubert.onnx"),
+          await getModelPath("$folder/chinese-roberta.onnx"),
+          await getModelPath("$folder/vocab.txt"),
           dicFolderOpenJtalk,
-          await getModelPath("/"),
-          dicFolderG2PCn: needsCN(modelType) ? await getModelPath("/") : null,
-          dicFolderG2PW: needsG2PW(modelType) ? await getModelPath("/") : null,
+          dicFolderG2PEn,
+          dicFolderG2PCn: needsCN(modelType) ? dicFolderG2PCn : null,
+          dicFolderG2PW: needsG2PW(modelType) ? dicFolderG2PW : null,
           userDictPath: userDictPath);
     } else if (isV3(modelType)) {
-      String basePath = await getModelPath("/");
+      String folder = getModelFolder(modelType);
       openGPTSoVITSV3(
-          await getModelPath("t2s_encoder.onnx"),
-          await getModelPath("t2s_fsdec.onnx"),
-          await getModelPath("t2s_sdec.opt.onnx"),
-          await getModelPath("cnhubert.onnx"),
-          await getModelPath("vq_model.onnx"),
-          await getModelPath("vq_cfm.onnx"),
-          await getModelPath("bigvgan_model.onnx"),
-          await getModelPath("chinese-roberta.onnx"),
-          await getModelPath("vocab.txt"),
+          await getModelPath("$folder/t2s_encoder.onnx"),
+          await getModelPath("$folder/t2s_fsdec.onnx"),
+          await getModelPath("$folder/t2s_sdec.opt.onnx"),
+          await getModelPath("$folder/cnhubert.onnx"),
+          await getModelPath("$folder/vq_model.onnx"),
+          await getModelPath("$folder/vq_cfm.onnx"),
+          await getModelPath("$folder/bigvgan_model.onnx"),
+          await getModelPath("$folder/chinese-roberta.onnx"),
+          await getModelPath("$folder/vocab.txt"),
           dicFolderOpenJtalk,
-          basePath, basePath, basePath,
+          dicFolderG2PEn, dicFolderG2PCn, dicFolderG2PW,
           userDictPath: userDictPath);
     } else if (isV2Pro(modelType)) {
-      String basePath = await getModelPath("/");
+      String folder = getModelFolder(modelType);
       openGPTSoVITSV2Pro(
-          await getModelPath("t2s_encoder.onnx"),
-          await getModelPath("t2s_fsdec.onnx"),
-          await getModelPath("t2s_sdec.opt.onnx"),
-          await getModelPath("cnhubert.onnx"),
-          await getModelPath("vits.onnx"),
-          await getModelPath("sv.onnx"),
-          await getModelPath("chinese-roberta.onnx"),
-          await getModelPath("vocab.txt"),
+          await getModelPath("$folder/t2s_encoder.onnx"),
+          await getModelPath("$folder/t2s_fsdec.onnx"),
+          await getModelPath("$folder/t2s_sdec.opt.onnx"),
+          await getModelPath("$folder/cnhubert.onnx"),
+          await getModelPath("$folder/vits.onnx"),
+          await getModelPath("$folder/sv.onnx"),
+          await getModelPath("$folder/chinese-roberta.onnx"),
+          await getModelPath("$folder/vocab.txt"),
           dicFolderOpenJtalk,
-          basePath, basePath, basePath,
+          dicFolderG2PEn, dicFolderG2PCn, dicFolderG2PW,
           userDictPath: userDictPath);
     }
 
