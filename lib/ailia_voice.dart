@@ -3498,6 +3498,11 @@ class ailiaVoiceFFI {
   /// @param dictionary_type AILIA_VOICE_DICTIONARY_TYPE_*
   /// @return
   /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// @details
+  /// 中国語を使用する場合、GPT-SoVITS V1では \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN のみ必要です。
+  /// GPT-SoVITS V2およびV3では \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN と
+  /// \ref AILIA_VOICE_DICTIONARY_TYPE_G2PW の両方が必要です。
+  /// G2PWを使用する場合、先にG2P_CNを読み込んでください。
   ///
   /// \~english
   /// @brief Set dictionary into a network instance.
@@ -3506,6 +3511,11 @@ class ailiaVoiceFFI {
   /// @param dictionary_type AILIA_VOICE_DICTIONARY_TYPE_*
   /// @return
   /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// @details
+  /// For Chinese, GPT-SoVITS V1 requires only \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN .
+  /// GPT-SoVITS V2 and V3 require both \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN and
+  /// \ref AILIA_VOICE_DICTIONARY_TYPE_G2PW .
+  /// When using G2PW, load G2P_CN first.
   int ailiaVoiceOpenDictionaryFileA(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.Char> dictionary_path,
@@ -3533,6 +3543,11 @@ class ailiaVoiceFFI {
   /// @param dictionary_type AILIA_VOICE_DICTIONARY_TYPE_*
   /// @return
   /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// @details
+  /// 中国語を使用する場合、GPT-SoVITS V1では \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN のみ必要です。
+  /// GPT-SoVITS V2およびV3では \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN と
+  /// \ref AILIA_VOICE_DICTIONARY_TYPE_G2PW の両方が必要です。
+  /// G2PWを使用する場合、先にG2P_CNを読み込んでください。
   ///
   /// \~english
   /// @brief Set dictionary into a network instance.
@@ -3541,6 +3556,11 @@ class ailiaVoiceFFI {
   /// @param dictionary_type AILIA_VOICE_DICTIONARY_TYPE_*
   /// @return
   /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// @details
+  /// For Chinese, GPT-SoVITS V1 requires only \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN .
+  /// GPT-SoVITS V2 and V3 require both \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN and
+  /// \ref AILIA_VOICE_DICTIONARY_TYPE_G2PW .
+  /// When using G2PW, load G2P_CN first.
   int ailiaVoiceOpenDictionaryFileW(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.WChar> dictionary_path,
@@ -3573,6 +3593,9 @@ class ailiaVoiceFFI {
   /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
   /// @return
   /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// @details
+  /// この関数は非推奨です。代わりにailiaVoiceOpenTacotron2ModelFileA、ailiaVoiceOpenGPTSoVITSV1ModelFileA、
+  /// ailiaVoiceOpenGPTSoVITSV2ModelFileAを使用してください。
   ///
   /// \~english
   /// @brief Set models into a network instance.
@@ -3586,6 +3609,9 @@ class ailiaVoiceFFI {
   /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
   /// @return
   /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// @details
+  /// This function is deprecated. Use ailiaVoiceOpenTacotron2ModelFileA, ailiaVoiceOpenGPTSoVITSV1ModelFileA,
+  /// ailiaVoiceOpenGPTSoVITSV2ModelFileA instead.
   int ailiaVoiceOpenModelFileA(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.Char> encoder,
@@ -3643,6 +3669,9 @@ class ailiaVoiceFFI {
   /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
   /// @return
   /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// @details
+  /// この関数は非推奨です。代わりにailiaVoiceOpenTacotron2ModelFileW、ailiaVoiceOpenGPTSoVITSV1ModelFileW、
+  /// ailiaVoiceOpenGPTSoVITSV2ModelFileWを使用してください。
   ///
   /// \~english
   /// @brief Set models into a network instance.
@@ -3656,6 +3685,9 @@ class ailiaVoiceFFI {
   /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
   /// @return
   /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// @details
+  /// This function is deprecated. Use ailiaVoiceOpenTacotron2ModelFileW, ailiaVoiceOpenGPTSoVITSV1ModelFileW,
+  /// ailiaVoiceOpenGPTSoVITSV2ModelFileW instead.
   int ailiaVoiceOpenModelFileW(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.WChar> encoder,
@@ -3700,6 +3732,696 @@ class ailiaVoiceFFI {
               ffi.Pointer<ffi.WChar>,
               int,
               int)>();
+
+  /// \~japanese
+  /// @brief Tacotron2向けのモデルを指定します。(MBSC)
+  /// @param net ネットワークオブジェクトポインタ
+  /// @param encoder onnxファイルのパス名 (encoder.onnx) (MBSC)
+  /// @param decoder1 onnxファイルのパス名 (decoder_iter.onnx) (MBSC)
+  /// @param decoder2 onnxファイルのパス名 (postnet.onnx) (MBSC)
+  /// @param wave onnxファイルのパス名 (waveglow.onnx) (MBSC)
+  /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  ///
+  /// \~english
+  /// @brief Set Tacotron2 models into a network instance.
+  /// @param net A network instance pointer
+  /// @param encoder The path name to the onnx file (encoder.onnx) (MBSC)
+  /// @param decoder1 The path name to the onnx file (decoder_iter.onnx) (MBSC)
+  /// @param decoder2 The path name to the onnx file (postnet.onnx) (MBSC)
+  /// @param wave The path name to the onnx file (waveglow.onnx) (MBSC)
+  /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  int ailiaVoiceOpenTacotron2ModelFileA(
+    ffi.Pointer<AILIAVoice> net,
+    ffi.Pointer<ffi.Char> encoder,
+    ffi.Pointer<ffi.Char> decoder1,
+    ffi.Pointer<ffi.Char> decoder2,
+    ffi.Pointer<ffi.Char> wave,
+    int cleaner_type,
+  ) {
+    return _ailiaVoiceOpenTacotron2ModelFileA(
+      net,
+      encoder,
+      decoder1,
+      decoder2,
+      wave,
+      cleaner_type,
+    );
+  }
+
+  late final _ailiaVoiceOpenTacotron2ModelFileAPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Int)>>('ailiaVoiceOpenTacotron2ModelFileA');
+  late final _ailiaVoiceOpenTacotron2ModelFileA =
+      _ailiaVoiceOpenTacotron2ModelFileAPtr.asFunction<
+          int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              int)>();
+
+  /// \~japanese
+  /// @brief Tacotron2向けのモデルを指定します。(UTF16)
+  /// @param net ネットワークオブジェクトポインタ
+  /// @param encoder onnxファイルのパス名 (encoder.onnx) (UTF16)
+  /// @param decoder1 onnxファイルのパス名 (decoder_iter.onnx) (UTF16)
+  /// @param decoder2 onnxファイルのパス名 (postnet.onnx) (UTF16)
+  /// @param wave onnxファイルのパス名 (waveglow.onnx) (UTF16)
+  /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  ///
+  /// \~english
+  /// @brief Set Tacotron2 models into a network instance.
+  /// @param net A network instance pointer
+  /// @param encoder The path name to the onnx file (encoder.onnx) (UTF16)
+  /// @param decoder1 The path name to the onnx file (decoder_iter.onnx) (UTF16)
+  /// @param decoder2 The path name to the onnx file (postnet.onnx) (UTF16)
+  /// @param wave The path name to the onnx file (waveglow.onnx) (UTF16)
+  /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  int ailiaVoiceOpenTacotron2ModelFileW(
+    ffi.Pointer<AILIAVoice> net,
+    ffi.Pointer<ffi.WChar> encoder,
+    ffi.Pointer<ffi.WChar> decoder1,
+    ffi.Pointer<ffi.WChar> decoder2,
+    ffi.Pointer<ffi.WChar> wave,
+    int cleaner_type,
+  ) {
+    return _ailiaVoiceOpenTacotron2ModelFileW(
+      net,
+      encoder,
+      decoder1,
+      decoder2,
+      wave,
+      cleaner_type,
+    );
+  }
+
+  late final _ailiaVoiceOpenTacotron2ModelFileWPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Int)>>('ailiaVoiceOpenTacotron2ModelFileW');
+  late final _ailiaVoiceOpenTacotron2ModelFileW =
+      _ailiaVoiceOpenTacotron2ModelFileWPtr.asFunction<
+          int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              int)>();
+
+  /// \~japanese
+  /// @brief GPT-SoVITS V1向けのモデルを指定します。(MBSC)
+  /// @param net ネットワークオブジェクトポインタ
+  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (MBSC)
+  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (MBSC)
+  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (MBSC)
+  /// @param wave onnxファイルのパス名 (vits.onnx) (MBSC)
+  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (MBSC)
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  ///
+  /// \~english
+  /// @brief Set GPT-SoVITS V1 models into a network instance.
+  /// @param net A network instance pointer
+  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (MBSC)
+  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (MBSC)
+  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (MBSC)
+  /// @param wave The path name to the onnx file (vits.onnx) (MBSC)
+  /// @param ssl The path name to the onnx file (cnhubert.onnx) (MBSC)
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  int ailiaVoiceOpenGPTSoVITSV1ModelFileA(
+    ffi.Pointer<AILIAVoice> net,
+    ffi.Pointer<ffi.Char> encoder,
+    ffi.Pointer<ffi.Char> decoder1,
+    ffi.Pointer<ffi.Char> decoder2,
+    ffi.Pointer<ffi.Char> wave,
+    ffi.Pointer<ffi.Char> ssl,
+  ) {
+    return _ailiaVoiceOpenGPTSoVITSV1ModelFileA(
+      net,
+      encoder,
+      decoder1,
+      decoder2,
+      wave,
+      ssl,
+    );
+  }
+
+  late final _ailiaVoiceOpenGPTSoVITSV1ModelFileAPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('ailiaVoiceOpenGPTSoVITSV1ModelFileA');
+  late final _ailiaVoiceOpenGPTSoVITSV1ModelFileA =
+      _ailiaVoiceOpenGPTSoVITSV1ModelFileAPtr.asFunction<
+          int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>();
+
+  /// \~japanese
+  /// @brief GPT-SoVITS V1向けのモデルを指定します。(UTF16)
+  /// @param net ネットワークオブジェクトポインタ
+  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (UTF16)
+  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (UTF16)
+  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (UTF16)
+  /// @param wave onnxファイルのパス名 (vits.onnx) (UTF16)
+  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (UTF16)
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  ///
+  /// \~english
+  /// @brief Set GPT-SoVITS V1 models into a network instance.
+  /// @param net A network instance pointer
+  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (UTF16)
+  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (UTF16)
+  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (UTF16)
+  /// @param wave The path name to the onnx file (vits.onnx) (UTF16)
+  /// @param ssl The path name to the onnx file (cnhubert.onnx) (UTF16)
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  int ailiaVoiceOpenGPTSoVITSV1ModelFileW(
+    ffi.Pointer<AILIAVoice> net,
+    ffi.Pointer<ffi.WChar> encoder,
+    ffi.Pointer<ffi.WChar> decoder1,
+    ffi.Pointer<ffi.WChar> decoder2,
+    ffi.Pointer<ffi.WChar> wave,
+    ffi.Pointer<ffi.WChar> ssl,
+  ) {
+    return _ailiaVoiceOpenGPTSoVITSV1ModelFileW(
+      net,
+      encoder,
+      decoder1,
+      decoder2,
+      wave,
+      ssl,
+    );
+  }
+
+  late final _ailiaVoiceOpenGPTSoVITSV1ModelFileWPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>)>>('ailiaVoiceOpenGPTSoVITSV1ModelFileW');
+  late final _ailiaVoiceOpenGPTSoVITSV1ModelFileW =
+      _ailiaVoiceOpenGPTSoVITSV1ModelFileWPtr.asFunction<
+          int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>)>();
+
+  /// \~japanese
+  /// @brief GPT-SoVITS V2向けのモデルを指定します。(MBSC)
+  /// @param net ネットワークオブジェクトポインタ
+  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (MBSC)
+  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (MBSC)
+  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (MBSC)
+  /// @param wave onnxファイルのパス名 (vits.onnx) (MBSC)
+  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (MBSC)
+  /// @param chinese_bert onnxファイルのパス名 (chinese-roberta.onnx) (MBSC)（NULLの場合はBERTを使用しない）
+  /// @param vocab vocab.txtのパス名 (MBSC)（NULLの場合はBERTを使用しない）
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  ///
+  /// \~english
+  /// @brief Set GPT-SoVITS V2 models into a network instance.
+  /// @param net A network instance pointer
+  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (MBSC)
+  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (MBSC)
+  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (MBSC)
+  /// @param wave The path name to the onnx file (vits.onnx) (MBSC)
+  /// @param ssl The path name to the onnx file (cnhubert.onnx) (MBSC)
+  /// @param chinese_bert The path name to the onnx file (chinese-roberta.onnx) (MBSC) (NULL to disable BERT)
+  /// @param vocab The path name to the vocab file (vocab.txt) (MBSC) (NULL to disable BERT)
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  int ailiaVoiceOpenGPTSoVITSV2ModelFileA(
+    ffi.Pointer<AILIAVoice> net,
+    ffi.Pointer<ffi.Char> encoder,
+    ffi.Pointer<ffi.Char> decoder1,
+    ffi.Pointer<ffi.Char> decoder2,
+    ffi.Pointer<ffi.Char> wave,
+    ffi.Pointer<ffi.Char> ssl,
+    ffi.Pointer<ffi.Char> chinese_bert,
+    ffi.Pointer<ffi.Char> vocab,
+  ) {
+    return _ailiaVoiceOpenGPTSoVITSV2ModelFileA(
+      net,
+      encoder,
+      decoder1,
+      decoder2,
+      wave,
+      ssl,
+      chinese_bert,
+      vocab,
+    );
+  }
+
+  late final _ailiaVoiceOpenGPTSoVITSV2ModelFileAPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('ailiaVoiceOpenGPTSoVITSV2ModelFileA');
+  late final _ailiaVoiceOpenGPTSoVITSV2ModelFileA =
+      _ailiaVoiceOpenGPTSoVITSV2ModelFileAPtr.asFunction<
+          int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>();
+
+  /// \~japanese
+  /// @brief GPT-SoVITS V2向けのモデルを指定します。(UTF16)
+  /// @param net ネットワークオブジェクトポインタ
+  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (UTF16)
+  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (UTF16)
+  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (UTF16)
+  /// @param wave onnxファイルのパス名 (vits.onnx) (UTF16)
+  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (UTF16)
+  /// @param chinese_bert onnxファイルのパス名 (chinese-roberta.onnx) (UTF16)（NULLの場合はBERTを使用しない）
+  /// @param vocab vocab.txtのパス名 (UTF16)（NULLの場合はBERTを使用しない）
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  ///
+  /// \~english
+  /// @brief Set GPT-SoVITS V2 models into a network instance.
+  /// @param net A network instance pointer
+  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (UTF16)
+  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (UTF16)
+  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (UTF16)
+  /// @param wave The path name to the onnx file (vits.onnx) (UTF16)
+  /// @param ssl The path name to the onnx file (cnhubert.onnx) (UTF16)
+  /// @param chinese_bert The path name to the onnx file (chinese-roberta.onnx) (UTF16) (NULL to disable BERT)
+  /// @param vocab The path name to the vocab file (vocab.txt) (UTF16) (NULL to disable BERT)
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  int ailiaVoiceOpenGPTSoVITSV2ModelFileW(
+    ffi.Pointer<AILIAVoice> net,
+    ffi.Pointer<ffi.WChar> encoder,
+    ffi.Pointer<ffi.WChar> decoder1,
+    ffi.Pointer<ffi.WChar> decoder2,
+    ffi.Pointer<ffi.WChar> wave,
+    ffi.Pointer<ffi.WChar> ssl,
+    ffi.Pointer<ffi.WChar> chinese_bert,
+    ffi.Pointer<ffi.WChar> vocab,
+  ) {
+    return _ailiaVoiceOpenGPTSoVITSV2ModelFileW(
+      net,
+      encoder,
+      decoder1,
+      decoder2,
+      wave,
+      ssl,
+      chinese_bert,
+      vocab,
+    );
+  }
+
+  late final _ailiaVoiceOpenGPTSoVITSV2ModelFileWPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>)>>('ailiaVoiceOpenGPTSoVITSV2ModelFileW');
+  late final _ailiaVoiceOpenGPTSoVITSV2ModelFileW =
+      _ailiaVoiceOpenGPTSoVITSV2ModelFileWPtr.asFunction<
+          int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>)>();
+
+  /// \~japanese
+  /// @brief GPT-SoVITS V3向けのモデルを指定します。(MBSC)
+  /// @param net ネットワークオブジェクトポインタ
+  /// @param encoder_path onnxファイルのパス名 (t2s_encoder.onnx) (MBSC)
+  /// @param decoder1_path onnxファイルのパス名 (t2s_fsdec.onnx) (MBSC)
+  /// @param decoder2_path onnxファイルのパス名 (t2s_sdec.onnx) (MBSC)
+  /// @param ssl_path onnxファイルのパス名 (cnhubert.onnx) (MBSC)
+  /// @param vq_path onnxファイルのパス名 (vq_model.onnx) (MBSC)
+  /// @param cfm_path onnxファイルのパス名 (vq_cfm.onnx) (MBSC)
+  /// @param bigvgan_path onnxファイルのパス名 (bigvgan_model.onnx) (MBSC)
+  /// @param chinese_bert onnxファイルのパス名 (chinese-roberta.onnx) (MBSC)（NULLの場合はBERTを使用しない）
+  /// @param vocab vocab.txtのパス名 (MBSC)（NULLの場合はBERTを使用しない）
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  ///
+  /// \~english
+  /// @brief Set GPT-SoVITS V3 models into a network instance.
+  /// @param net A network instance pointer
+  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (MBSC)
+  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (MBSC)
+  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (MBSC)
+  /// @param ssl The path name to the onnx file (cnhubert.onnx) (MBSC)
+  /// @param vq The path name to the onnx file (vq_model.onnx) (MBSC)
+  /// @param cfm The path name to the onnx file (vq_cfm.onnx) (MBSC)
+  /// @param bigvgan The path name to the onnx file (bigvgan_model.onnx) (MBSC)
+  /// @param chinese_bert The path name to the onnx file (chinese-roberta.onnx) (MBSC) (NULL to disable BERT)
+  /// @param vocab The path name to the vocab file (vocab.txt) (MBSC) (NULL to disable BERT)
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  int ailiaVoiceOpenGPTSoVITSV3ModelFileA(
+    ffi.Pointer<AILIAVoice> net,
+    ffi.Pointer<ffi.Char> encoder,
+    ffi.Pointer<ffi.Char> decoder1,
+    ffi.Pointer<ffi.Char> decoder2,
+    ffi.Pointer<ffi.Char> ssl,
+    ffi.Pointer<ffi.Char> vq,
+    ffi.Pointer<ffi.Char> cfm,
+    ffi.Pointer<ffi.Char> bigvgan,
+    ffi.Pointer<ffi.Char> chinese_bert,
+    ffi.Pointer<ffi.Char> vocab,
+  ) {
+    return _ailiaVoiceOpenGPTSoVITSV3ModelFileA(
+      net,
+      encoder,
+      decoder1,
+      decoder2,
+      ssl,
+      vq,
+      cfm,
+      bigvgan,
+      chinese_bert,
+      vocab,
+    );
+  }
+
+  late final _ailiaVoiceOpenGPTSoVITSV3ModelFileAPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('ailiaVoiceOpenGPTSoVITSV3ModelFileA');
+  late final _ailiaVoiceOpenGPTSoVITSV3ModelFileA =
+      _ailiaVoiceOpenGPTSoVITSV3ModelFileAPtr.asFunction<
+          int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>();
+
+  /// \~japanese
+  /// @brief GPT-SoVITS V3向けのモデルを指定します。(UTF16)
+  /// @param net ネットワークオブジェクトポインタ
+  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (UTF16)
+  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (UTF16)
+  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (UTF16)
+  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (UTF16)
+  /// @param vq onnxファイルのパス名 (vq_model.onnx) (UTF16)
+  /// @param cfm onnxファイルのパス名 (vq_cfm.onnx) (UTF16)
+  /// @param bigvgan onnxファイルのパス名 (bigvgan_model.onnx) (UTF16)
+  /// @param chinese_bert onnxファイルのパス名 (chinese-roberta.onnx) (UTF16)（NULLの場合はBERTを使用しない）
+  /// @param vocab vocab.txtのパス名 (UTF16)（NULLの場合はBERTを使用しない）
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  ///
+  /// \~english
+  /// @brief Set GPT-SoVITS V3 models into a network instance.
+  /// @param net A network instance pointer
+  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (UTF16)
+  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (UTF16)
+  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (UTF16)
+  /// @param ssl The path name to the onnx file (cnhubert.onnx) (UTF16)
+  /// @param vq The path name to the onnx file (vq_model.onnx) (UTF16)
+  /// @param cfm The path name to the onnx file (vq_cfm.onnx) (UTF16)
+  /// @param bigvgan The path name to the onnx file (bigvgan_model.onnx) (UTF16)
+  /// @param chinese_bert The path name to the onnx file (chinese-roberta.onnx) (UTF16) (NULL to disable BERT)
+  /// @param vocab The path name to the vocab file (vocab.txt) (UTF16) (NULL to disable BERT)
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  int ailiaVoiceOpenGPTSoVITSV3ModelFileW(
+    ffi.Pointer<AILIAVoice> net,
+    ffi.Pointer<ffi.WChar> encoder,
+    ffi.Pointer<ffi.WChar> decoder1,
+    ffi.Pointer<ffi.WChar> decoder2,
+    ffi.Pointer<ffi.WChar> ssl,
+    ffi.Pointer<ffi.WChar> vq,
+    ffi.Pointer<ffi.WChar> cfm,
+    ffi.Pointer<ffi.WChar> bigvgan,
+    ffi.Pointer<ffi.WChar> chinese_bert,
+    ffi.Pointer<ffi.WChar> vocab,
+  ) {
+    return _ailiaVoiceOpenGPTSoVITSV3ModelFileW(
+      net,
+      encoder,
+      decoder1,
+      decoder2,
+      ssl,
+      vq,
+      cfm,
+      bigvgan,
+      chinese_bert,
+      vocab,
+    );
+  }
+
+  late final _ailiaVoiceOpenGPTSoVITSV3ModelFileWPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>)>>('ailiaVoiceOpenGPTSoVITSV3ModelFileW');
+  late final _ailiaVoiceOpenGPTSoVITSV3ModelFileW =
+      _ailiaVoiceOpenGPTSoVITSV3ModelFileWPtr.asFunction<
+          int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>)>();
+
+  /// \~japanese
+  /// @brief GPT-SoVITS V2-Pro向けのモデルを指定します。(MBSC)
+  /// @param net ネットワークオブジェクトポインタ
+  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (MBSC)
+  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (MBSC)
+  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (MBSC)
+  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (MBSC)
+  /// @param vits onnxファイルのパス名 (vits.onnx) (MBSC)
+  /// @param sv onnxファイルのパス名 (sv.onnx) (MBSC)
+  /// @param chinese_bert onnxファイルのパス名 (chinese-roberta.onnx) (MBSC)（NULLの場合はBERTを使用しない）
+  /// @param vocab vocab.txtのパス名 (MBSC)（NULLの場合はBERTを使用しない）
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  ///
+  /// \~english
+  /// @brief Set GPT-SoVITS V2-Pro models into a network instance.
+  /// @param net A network instance pointer
+  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (MBSC)
+  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (MBSC)
+  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (MBSC)
+  /// @param ssl The path name to the onnx file (cnhubert.onnx) (MBSC)
+  /// @param vits The path name to the onnx file (vits.onnx) (MBSC)
+  /// @param sv The path name to the onnx file (sv.onnx) (MBSC)
+  /// @param chinese_bert The path name to the onnx file (chinese-roberta.onnx) (MBSC) (NULL to disable BERT)
+  /// @param vocab The path name to the vocab file (vocab.txt) (MBSC) (NULL to disable BERT)
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  int ailiaVoiceOpenGPTSoVITSV2ProModelFileA(
+    ffi.Pointer<AILIAVoice> net,
+    ffi.Pointer<ffi.Char> encoder,
+    ffi.Pointer<ffi.Char> decoder1,
+    ffi.Pointer<ffi.Char> decoder2,
+    ffi.Pointer<ffi.Char> ssl,
+    ffi.Pointer<ffi.Char> vits,
+    ffi.Pointer<ffi.Char> sv,
+    ffi.Pointer<ffi.Char> chinese_bert,
+    ffi.Pointer<ffi.Char> vocab,
+  ) {
+    return _ailiaVoiceOpenGPTSoVITSV2ProModelFileA(
+      net,
+      encoder,
+      decoder1,
+      decoder2,
+      ssl,
+      vits,
+      sv,
+      chinese_bert,
+      vocab,
+    );
+  }
+
+  late final _ailiaVoiceOpenGPTSoVITSV2ProModelFileAPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Int Function(
+                  ffi.Pointer<AILIAVoice>,
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Char>,
+                  ffi.Pointer<ffi.Char>)>>(
+      'ailiaVoiceOpenGPTSoVITSV2ProModelFileA');
+  late final _ailiaVoiceOpenGPTSoVITSV2ProModelFileA =
+      _ailiaVoiceOpenGPTSoVITSV2ProModelFileAPtr.asFunction<
+          int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>();
+
+  /// \~japanese
+  /// @brief GPT-SoVITS V2-Pro向けのモデルを指定します。(UTF16)
+  /// @param net ネットワークオブジェクトポインタ
+  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (UTF16)
+  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (UTF16)
+  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (UTF16)
+  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (UTF16)
+  /// @param vits onnxファイルのパス名 (vits.onnx) (UTF16)
+  /// @param sv onnxファイルのパス名 (sv.onnx) (UTF16)
+  /// @param chinese_bert onnxファイルのパス名 (chinese-roberta.onnx) (UTF16)（NULLの場合はBERTを使用しない）
+  /// @param vocab vocab.txtのパス名 (UTF16)（NULLの場合はBERTを使用しない）
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  ///
+  /// \~english
+  /// @brief Set GPT-SoVITS V2-Pro models into a network instance.
+  /// @param net A network instance pointer
+  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (UTF16)
+  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (UTF16)
+  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (UTF16)
+  /// @param ssl The path name to the onnx file (cnhubert.onnx) (UTF16)
+  /// @param vits The path name to the onnx file (vits.onnx) (UTF16)
+  /// @param sv The path name to the onnx file (sv.onnx) (UTF16)
+  /// @param chinese_bert The path name to the onnx file (chinese-roberta.onnx) (UTF16) (NULL to disable BERT)
+  /// @param vocab The path name to the vocab file (vocab.txt) (UTF16) (NULL to disable BERT)
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  int ailiaVoiceOpenGPTSoVITSV2ProModelFileW(
+    ffi.Pointer<AILIAVoice> net,
+    ffi.Pointer<ffi.WChar> encoder,
+    ffi.Pointer<ffi.WChar> decoder1,
+    ffi.Pointer<ffi.WChar> decoder2,
+    ffi.Pointer<ffi.WChar> ssl,
+    ffi.Pointer<ffi.WChar> vits,
+    ffi.Pointer<ffi.WChar> sv,
+    ffi.Pointer<ffi.WChar> chinese_bert,
+    ffi.Pointer<ffi.WChar> vocab,
+  ) {
+    return _ailiaVoiceOpenGPTSoVITSV2ProModelFileW(
+      net,
+      encoder,
+      decoder1,
+      decoder2,
+      ssl,
+      vits,
+      sv,
+      chinese_bert,
+      vocab,
+    );
+  }
+
+  late final _ailiaVoiceOpenGPTSoVITSV2ProModelFileWPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Int Function(
+                  ffi.Pointer<AILIAVoice>,
+                  ffi.Pointer<ffi.WChar>,
+                  ffi.Pointer<ffi.WChar>,
+                  ffi.Pointer<ffi.WChar>,
+                  ffi.Pointer<ffi.WChar>,
+                  ffi.Pointer<ffi.WChar>,
+                  ffi.Pointer<ffi.WChar>,
+                  ffi.Pointer<ffi.WChar>,
+                  ffi.Pointer<ffi.WChar>)>>(
+      'ailiaVoiceOpenGPTSoVITSV2ProModelFileW');
+  late final _ailiaVoiceOpenGPTSoVITSV2ProModelFileW =
+      _ailiaVoiceOpenGPTSoVITSV2ProModelFileWPtr.asFunction<
+          int Function(
+              ffi.Pointer<AILIAVoice>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>,
+              ffi.Pointer<ffi.WChar>)>();
 
   /// \~japanese
   /// @brief G2Pを行います。
@@ -3897,6 +4619,106 @@ class ailiaVoiceFFI {
   late final _ailiaVoiceSetReference = _ailiaVoiceSetReferencePtr.asFunction<
       int Function(ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.Float>, int, int,
           int, ffi.Pointer<ffi.Char>)>();
+
+  /// \~japanese
+  /// @brief GPT-SoVITS v3のCFMサンプリングステップ数を設定します。
+  /// @param net ボイスオブジェクトポインタ
+  /// @param steps CFMのEuler ODEステップ数(デフォルト4)
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  ///
+  /// \~english
+  /// @brief Set the number of CFM sampling steps for GPT-SoVITS v3.
+  /// @param net A Voice instance pointer
+  /// @param steps Number of Euler ODE steps for CFM (default 4)
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  int ailiaVoiceSetSampleSteps(
+    ffi.Pointer<AILIAVoice> net,
+    int steps,
+  ) {
+    return _ailiaVoiceSetSampleSteps(
+      net,
+      steps,
+    );
+  }
+
+  late final _ailiaVoiceSetSampleStepsPtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Int Function(ffi.Pointer<AILIAVoice>, ffi.Int)>>(
+      'ailiaVoiceSetSampleSteps');
+  late final _ailiaVoiceSetSampleSteps = _ailiaVoiceSetSampleStepsPtr
+      .asFunction<int Function(ffi.Pointer<AILIAVoice>, int)>();
+
+  /// \~japanese
+  /// @brief 音声合成の速度を設定します。
+  /// @param net ボイスオブジェクトポインタ
+  /// @param speed 速度(デフォルト1.0、0より大きい値)
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// @details
+  /// GPT-SoVITS V2およびV3で使用できます。V1では無効です。
+  ///
+  /// \~english
+  /// @brief Set the speech speed for synthesis.
+  /// @param net A Voice instance pointer
+  /// @param speed Speed value (default 1.0, must be greater than 0)
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// @details
+  /// Supported by GPT-SoVITS V2 and V3. Not effective for V1.
+  int ailiaVoiceSetSpeed(
+    ffi.Pointer<AILIAVoice> net,
+    double speed,
+  ) {
+    return _ailiaVoiceSetSpeed(
+      net,
+      speed,
+    );
+  }
+
+  late final _ailiaVoiceSetSpeedPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<AILIAVoice>, ffi.Float)>>('ailiaVoiceSetSpeed');
+  late final _ailiaVoiceSetSpeed = _ailiaVoiceSetSpeedPtr
+      .asFunction<int Function(ffi.Pointer<AILIAVoice>, double)>();
+
+  /// \~japanese
+  /// @brief G2Pで使用するモデルタイプを設定します。
+  /// @param net ボイスオブジェクトポインタ
+  /// @param model_type モデルタイプ（AILIA_VOICE_MODEL_TYPE_GPT_SOVITS, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V2, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V3, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V2_PRO）
+  /// @return
+  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// @details
+  /// G2Pを単独で使用する際に、モデルファイルを与えずにモデルタイプを設定することに使用します。
+  /// ailiaVoiceOpenModelFileAまたはailiaVoiceOpenGPTSoVITSV3ModelFileAを呼び出した場合は自動的に設定されるため、本APIの呼び出しは不要です。
+  ///
+  /// \~english
+  /// @brief Set the model type used for G2P processing.
+  /// @param net A Voice instance pointer
+  /// @param model_type Model type (AILIA_VOICE_MODEL_TYPE_GPT_SOVITS, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V2, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V3, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V2_PRO)
+  /// @return
+  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// @details
+  /// Used to set the model type when using G2P standalone without opening model files.
+  /// If ailiaVoiceOpenModelFileA or ailiaVoiceOpenGPTSoVITSV3ModelFileA is called, the model type is set automatically, so calling this API is not required.
+  int ailiaVoiceSetModelType(
+    ffi.Pointer<AILIAVoice> net,
+    int model_type,
+  ) {
+    return _ailiaVoiceSetModelType(
+      net,
+      model_type,
+    );
+  }
+
+  late final _ailiaVoiceSetModelTypePtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Int Function(ffi.Pointer<AILIAVoice>, ffi.Int)>>(
+      'ailiaVoiceSetModelType');
+  late final _ailiaVoiceSetModelType = _ailiaVoiceSetModelTypePtr
+      .asFunction<int Function(ffi.Pointer<AILIAVoice>, int)>();
 
   /// \~japanese
   /// @brief 推論を行います。
@@ -4391,6 +5213,14 @@ final class _AILIAVoiceApiCallback extends ffi.Struct {
   external AILIA_VOICE_USER_API_AILIA_AUDIO_GET_RESAMPLE_LEN
       ailiaAudioGetResampleLen;
 
+  external AILIA_VOICE_USER_API_AILIA_AUDIO_GET_FRAME_LEN ailiaAudioGetFrameLen;
+
+  external AILIA_VOICE_USER_API_AILIA_AUDIO_GET_SPECTROGRAM
+      ailiaAudioGetSpectrogram;
+
+  external AILIA_VOICE_USER_API_AILIA_AUDIO_GET_MEL_SPECTROGRAM
+      ailiaAudioGetMelSpectrogram;
+
   external AILIA_VOICE_USER_API_AILIA_CREATE ailiaCreate;
 
   external AILIA_VOICE_USER_API_AILIA_OPEN_WEIGHT_FILE_A ailiaOpenWeightFileA;
@@ -4449,6 +5279,56 @@ typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_RESAMPLE_LENFunction = ffi.Int
     Function(ffi.Pointer<ffi.Int>, ffi.Int, ffi.Int, ffi.Int);
 typedef DartAILIA_VOICE_USER_API_AILIA_AUDIO_GET_RESAMPLE_LENFunction = int
     Function(ffi.Pointer<ffi.Int>, int, int, int);
+typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_FRAME_LEN = ffi.Pointer<
+    ffi.NativeFunction<AILIA_VOICE_USER_API_AILIA_AUDIO_GET_FRAME_LENFunction>>;
+typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_FRAME_LENFunction = ffi.Int
+    Function(ffi.Pointer<ffi.Int>, ffi.Int, ffi.Int, ffi.Int, ffi.Int);
+typedef DartAILIA_VOICE_USER_API_AILIA_AUDIO_GET_FRAME_LENFunction = int
+    Function(ffi.Pointer<ffi.Int>, int, int, int, int);
+typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_SPECTROGRAM = ffi.Pointer<
+    ffi
+    .NativeFunction<AILIA_VOICE_USER_API_AILIA_AUDIO_GET_SPECTROGRAMFunction>>;
+typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_SPECTROGRAMFunction
+    = ffi.Int Function(
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Void>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Float,
+        ffi.Int);
+typedef DartAILIA_VOICE_USER_API_AILIA_AUDIO_GET_SPECTROGRAMFunction
+    = int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int, int, int,
+        int, int, int, int, double, int);
+typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_MEL_SPECTROGRAM = ffi.Pointer<
+    ffi.NativeFunction<
+        AILIA_VOICE_USER_API_AILIA_AUDIO_GET_MEL_SPECTROGRAMFunction>>;
+typedef AILIA_VOICE_USER_API_AILIA_AUDIO_GET_MEL_SPECTROGRAMFunction
+    = ffi.Int Function(
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Void>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Float,
+        ffi.Int,
+        ffi.Float,
+        ffi.Float,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int);
+typedef DartAILIA_VOICE_USER_API_AILIA_AUDIO_GET_MEL_SPECTROGRAMFunction
+    = int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int, int, int,
+        int, int, int, int, int, double, int, double, double, int, int, int);
 typedef AILIA_VOICE_USER_API_AILIA_CREATE = ffi
     .Pointer<ffi.NativeFunction<AILIA_VOICE_USER_API_AILIA_CREATEFunction>>;
 typedef AILIA_VOICE_USER_API_AILIA_CREATEFunction = ffi.Int Function(
@@ -4580,11 +5460,11 @@ typedef AILIAVoiceApiCallback = _AILIAVoiceApiCallback;
 
 const int __has_safe_buffers = 1;
 
-const int __DARWIN_ONLY_64_BIT_INO_T = 1;
+const int __DARWIN_ONLY_64_BIT_INO_T = 0;
 
 const int __DARWIN_ONLY_UNIX_CONFORMANCE = 1;
 
-const int __DARWIN_ONLY_VERS_1050 = 1;
+const int __DARWIN_ONLY_VERS_1050 = 0;
 
 const int __DARWIN_UNIX03 = 1;
 
@@ -4593,6 +5473,10 @@ const int __DARWIN_64_BIT_INO_T = 1;
 const int __DARWIN_VERS_1050 = 1;
 
 const int __DARWIN_NON_CANCELABLE = 0;
+
+const String __DARWIN_SUF_64_BIT_INO_T = '\$INODE64';
+
+const String __DARWIN_SUF_1050 = '\$1050';
 
 const String __DARWIN_SUF_EXTSN = '\$DARWIN_EXTSN';
 
@@ -4608,15 +5492,13 @@ const int __DARWIN_NO_LONG_LONG = 0;
 
 const int _DARWIN_FEATURE_64_BIT_INODE = 1;
 
-const int _DARWIN_FEATURE_ONLY_64_BIT_INODE = 1;
-
-const int _DARWIN_FEATURE_ONLY_VERS_1050 = 1;
-
 const int _DARWIN_FEATURE_ONLY_UNIX_CONFORMANCE = 1;
 
 const int _DARWIN_FEATURE_UNIX_CONFORMANCE = 3;
 
 const int __has_ptrcheck = 0;
+
+const int __has_bounds_safety_attributes = 0;
 
 const int __DARWIN_NULL = 0;
 
@@ -4824,9 +5706,19 @@ const int AILIA_VOICE_DICTIONARY_TYPE_OPEN_JTALK = 0;
 
 const int AILIA_VOICE_DICTIONARY_TYPE_G2P_EN = 1;
 
+const int AILIA_VOICE_DICTIONARY_TYPE_G2P_CN = 2;
+
+const int AILIA_VOICE_DICTIONARY_TYPE_G2PW = 3;
+
 const int AILIA_VOICE_MODEL_TYPE_TACOTRON2 = 0;
 
 const int AILIA_VOICE_MODEL_TYPE_GPT_SOVITS = 1;
+
+const int AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V2 = 2;
+
+const int AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V3 = 3;
+
+const int AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V2_PRO = 4;
 
 const int AILIA_VOICE_CLEANER_TYPE_BASIC = 0;
 
@@ -4838,6 +5730,8 @@ const int AILIA_VOICE_G2P_TYPE_GPT_SOVITS_EN = 1;
 
 const int AILIA_VOICE_G2P_TYPE_GPT_SOVITS_JA = 2;
 
+const int AILIA_VOICE_G2P_TYPE_GPT_SOVITS_ZH = 3;
+
 const int AILIA_VOICE_TEXT_POST_PROCESS_APPEND_PUNCTUATION = 2;
 
-const int AILIA_VOICE_API_CALLBACK_VERSION = 2;
+const int AILIA_VOICE_API_CALLBACK_VERSION = 3;

@@ -1,27 +1,35 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:ailia_voice_example/main.dart';
 
 void main() {
-  testWidgets('Verify Platform version', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('App renders with dropdown and run button', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
-    // Verify that platform version is retrieved.
-    expect(
-      find.byWidgetPredicate(
-        (Widget widget) => widget is Text &&
-                           widget.data!.startsWith('Running on:'),
-      ),
-      findsOneWidget,
-    );
+    expect(find.byType(DropdownButton<int>), findsOneWidget);
+    expect(find.text('Run'), findsOneWidget);
+    expect(find.text('Model Type:'), findsOneWidget);
+  });
+
+  testWidgets('Dropdown contains all model types', (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.tap(find.byType(DropdownButton<int>));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tacotron2', skipOffstage: false), findsWidgets);
+    expect(find.text('GPT-SoVITS V1 (JA)', skipOffstage: false), findsWidgets);
+    expect(find.text('GPT-SoVITS V1 (EN)', skipOffstage: false), findsWidgets);
+    expect(find.text('GPT-SoVITS V1 (ZH)', skipOffstage: false), findsWidgets);
+    expect(find.text('GPT-SoVITS V2 (JA)', skipOffstage: false), findsWidgets);
+    expect(find.text('GPT-SoVITS V2 (EN)', skipOffstage: false), findsWidgets);
+    expect(find.text('GPT-SoVITS V2 (ZH)', skipOffstage: false), findsWidgets);
+    expect(find.text('GPT-SoVITS V3 (JA)', skipOffstage: false), findsWidgets);
+    expect(find.text('GPT-SoVITS V3 (EN)', skipOffstage: false), findsWidgets);
+    expect(find.text('GPT-SoVITS V3 (ZH)', skipOffstage: false), findsWidgets);
+    expect(find.text('GPT-SoVITS V2Pro (JA)', skipOffstage: false), findsWidgets);
+    expect(find.text('GPT-SoVITS V2Pro (EN)', skipOffstage: false), findsWidgets);
+    expect(find.text('GPT-SoVITS V2Pro (ZH)', skipOffstage: false), findsWidgets);
   });
 }

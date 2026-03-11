@@ -12,5 +12,5 @@ ailia AI Voice can perform speech synthesis offline, only on edge devices, witho
 
 ## API specification
 
-https://github.com/axinc-ai/ailia-sdk
+https://github.com/ailia-ai/ailia-sdk
 
