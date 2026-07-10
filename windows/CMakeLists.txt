@@ -52,8 +52,15 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
 # This list could contain prebuilt libraries, or libraries created by an
 # external build triggered from this build file.
 # Copy ailia voice library
+if(CMAKE_GENERATOR_PLATFORM MATCHES "^[Aa][Rr][Mm]64$" OR
+   CMAKE_SYSTEM_PROCESSOR MATCHES "^([Aa][Rr][Mm]64|aarch64)$")
+  set(AILIA_VOICE_ARCH "arm64")
+else()
+  set(AILIA_VOICE_ARCH "x64")
+endif()
+
 set(ailia_voice_bundled_libraries
-  "${CMAKE_CURRENT_SOURCE_DIR}/x64/ailia_voice.dll"
+  "${CMAKE_CURRENT_SOURCE_DIR}/${AILIA_VOICE_ARCH}/ailia_voice.dll"
   PARENT_SCOPE
 )
 
