@@ -27,15 +27,22 @@ Future<String> getModelPath(String path) async {
   return filePath;
 }
 
-void downloadModel(
+/// Downloads [url] to [filename] under the models directory.
+///
+/// The returned future completes with the downloaded file, or with an error
+/// when the download fails, so that the caller can report it. The HTTP status,
+/// the write and the rename are all awaited here; the partial file is removed
+/// before the error is rethrown.
+Future<File> downloadModel(
   String url,
-  String filename,
-  Function downloadCallback
-) async {
+  String filename, [
+  void Function(File file)? downloadCallback,
+]) async {
   var filePath = await getModelPath(filename);
-  if (File(filePath).existsSync()) {
-    downloadCallback(File(filePath));
-    return;
+  final File file = File(filePath);
+  if (file.existsSync()) {
+    downloadCallback?.call(file);
+    return file;
   }
   // create the folder if not exists.
   final Directory dir = Directory(p.dirname(filePath));
@@ -44,67 +51,34 @@ void downloadModel(
   }
 
   var httpClient = http.Client();
-  var request = http.Request('GET', Uri.parse(url));
-  var response = httpClient.send(request);
+  File tempFile = File('$filePath.tmp');
 
-  int downloaded = 0;
-  final stopwatch = Stopwatch()..start();
+  try {
+    var request = http.Request('GET', Uri.parse(url));
+    http.StreamedResponse response = await httpClient.send(request);
 
-  var tempFilename = '$filePath.tmp';
-  File tempFile = File(tempFilename);
-  IOSink tempFileSink = tempFile.openWrite();
-  bool hasIOError = false;
-  dynamic ioError;
+    if (response.statusCode != 200) {
+      throw Exception("$filename : ${response.statusCode}");
+    }
 
-  response.asStream().listen((http.StreamedResponse r) {
-    tempFileSink.done.catchError((e) {
-      hasIOError = true;
-      ioError = e;
-    });
+    IOSink tempFileSink = tempFile.openWrite();
+    try {
+      await tempFileSink.addStream(response.stream);
+    } finally {
+      // Reports the write failure as well, so it must run on both paths.
+      await tempFileSink.close();
+    }
 
-    r.stream.listen(
-      (List<int> chunk) {
-        final speed = 0;//getDownloadSpeed(bytes: downloaded, stopwatch: stopwatch);
+    await tempFile.rename(filePath);
+  } catch (e) {
+    if (tempFile.existsSync()) {
+      await tempFile.delete();
+    }
+    rethrow;
+  } finally {
+    httpClient.close();
+  }
 
-        //progressCallback(filename, speed, chunk.length);
-
-        if (!hasIOError) {
-          tempFileSink.add(chunk);
-        } else {
-          return;
-        }
-        downloaded += chunk.length;
-      },
-      onDone: () async {
-        stopwatch.stop();
-        final speed = 0;//getDownloadSpeed(bytes: downloaded, stopwatch: stopwatch);
-
-        await tempFileSink.close();
-
-        if (hasIOError) {
-          await tempFile.delete();
-          throw Exception("$filename : ${ioError.toString()}");
-        }
-
-        if (r.statusCode != 200) {
-          await tempFile.delete();
-          throw Exception("$filename : ${r.statusCode}");
-        }
-
-        try {
-          await tempFile.rename(filePath);
-        } on FileSystemException catch (e) {
-          await tempFile.delete();
-          throw Exception("$filename : ${e.toString()}");
-        }
-
-        //progressCallback(filename, speed, 0);
-      
-        downloadCallback(File(filePath));
-      },
-      onError: (_) {
-        stopwatch.stop();
-      },
-    );
-  });
+  downloadCallback?.call(file);
+  return file;
 }

@@ -1,6 +1,6 @@
 name: ailia_voice
 description: "Speech synthesis library."
-version: 1.5.0
+version: 1.5.3
 homepage:
 
 environment:
@@ -17,7 +17,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-  ffigen:
+  ffigen: ^21.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
