@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:ailia_voice/ailia_voice.dart' as ailia_voice_dart;
 import 'package:ailia_voice/ailia_voice_model.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -333,11 +331,7 @@ class TextToSpeech {
   }
 
   Future<void> _downloadFile(String url, String filename) async {
-    final completer = Completer<void>();
-    downloadModel(url, filename, (file) {
-      completer.complete();
-    });
-    await completer.future;
+    await downloadModel(url, filename);
   }
 
   // モデルのダウンロード

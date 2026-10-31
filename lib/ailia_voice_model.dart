@@ -95,6 +95,12 @@ class AiliaVoiceModel {
   /// Whether the model is available for inference.
   bool available = false;
 
+  /// Whether [ppAilia] holds an instance that ailiaVoiceCreate returned.
+  ///
+  /// Tracked separately from [available], which only becomes true once a model
+  /// has been loaded as well.
+  bool _created = false;
+
   /// Whether to enable debug output.
   bool debug = false;
 
@@ -317,6 +323,8 @@ class AiliaVoiceModel {
     ailiaAudio = _ailiaCommonGetLibrary(_ailiaCommonGetAudioPath());
 
     ppAilia = malloc<ffi.Pointer<ailia_voice_dart.AILIAVoice>>();
+    // throwError() reads this below, before ailiaVoiceCreate has filled it in.
+    ppAilia!.value = ffi.nullptr;
 
     ffi.Pointer<ailia_voice_dart.AILIAVoiceApiCallback> callback =
         getCallback();
@@ -326,18 +334,23 @@ class AiliaVoiceModel {
         ailia_voice_dart.AILIA_MEMORY_REUSE_INTERSTAGE;
     int flag = ailia_voice_dart.AILIA_VOICE_FLAG_NONE;
 
-    int status = ailiaVoice.ailiaVoiceCreate(
-      ppAilia,
-      envId,
-      ailia_voice_dart.AILIA_MULTITHREAD_AUTO,
-      memoryMode,
-      flag,
-      callback.ref,
-      ailia_voice_dart.AILIA_VOICE_API_CALLBACK_VERSION,
-    );
+    int status;
+    try {
+      status = ailiaVoice.ailiaVoiceCreate(
+        ppAilia,
+        envId,
+        ailia_voice_dart.AILIA_MULTITHREAD_AUTO,
+        memoryMode,
+        flag,
+        callback.ref,
+        ailia_voice_dart.AILIA_VOICE_API_CALLBACK_VERSION,
+      );
+    } finally {
+      malloc.free(callback);
+    }
     throwError("ailiaVoiceCreate", status);
 
-    malloc.free(callback);
+    _created = true;
   }
 
   void _finalizeOpen() {
@@ -371,27 +384,27 @@ class AiliaVoiceModel {
 
     int status;
     if (Platform.isWindows){
-      status = ailiaVoice.ailiaVoiceOpenModelFileW(
+      status = using((arena) => ailiaVoice.ailiaVoiceOpenModelFileW(
         ppAilia!.value,
-        encoder.toNativeUtf16().cast<ffi.WChar>(),
-        decoder1.toNativeUtf16().cast<ffi.WChar>(),
-        decoder2.toNativeUtf16().cast<ffi.WChar>(),
-        wave.toNativeUtf16().cast<ffi.WChar>(),
-        (ssl != null) ? ssl.toNativeUtf16().cast<ffi.WChar>():ffi.nullptr,
+        encoder.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        decoder1.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        decoder2.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        wave.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        (ssl != null) ? ssl.toNativeUtf16(allocator: arena).cast<ffi.WChar>():ffi.nullptr,
         modelType,
         cleanerType,
-      );
+      ), malloc);
     }else{
-      status = ailiaVoice.ailiaVoiceOpenModelFileA(
+      status = using((arena) => ailiaVoice.ailiaVoiceOpenModelFileA(
         ppAilia!.value,
-        encoder.toNativeUtf8().cast<ffi.Char>(),
-        decoder1.toNativeUtf8().cast<ffi.Char>(),
-        decoder2.toNativeUtf8().cast<ffi.Char>(),
-        wave.toNativeUtf8().cast<ffi.Char>(),
-        (ssl != null) ? ssl.toNativeUtf8().cast<ffi.Char>():ffi.nullptr,
+        encoder.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        decoder1.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        decoder2.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        wave.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        (ssl != null) ? ssl.toNativeUtf8(allocator: arena).cast<ffi.Char>():ffi.nullptr,
         modelType,
         ailia_voice_dart.AILIA_VOICE_CLEANER_TYPE_BASIC,
-      );
+      ), malloc);
     }
     throwError("ailiaVoiceOpenModelFile", status);
 
@@ -418,23 +431,23 @@ class AiliaVoiceModel {
 
     int status;
     if (Platform.isWindows){
-      status = ailiaVoice.ailiaVoiceOpenGPTSoVITSV1ModelFileW(
+      status = using((arena) => ailiaVoice.ailiaVoiceOpenGPTSoVITSV1ModelFileW(
         ppAilia!.value,
-        encoder.toNativeUtf16().cast<ffi.WChar>(),
-        decoder1.toNativeUtf16().cast<ffi.WChar>(),
-        decoder2.toNativeUtf16().cast<ffi.WChar>(),
-        wave.toNativeUtf16().cast<ffi.WChar>(),
-        ssl.toNativeUtf16().cast<ffi.WChar>(),
-      );
+        encoder.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        decoder1.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        decoder2.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        wave.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        ssl.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+      ), malloc);
     }else{
-      status = ailiaVoice.ailiaVoiceOpenGPTSoVITSV1ModelFileA(
+      status = using((arena) => ailiaVoice.ailiaVoiceOpenGPTSoVITSV1ModelFileA(
         ppAilia!.value,
-        encoder.toNativeUtf8().cast<ffi.Char>(),
-        decoder1.toNativeUtf8().cast<ffi.Char>(),
-        decoder2.toNativeUtf8().cast<ffi.Char>(),
-        wave.toNativeUtf8().cast<ffi.Char>(),
-        ssl.toNativeUtf8().cast<ffi.Char>(),
-      );
+        encoder.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        decoder1.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        decoder2.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        wave.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        ssl.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+      ), malloc);
     }
     throwError("ailiaVoiceOpenGPTSoVITSV1ModelFile", status);
 
@@ -465,27 +478,27 @@ class AiliaVoiceModel {
 
     int status;
     if (Platform.isWindows){
-      status = ailiaVoice.ailiaVoiceOpenGPTSoVITSV2ModelFileW(
+      status = using((arena) => ailiaVoice.ailiaVoiceOpenGPTSoVITSV2ModelFileW(
         ppAilia!.value,
-        encoder.toNativeUtf16().cast<ffi.WChar>(),
-        decoder1.toNativeUtf16().cast<ffi.WChar>(),
-        decoder2.toNativeUtf16().cast<ffi.WChar>(),
-        wave.toNativeUtf16().cast<ffi.WChar>(),
-        ssl.toNativeUtf16().cast<ffi.WChar>(),
-        (chineseBert != null) ? chineseBert.toNativeUtf16().cast<ffi.WChar>() : ffi.nullptr,
-        (vocab != null) ? vocab.toNativeUtf16().cast<ffi.WChar>() : ffi.nullptr,
-      );
+        encoder.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        decoder1.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        decoder2.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        wave.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        ssl.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        (chineseBert != null) ? chineseBert.toNativeUtf16(allocator: arena).cast<ffi.WChar>() : ffi.nullptr,
+        (vocab != null) ? vocab.toNativeUtf16(allocator: arena).cast<ffi.WChar>() : ffi.nullptr,
+      ), malloc);
     }else{
-      status = ailiaVoice.ailiaVoiceOpenGPTSoVITSV2ModelFileA(
+      status = using((arena) => ailiaVoice.ailiaVoiceOpenGPTSoVITSV2ModelFileA(
         ppAilia!.value,
-        encoder.toNativeUtf8().cast<ffi.Char>(),
-        decoder1.toNativeUtf8().cast<ffi.Char>(),
-        decoder2.toNativeUtf8().cast<ffi.Char>(),
-        wave.toNativeUtf8().cast<ffi.Char>(),
-        ssl.toNativeUtf8().cast<ffi.Char>(),
-        (chineseBert != null) ? chineseBert.toNativeUtf8().cast<ffi.Char>() : ffi.nullptr,
-        (vocab != null) ? vocab.toNativeUtf8().cast<ffi.Char>() : ffi.nullptr,
-      );
+        encoder.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        decoder1.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        decoder2.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        wave.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        ssl.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        (chineseBert != null) ? chineseBert.toNativeUtf8(allocator: arena).cast<ffi.Char>() : ffi.nullptr,
+        (vocab != null) ? vocab.toNativeUtf8(allocator: arena).cast<ffi.Char>() : ffi.nullptr,
+      ), malloc);
     }
     throwError("ailiaVoiceOpenGPTSoVITSV2ModelFile", status);
 
@@ -520,31 +533,31 @@ class AiliaVoiceModel {
 
     int status;
     if (Platform.isWindows){
-      status = ailiaVoice.ailiaVoiceOpenGPTSoVITSV3ModelFileW(
+      status = using((arena) => ailiaVoice.ailiaVoiceOpenGPTSoVITSV3ModelFileW(
         ppAilia!.value,
-        encoder.toNativeUtf16().cast<ffi.WChar>(),
-        decoder1.toNativeUtf16().cast<ffi.WChar>(),
-        decoder2.toNativeUtf16().cast<ffi.WChar>(),
-        ssl.toNativeUtf16().cast<ffi.WChar>(),
-        vq.toNativeUtf16().cast<ffi.WChar>(),
-        cfm.toNativeUtf16().cast<ffi.WChar>(),
-        bigvgan.toNativeUtf16().cast<ffi.WChar>(),
-        (chineseBert != null) ? chineseBert.toNativeUtf16().cast<ffi.WChar>() : ffi.nullptr,
-        (vocab != null) ? vocab.toNativeUtf16().cast<ffi.WChar>() : ffi.nullptr,
-      );
+        encoder.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        decoder1.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        decoder2.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        ssl.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        vq.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        cfm.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        bigvgan.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        (chineseBert != null) ? chineseBert.toNativeUtf16(allocator: arena).cast<ffi.WChar>() : ffi.nullptr,
+        (vocab != null) ? vocab.toNativeUtf16(allocator: arena).cast<ffi.WChar>() : ffi.nullptr,
+      ), malloc);
     }else{
-      status = ailiaVoice.ailiaVoiceOpenGPTSoVITSV3ModelFileA(
+      status = using((arena) => ailiaVoice.ailiaVoiceOpenGPTSoVITSV3ModelFileA(
         ppAilia!.value,
-        encoder.toNativeUtf8().cast<ffi.Char>(),
-        decoder1.toNativeUtf8().cast<ffi.Char>(),
-        decoder2.toNativeUtf8().cast<ffi.Char>(),
-        ssl.toNativeUtf8().cast<ffi.Char>(),
-        vq.toNativeUtf8().cast<ffi.Char>(),
-        cfm.toNativeUtf8().cast<ffi.Char>(),
-        bigvgan.toNativeUtf8().cast<ffi.Char>(),
-        (chineseBert != null) ? chineseBert.toNativeUtf8().cast<ffi.Char>() : ffi.nullptr,
-        (vocab != null) ? vocab.toNativeUtf8().cast<ffi.Char>() : ffi.nullptr,
-      );
+        encoder.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        decoder1.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        decoder2.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        ssl.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        vq.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        cfm.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        bigvgan.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        (chineseBert != null) ? chineseBert.toNativeUtf8(allocator: arena).cast<ffi.Char>() : ffi.nullptr,
+        (vocab != null) ? vocab.toNativeUtf8(allocator: arena).cast<ffi.Char>() : ffi.nullptr,
+      ), malloc);
     }
     throwError("ailiaVoiceOpenGPTSoVITSV3ModelFile", status);
 
@@ -577,29 +590,29 @@ class AiliaVoiceModel {
 
     int status;
     if (Platform.isWindows){
-      status = ailiaVoice.ailiaVoiceOpenGPTSoVITSV2ProModelFileW(
+      status = using((arena) => ailiaVoice.ailiaVoiceOpenGPTSoVITSV2ProModelFileW(
         ppAilia!.value,
-        encoder.toNativeUtf16().cast<ffi.WChar>(),
-        decoder1.toNativeUtf16().cast<ffi.WChar>(),
-        decoder2.toNativeUtf16().cast<ffi.WChar>(),
-        ssl.toNativeUtf16().cast<ffi.WChar>(),
-        vits.toNativeUtf16().cast<ffi.WChar>(),
-        sv.toNativeUtf16().cast<ffi.WChar>(),
-        (chineseBert != null) ? chineseBert.toNativeUtf16().cast<ffi.WChar>() : ffi.nullptr,
-        (vocab != null) ? vocab.toNativeUtf16().cast<ffi.WChar>() : ffi.nullptr,
-      );
+        encoder.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        decoder1.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        decoder2.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        ssl.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        vits.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        sv.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
+        (chineseBert != null) ? chineseBert.toNativeUtf16(allocator: arena).cast<ffi.WChar>() : ffi.nullptr,
+        (vocab != null) ? vocab.toNativeUtf16(allocator: arena).cast<ffi.WChar>() : ffi.nullptr,
+      ), malloc);
     }else{
-      status = ailiaVoice.ailiaVoiceOpenGPTSoVITSV2ProModelFileA(
+      status = using((arena) => ailiaVoice.ailiaVoiceOpenGPTSoVITSV2ProModelFileA(
         ppAilia!.value,
-        encoder.toNativeUtf8().cast<ffi.Char>(),
-        decoder1.toNativeUtf8().cast<ffi.Char>(),
-        decoder2.toNativeUtf8().cast<ffi.Char>(),
-        ssl.toNativeUtf8().cast<ffi.Char>(),
-        vits.toNativeUtf8().cast<ffi.Char>(),
-        sv.toNativeUtf8().cast<ffi.Char>(),
-        (chineseBert != null) ? chineseBert.toNativeUtf8().cast<ffi.Char>() : ffi.nullptr,
-        (vocab != null) ? vocab.toNativeUtf8().cast<ffi.Char>() : ffi.nullptr,
-      );
+        encoder.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        decoder1.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        decoder2.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        ssl.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        vits.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        sv.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        (chineseBert != null) ? chineseBert.toNativeUtf8(allocator: arena).cast<ffi.Char>() : ffi.nullptr,
+        (vocab != null) ? vocab.toNativeUtf8(allocator: arena).cast<ffi.Char>() : ffi.nullptr,
+      ), malloc);
     }
     throwError("ailiaVoiceOpenGPTSoVITSV2ProModelFile", status);
 
@@ -640,17 +653,17 @@ class AiliaVoiceModel {
   ) {
     int status = 0;
     if (Platform.isWindows){
-      status = ailiaVoice.ailiaVoiceSetUserDictionaryFileW(
+      status = using((arena) => ailiaVoice.ailiaVoiceSetUserDictionaryFileW(
         ppAilia!.value,
-        dicFile.toNativeUtf16().cast<ffi.WChar>(),
+        dicFile.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
         dictionaryType,
-      );
+      ), malloc);
     }else{
-      status = ailiaVoice.ailiaVoiceSetUserDictionaryFileA(
+      status = using((arena) => ailiaVoice.ailiaVoiceSetUserDictionaryFileA(
         ppAilia!.value,
-        dicFile.toNativeUtf8().cast<ffi.Char>(),
+        dicFile.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
         dictionaryType,
-      );
+      ), malloc);
     }
     throwError("ailiaVoiceSetUserDictionaryFile", status);
   }
@@ -666,17 +679,17 @@ class AiliaVoiceModel {
   ) {
     int status = 0;
     if (Platform.isWindows){
-      status = ailiaVoice.ailiaVoiceOpenDictionaryFileW(
+      status = using((arena) => ailiaVoice.ailiaVoiceOpenDictionaryFileW(
         ppAilia!.value,
-        dicFolder.toNativeUtf16().cast<ffi.WChar>(),
+        dicFolder.toNativeUtf16(allocator: arena).cast<ffi.WChar>(),
         dictionaryType,
-      );
+      ), malloc);
     }else{
-      status = ailiaVoice.ailiaVoiceOpenDictionaryFileA(
+      status = using((arena) => ailiaVoice.ailiaVoiceOpenDictionaryFileA(
         ppAilia!.value,
-        dicFolder.toNativeUtf8().cast<ffi.Char>(),
+        dicFolder.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
         dictionaryType,
-      );
+      ), malloc);
     }
     throwError("ailiaVoiceOpenDictionaryFile", status);
   }
@@ -701,14 +714,21 @@ class AiliaVoiceModel {
   }
 
   /// Closes the model and releases native resources.
+  ///
+  /// The instance is released even when loading a model failed, because it has
+  /// already been created by then and [available] is still false.
   void close() {
-    if (!available){
+    if (ppAilia == null){
       return;
     }
 
-    ffi.Pointer<ailia_voice_dart.AILIAVoice> net = ppAilia!.value;
-    ailiaVoice.ailiaVoiceDestroy(net);
+    if (_created){
+      ffi.Pointer<ailia_voice_dart.AILIAVoice> net = ppAilia!.value;
+      ailiaVoice.ailiaVoiceDestroy(net);
+      _created = false;
+    }
     malloc.free(ppAilia!);
+    ppAilia = null;
 
     available = false;
   }
@@ -722,38 +742,39 @@ class AiliaVoiceModel {
       print("ailiaVoiceGraphemeToPhoeneme $inputText");
     }
 
-    int status = ailiaVoice.ailiaVoiceGraphemeToPhoneme(
-      ppAilia!.value,
-      inputText.toNativeUtf8().cast<ffi.Char>(),
-      g2pType,
-    );
-    throwError("ailiaVoiceGraphemeToPhoneme", status);
+    // The arena releases the text and the feature buffer on every path,
+    // including the ones where throwError throws.
+    return using((arena) {
+      int status = ailiaVoice.ailiaVoiceGraphemeToPhoneme(
+        ppAilia!.value,
+        inputText.toNativeUtf8(allocator: arena).cast<ffi.Char>(),
+        g2pType,
+      );
+      throwError("ailiaVoiceGraphemeToPhoneme", status);
 
-    final ffi.Pointer<ffi.UnsignedInt> len = malloc<ffi.UnsignedInt>();
-    status = ailiaVoice.ailiaVoiceGetFeatureLength(ppAilia!.value, len);
-    throwError("ailiaVoiceGetFeatureLength", status);
-    if (debug){
-      print("length ${len.value}");
-    }
+      final ffi.Pointer<ffi.UnsignedInt> len = arena<ffi.UnsignedInt>();
+      status = ailiaVoice.ailiaVoiceGetFeatureLength(ppAilia!.value, len);
+      throwError("ailiaVoiceGetFeatureLength", status);
+      if (debug){
+        print("length ${len.value}");
+      }
 
-    final ffi.Pointer<ffi.Char> features = malloc<ffi.Char>(len.value);
-    status = ailiaVoice.ailiaVoiceGetFeatures(
-      ppAilia!.value,
-      features,
-      len.value,
-    );
-    throwError("ailiaVoiceGetFeatures", status);
+      final ffi.Pointer<ffi.Char> features = arena<ffi.Char>(len.value);
+      status = ailiaVoice.ailiaVoiceGetFeatures(
+        ppAilia!.value,
+        features,
+        len.value,
+      );
+      throwError("ailiaVoiceGetFeatures", status);
 
-    ffi.Pointer<Utf8> p = features.cast<Utf8>();
-    String s = p.toDartString();
-    if (debug){
-      print("g2p output $s");
-    }
+      ffi.Pointer<Utf8> p = features.cast<Utf8>();
+      String s = p.toDartString();
+      if (debug){
+        print("g2p output $s");
+      }
 
-    malloc.free(len);
-    malloc.free(features);
-
-    return s;
+      return s;
+    }, malloc);
   }
 
   /// Sets the reference audio for voice cloning (GPT-SoVITS models).
@@ -767,22 +788,24 @@ class AiliaVoiceModel {
       throw Exception("Model not opened yet. wait one second and try again.");
     }
 
-    ffi.Pointer<ffi.Float> waveBuf = malloc<ffi.Float>(pcm.length);
-    for (int i = 0; i < pcm.length; i++) {
-      waveBuf[i] = pcm[i];
-    }
+    // The arena releases the PCM buffer and the feature text on every path,
+    // including the one where throwError throws.
+    using((arena) {
+      ffi.Pointer<ffi.Float> waveBuf = arena<ffi.Float>(pcm.length);
+      for (int i = 0; i < pcm.length; i++) {
+        waveBuf[i] = pcm[i];
+      }
 
-    int status = ailiaVoice.ailiaVoiceSetReference(
-      ppAilia!.value,
-      waveBuf,
-      pcm.length * 4,
-      nChannels,
-      sampleRate,
-      referenceFeature.toNativeUtf8().cast<ffi.Char>()
-    );
-    throwError("ailiaVoiceSetReference", status);
-
-    malloc.free(waveBuf);
+      int status = ailiaVoice.ailiaVoiceSetReference(
+        ppAilia!.value,
+        waveBuf,
+        pcm.length * 4,
+        nChannels,
+        sampleRate,
+        referenceFeature.toNativeUtf8(allocator: arena).cast<ffi.Char>()
+      );
+      throwError("ailiaVoiceSetReference", status);
+    }, malloc);
   }
 
   /// Runs speech synthesis inference.
@@ -805,61 +828,61 @@ class AiliaVoiceModel {
       print("ailiaVoiceInference");
     }
 
-    int status = ailiaVoice.ailiaVoiceInference(ppAilia!.value, inputFeature.toNativeUtf8().cast<ffi.Char>());
-    throwError("ailiaVoiceInference", status);
+    // The arena releases the input text and the wave buffers on every path,
+    // including the ones where throwError throws.
+    return using((arena) {
+      int status = ailiaVoice.ailiaVoiceInference(
+          ppAilia!.value, inputFeature.toNativeUtf8(allocator: arena).cast<ffi.Char>());
+      throwError("ailiaVoiceInference", status);
 
-    if (debug){
-      print("ailiaVoiceGetWaveInfo");
-    }
+      if (debug){
+        print("ailiaVoiceGetWaveInfo");
+      }
 
-    final ffi.Pointer<ffi.UnsignedInt> samples = malloc<ffi.UnsignedInt>();
-    final ffi.Pointer<ffi.UnsignedInt> channels = malloc<ffi.UnsignedInt>();
-    final ffi.Pointer<ffi.UnsignedInt> samplingRate = malloc<ffi.UnsignedInt>();
+      final ffi.Pointer<ffi.UnsignedInt> samples = arena<ffi.UnsignedInt>();
+      final ffi.Pointer<ffi.UnsignedInt> channels = arena<ffi.UnsignedInt>();
+      final ffi.Pointer<ffi.UnsignedInt> samplingRate = arena<ffi.UnsignedInt>();
 
-    status = ailiaVoice.ailiaVoiceGetWaveInfo(
-      ppAilia!.value,
-      samples,
-      channels,
-      samplingRate,
-    );
-    throwError("ailiaVoiceGetWaveInfo", status);
+      status = ailiaVoice.ailiaVoiceGetWaveInfo(
+        ppAilia!.value,
+        samples,
+        channels,
+        samplingRate,
+      );
+      throwError("ailiaVoiceGetWaveInfo", status);
 
-    if (debug){
-      print("ailiaVoiceGetWaves");
-    }
+      if (debug){
+        print("ailiaVoiceGetWaves");
+      }
 
-    final ffi.Pointer<ffi.Float> buf =
-        malloc<ffi.Float>(samples.value * channels.value);
+      final ffi.Pointer<ffi.Float> buf =
+          arena<ffi.Float>(samples.value * channels.value);
 
-    int sizeofFloat = 4;
-    status = ailiaVoice.ailiaVoiceGetWave(
-      ppAilia!.value,
-      buf,
-      samples.value * channels.value * sizeofFloat,
-    );
-    throwError("ailiaVoiceGetWaves", status);
+      int sizeofFloat = 4;
+      status = ailiaVoice.ailiaVoiceGetWave(
+        ppAilia!.value,
+        buf,
+        samples.value * channels.value * sizeofFloat,
+      );
+      throwError("ailiaVoiceGetWaves", status);
 
-    List<double> pcm = List<double>.empty(growable: true);
-    for (int i = 0; i < samples.value * channels.value; i++) {
-      pcm.add(buf[i]);
-    }
+      List<double> pcm = List<double>.empty(growable: true);
+      for (int i = 0; i < samples.value * channels.value; i++) {
+        pcm.add(buf[i]);
+      }
 
-    AiliaVoiceResult resultPcm = AiliaVoiceResult(
-      sampleRate: samplingRate.value,
-      nChannels: channels.value,
-      pcm: pcm,
-    );
+      AiliaVoiceResult resultPcm = AiliaVoiceResult(
+        sampleRate: samplingRate.value,
+        nChannels: channels.value,
+        pcm: pcm,
+      );
 
-    if (debug){
-      print(
-          "ailiaVoice output ${samples.value} ${samplingRate.value} ${channels.value}");
-    }
+      if (debug){
+        print(
+            "ailiaVoice output ${samples.value} ${samplingRate.value} ${channels.value}");
+      }
 
-    malloc.free(buf);
-    malloc.free(samples);
-    malloc.free(channels);
-    malloc.free(samplingRate);
-
-    return resultPcm;
+      return resultPcm;
+    }, malloc);
   }
 }

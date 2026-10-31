@@ -20,29 +20,20 @@ class ailiaVoiceFFI {
           lookup)
       : _lookup = lookup;
 
-  /// \~japanese
-  /// @brief ネットワークオブジェクトを作成します。
-  /// @param net ネットワークオブジェクトポインタへのポインタ
-  /// @param env_id 計算に利用する推論実行環境のID( ailiaGetEnvironment() で取得)  \ref AILIA_ENVIRONMENT_ID_AUTO
-  /// にした場合は自動で選択する
-  /// @param num_thread スレッド数の上限(  \ref AILIA_MULTITHREAD_AUTO  にした場合は自動で設定)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ネットワークオブジェクトを作成します。
-  /// 推論実行環境を自動にした場合はCPUモードになり、BLASが利用できる場合はBLASを利用します。
-  /// なお、BLASを利用する場合num_threadは無視される場合があります。
+  /// Creates a network instance.
   ///
-  /// \~english
-  /// @brief Creates a network instance.
-  /// @param net A pointer to the network instance pointer
-  /// @param env_id The ID of the inference backend used for computation (obtained by  ailiaGetEnvironment() ). It is
-  /// selected automatically if  \ref AILIA_ENVIRONMENT_ID_AUTO  is specified.
-  /// @param num_thread The upper limit on the number of threads (It is set automatically if  \ref AILIA_MULTITHREAD_AUTO
-  /// is specified.)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A pointer to the network instance pointer
+  /// - `env_id`: The ID of the inference backend used for computation (obtained by  ailiaGetEnvironment() ). It is
+  ///   selected automatically if  [AILIA_ENVIRONMENT_ID_AUTO]  is specified.
+  /// - `num_thread`: The upper limit on the number of threads (It is set automatically if  [AILIA_MULTITHREAD_AUTO]
+  ///   is specified.)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// Creates a network instance.
   /// If the inference backend is set to automatic, CPU mode is used, while if BLAS is available, it uses BLAS.
   /// Note that if BLAS is used, num_thread may be ignored.
@@ -65,22 +56,17 @@ class ailiaVoiceFFI {
   late final _ailiaCreate = _ailiaCreatePtr.asFunction<
       int Function(ffi.Pointer<ffi.Pointer<AILIANetwork>>, int, int)>();
 
-  /// \~japanese
-  /// @brief ネットワークオブジェクトを初期化します。(ファイルから読み込み)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param path prototxtファイルのパス名(MBSC or UTF16)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ファイルから読み込み、ネットワークオブジェクトを初期化します。
+  /// Initializes the network instance. (Read from file)
   ///
-  /// \~english
-  /// @brief Initializes the network instance. (Read from file)
-  /// @param net A network instance pointer
-  /// @param path The path name to the prototxt file (MBSC or UTF16)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `path`: The path name to the prototxt file (MBSC or UTF16)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This function reads the network instance from a file and initializes it.
   int ailiaOpenStreamFileA(
     ffi.Pointer<AILIANetwork> net,
@@ -116,26 +102,19 @@ class ailiaVoiceFFI {
   late final _ailiaOpenStreamFileW = _ailiaOpenStreamFileWPtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.WChar>)>();
 
-  /// \~japanese
-  /// @brief ネットワークオブジェクトを初期化します。(ユーザ定義ファイルアクセスコールバック)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param fopen_args  \ref AILIA_USER_API_FOPEN に通知される引数ポインタ
-  /// @param callback ユーザ定義ファイルアクセスコールバック関数構造体
-  /// @param version ファイルアクセスコールバック関数構造体のバージョン( \ref AILIA_FILE_CALLBACK_VERSION )
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ファイルから読み込み、ネットワークオブジェクトを初期化します。
+  /// Initializes the network instance. (User-defined file access callback)
   ///
-  /// \~english
-  /// @brief Initializes the network instance. (User-defined file access callback)
-  /// @param net A network instance pointer
-  /// @param fopen_args An argument pointer supplied by AILIA_USER_API_FOPEN
-  /// @param callback A struct for the user-defined file access callback function
-  /// @param version The version of the struct for the file access callback function ( \ref AILIA_FILE_CALLBACK_VERSION )
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `fopen_args`: An argument pointer supplied by AILIA_USER_API_FOPEN
+  /// - `callback`: A struct for the user-defined file access callback function
+  /// - `version`: The version of the struct for the file access callback function ( [AILIA_FILE_CALLBACK_VERSION] )
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This function reads the network instance from a file and initializes it.
   int ailiaOpenStreamEx(
     ffi.Pointer<AILIANetwork> net,
@@ -159,24 +138,18 @@ class ailiaVoiceFFI {
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.Void>,
           ailiaFileCallback, int)>();
 
-  /// \~japanese
-  /// @brief ネットワークオブジェクトを初期化します。(メモリから読み込み)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param buf prototxtファイルのデータへのポインタ
-  /// @param buf_size prototxtファイルのデータサイズ
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// メモリから読み込み、ネットワークオブジェクトを初期化します。
+  /// Initializes the network instance. (Read from memory)
   ///
-  /// \~english
-  /// @brief Initializes the network instance. (Read from memory)
-  /// @param net A network instance pointer
-  /// @param buf A pointer to the data in the prototxt file
-  /// @param buf_size The data size of the prototxt file
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `buf`: A pointer to the data in the prototxt file
+  /// - `buf_size`: The data size of the prototxt file
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This function reads the network instance from memory and initializes it.
   int ailiaOpenStreamMem(
     ffi.Pointer<AILIANetwork> net,
@@ -197,22 +170,17 @@ class ailiaVoiceFFI {
   late final _ailiaOpenStreamMem = _ailiaOpenStreamMemPtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.Void>, int)>();
 
-  /// \~japanese
-  /// @brief ネットワークオブジェクトに重み係数を読み込みます。(ファイルから読み込み)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param path protobuf/onnxファイルのパス名(MBSC or UTF16)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ファイルからネットワークオブジェクトに重み係数を読み込みます。
+  /// Reads weights into a network instance. (Read from file)
   ///
-  /// \~english
-  /// @brief Reads weights into a network instance. (Read from file)
-  /// @param net A network instance pointer
-  /// @param path The path name to the protobuf/onnx file (MBSC or UTF16)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `path`: The path name to the protobuf/onnx file (MBSC or UTF16)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This function reads weights into the network instance from a file.
   int ailiaOpenWeightFileA(
     ffi.Pointer<AILIANetwork> net,
@@ -248,26 +216,19 @@ class ailiaVoiceFFI {
   late final _ailiaOpenWeightFileW = _ailiaOpenWeightFileWPtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.WChar>)>();
 
-  /// \~japanese
-  /// @brief ネットワークオブジェクトに重み係数を読み込みます。(ユーザ定義ファイルアクセスコールバック)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param fopen_args  \ref AILIA_USER_API_FOPEN に通知される引数ポインタ
-  /// @param callback ユーザ定義ファイルアクセスコールバック関数構造体
-  /// @param version ファイルアクセスコールバック関数構造体のバージョン( \ref AILIA_FILE_CALLBACK_VERSION )
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ファイルからネットワークオブジェクトに重み係数を読み込みます。
+  /// Reads weights into a network instance. (User-defined file access callback)
   ///
-  /// \~english
-  /// @brief Reads weights into a network instance. (User-defined file access callback)
-  /// @param net A network instance pointer
-  /// @param fopen_args An argument pointer supplied by AILIA_USER_API_FOPEN
-  /// @param callback A struct for the user-defined file access callback function
-  /// @param version The version of the struct for the file access callback function ( \ref AILIA_FILE_CALLBACK_VERSION )
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `fopen_args`: An argument pointer supplied by AILIA_USER_API_FOPEN
+  /// - `callback`: A struct for the user-defined file access callback function
+  /// - `version`: The version of the struct for the file access callback function ( [AILIA_FILE_CALLBACK_VERSION] )
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This function reads weights into the network instance from a file.
   int ailiaOpenWeightEx(
     ffi.Pointer<AILIANetwork> net,
@@ -291,24 +252,18 @@ class ailiaVoiceFFI {
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.Void>,
           ailiaFileCallback, int)>();
 
-  /// \~japanese
-  /// @brief ネットワークオブジェクトに重み係数を読み込みます。(メモリから読み込み)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param buf protobuf/onnxファイルのデータへのポインタ
-  /// @param buf_size protobuf/onnxファイルのデータサイズ
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// メモリからネットワークオブジェクトに重み係数を読み込みます。
+  /// Reads weights into a network instance. (Read from memory)
   ///
-  /// \~english
-  /// @brief Reads weights into a network instance. (Read from memory)
-  /// @param net A network instance pointer
-  /// @param buf A pointer to the data in the protobuf/onnx file
-  /// @param buf_size The data size of the protobuf/onnx file
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `buf`: A pointer to the data in the protobuf/onnx file
+  /// - `buf_size`: The data size of the protobuf/onnx file
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This function reads weights into the network instance from memory.
   int ailiaOpenWeightMem(
     ffi.Pointer<AILIANetwork> net,
@@ -329,13 +284,11 @@ class ailiaVoiceFFI {
   late final _ailiaOpenWeightMem = _ailiaOpenWeightMemPtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.Void>, int)>();
 
-  /// \~japanese
-  /// @brief ネットワークオブジェクトを破棄します。
-  /// @param net ネットワークオブジェクトポインタ
+  /// It destroys the network instance.
   ///
-  /// \~english
-  /// @brief It destroys the network instance.
-  /// @param net A network instance pointer
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
   void ailiaDestroy(
     ffi.Pointer<AILIANetwork> net,
   ) {
@@ -350,29 +303,18 @@ class ailiaVoiceFFI {
   late final _ailiaDestroy =
       _ailiaDestroyPtr.asFunction<void Function(ffi.Pointer<AILIANetwork>)>();
 
-  /// \~japanese
-  /// @brief 推論時の入力データの形状を変更します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param shape 入力データの形状情報
-  /// @param version AILIA_SHAPE_VERSION
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// prototxtで定義されている入力形状を変更します。
-  /// prototxtに記述されているランクと同じにする必要があります。
-  /// なお、重み係数の形状が入力形状に依存しているなどによりエラーが返る場合があります。
-  /// prototxtで定義されているランクが4次元未満の場合は未使用の要素に1を設定する必要があります。
-  /// prototxtで定義されているランクが5次元以上の場合は ailiaSetInputShapeND() を利用してください。
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Changes the shape of the input data during inference.
   ///
-  /// \~english
-  /// @brief Changes the shape of the input data during inference.
-  /// @param net A network instance pointer
-  /// @param shape Shape information for the input data
-  /// @param version AILIA_SHAPE_VERSION
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `shape`: Shape information for the input data
+  /// - `version`: AILIA_SHAPE_VERSION
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This function changes the input shape defined in prototxt.
   /// The shape must have the same rank as the one contained in prototxt.
   /// Note that an error may be returned if the weights are dependent on the input shapes, among other reasons.
@@ -398,27 +340,18 @@ class ailiaVoiceFFI {
   late final _ailiaSetInputShape = _ailiaSetInputShapePtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<AILIAShape>, int)>();
 
-  /// \~japanese
-  /// @brief 推論時の入力データの形状を変更します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param shape 入力データの各次元の大きさの配列(dim-1, dim-2, ... ,1, 0)
-  /// @param dim shapeの次元
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// prototxtで定義されている入力形状を変更します。
-  /// prototxtに記述されているランクと同じにする必要があります。
-  /// なお、重み係数の形状が入力形状に依存しているなどによりエラーが返る場合があります。
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Changes the shape of the input data during inference.
   ///
-  /// \~english
-  /// @brief Changes the shape of the input data during inference.
-  /// @param net A network instance pointer
-  /// @param shape An array of shape that contains size of each axis (dim-1, dim-2, ... ,1, 0)
-  /// @param dim The size of shape.
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `shape`: An array of shape that contains size of each axis (dim-1, dim-2, ... ,1, 0)
+  /// - `dim`: The size of shape.
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This function changes the input shape defined in prototxt.
   /// The shape must have the same rank as the one contained in prototxt.
   /// Note that an error may be returned if the weights are dependent on the input shapes, among other reasons.
@@ -445,29 +378,20 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>, int)>();
 
-  /// \~japanese
-  /// @brief 推論時の入力データの形状を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param shape 入力データの形状情報
-  /// @param version AILIA_SHAPE_VERSION
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、5次元以上の場合 \ref AILIA_STATUS_NDIMENSION_SHAPE 、
-  /// 形状の一部が未確定の場合 \ref AILIA_STATUS_UNSETTLED_SHAPE 、それ以外のエラーの場合はエラーコードを返す。
-  /// @details
-  /// 形状が5次元以上の場合は ailiaGetInputDim() 、 ailiaGetInputShapeND() を利用してください。
-  /// 形状の一部が未確定の場合、該当する次元の値は0となり、それ以外の次元の値は有効な値が格納されます。
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Gets the shape of the input data during inference.
   ///
-  /// \~english
-  /// @brief Gets the shape of the input data during inference.
-  /// @param net A network instance pointer
-  /// @param shape Shape information for the input data
-  /// @param version AILIA_SHAPE_VERSION
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS .
-  /// If shape has 5 or more dimension, it returns  \ref AILIA_STATUS_NDIMENSION_SHAPE .
-  /// And if shape is not seattled, it returns \ref AILIA_STATUS_UNSETTLED_SHAPE , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `shape`: Shape information for the input data
+  /// - `version`: AILIA_SHAPE_VERSION
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] .
+  /// If shape has 5 or more dimension, it returns  [AILIA_STATUS_NDIMENSION_SHAPE] .
+  /// And if shape is not seattled, it returns [AILIA_STATUS_UNSETTLED_SHAPE] , or an error code otherwise.
+  ///
   /// When dimension of shape is 5 or more, please use  ailiaGetInputDim() and  ailiaGetInputShapeND().
   /// When shape is not settled, this function stores 0 at unsettled dimension and otherwise stores valid value.
   /// This API can be call after call ailiaOpenWeighXXX().
@@ -490,22 +414,17 @@ class ailiaVoiceFFI {
   late final _ailiaGetInputShape = _ailiaGetInputShapePtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<AILIAShape>, int)>();
 
-  /// \~japanese
-  /// @brief 推論時の入力データの次元を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param dim 入力データの次元の格納先
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、それ以外のエラーの場合はエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Gets the dimension of the input data during inference.
   ///
-  /// \~english
-  /// @brief Gets the dimension of the input data during inference.
-  /// @param net A network instance pointer
-  /// @param dim The storage location of the dimension
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `dim`: The storage location of the dimension
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaGetInputDim(
     ffi.Pointer<AILIANetwork> net,
@@ -524,27 +443,19 @@ class ailiaVoiceFFI {
   late final _ailiaGetInputDim = _ailiaGetInputDimPtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>)>();
 
-  /// \~japanese
-  /// @brief 推論時の入力データの形状を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param shape 入力データの各次元の大きさの格納先配列(dim-1, dim-2, ... ,1, 0順で格納)
-  /// @param dim shapeの次元
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、形状の一部が未確定の場合 \ref AILIA_STATUS_UNSETTLED_SHAPE 、
-  /// それ以外のエラーの場合はエラーコードを返す。
-  /// @details
-  /// 形状の一部が未確定の場合、該当する次元の値は0となり、それ以外の次元の値は有効な値が格納されます。
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Gets the shape of the input data during inference.
   ///
-  /// \~english
-  /// @brief Gets the shape of the input data during inference.
-  /// @param net A network instance pointer
-  /// @param shape The storage location of the shape array. (It stores dim-1, dim-2, ... ,1, 0 order.)
-  /// @param dim The size of shape
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS .
-  /// And if shape is not seattled, it returns  \ref AILIA_STATUS_UNSETTLED_SHAPE , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `shape`: The storage location of the shape array. (It stores dim-1, dim-2, ... ,1, 0 order.)
+  /// - `dim`: The size of shape
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] .
+  /// And if shape is not seattled, it returns  [AILIA_STATUS_UNSETTLED_SHAPE] , or an error code otherwise.
+  ///
   /// When shape is not settled, this function stores 0 at unsettled dimension and otherwise stores valid value.
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaGetInputShapeND(
@@ -569,26 +480,19 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>, int)>();
 
-  /// \~japanese
-  /// @brief 推論時の出力データの形状を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param shape 出力データの形状情報
-  /// @param version AILIA_SHAPE_VERSION
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、5次元以上の場合 \ref AILIA_STATUS_NDIMENSION_SHAPE 、
-  /// それ以外のエラーの場合エラーコードを返す。
-  /// 形状が5次元以上の場合は ailiaGetOutputDim() 、 ailiaGetOutputShapeND() を利用してください。
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Gets the shape of the output data during inference.
   ///
-  /// \~english
-  /// @brief Gets the shape of the output data during inference.
-  /// @param net A network instance pointer
-  /// @param shape Shape information of the output data
-  /// @param version AILIA_SHAPE_VERSION
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS .
-  /// And if shape has 5 or more dimension, it returns  \ref AILIA_STATUS_NDIMENSION_SHAPE , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `shape`: Shape information of the output data
+  /// - `version`: AILIA_SHAPE_VERSION
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] .
+  /// And if shape has 5 or more dimension, it returns  [AILIA_STATUS_NDIMENSION_SHAPE] , or an error code otherwise.
+  ///
   /// When dimension of shape is 5 or more, please use  ailiaGetOutputDim() () and  ailiaGetOutputShapeND().
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaGetOutputShape(
@@ -610,22 +514,17 @@ class ailiaVoiceFFI {
   late final _ailiaGetOutputShape = _ailiaGetOutputShapePtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<AILIAShape>, int)>();
 
-  /// \~japanese
-  /// @brief 推論時の出力データの次元を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param dim 出力データの次元の格納先
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、それ以外のエラーの場合はエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Gets the dimension of the output data during inference.
   ///
-  /// \~english
-  /// @brief Gets the dimension of the output data during inference.
-  /// @param net A network instance pointer
-  /// @param dim The storage location of the dimension
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `dim`: The storage location of the dimension
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaGetOutputDim(
     ffi.Pointer<AILIANetwork> net,
@@ -644,24 +543,18 @@ class ailiaVoiceFFI {
   late final _ailiaGetOutputDim = _ailiaGetOutputDimPtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>)>();
 
-  /// \~japanese
-  /// @brief 推論時の出力データの形状を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param shape 出力データの各次元の大きさの格納先配列(dim-1, dim-2, ... ,1, 0順で格納)
-  /// @param dim shapeの次元
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、それ以外のエラーの場合はエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Gets the shape of the output data during inference.
   ///
-  /// \~english
-  /// @brief Gets the shape of the output data during inference.
-  /// @param net A network instance pointer
-  /// @param shape The storage location of the shape array. (It stores dim-1, dim-2, ... ,1, 0 order.)
-  /// @param dim The size of shape
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `shape`: The storage location of the shape array. (It stores dim-1, dim-2, ... ,1, 0 order.)
+  /// - `dim`: The size of shape
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaGetOutputShapeND(
     ffi.Pointer<AILIANetwork> net,
@@ -685,30 +578,22 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>, int)>();
 
-  /// \~japanese
-  /// @brief 推論を行い推論結果を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param dest 推論結果の書き出し先バッファにX,Y,Z,Wの順でnumeric型で格納  サイズはネットファイルのoutputSizeとなる
-  /// @param dest_size 推論結果の書き出し先バッファのbyte数
-  /// @param src 推論データ X,Y,Z,Wの順でnumeric型で格納 サイズはネットファイルのinputSizeとなる
-  /// @param src_size 推論データのbyte数
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Performs the inferences and provides the inference result.
   ///
-  /// \~english
-  /// @brief Performs the inferences and provides the inference result.
-  /// @param net A network instance pointer
-  /// @param dest The result is stored in the inference result destination buffer as numeric type data in the order of X,
-  /// Y, Z, and W. The buffer has the same size as the network file outputSize.
-  /// @param dest_size The number of bytes for the destination buffer for the inference result
-  /// @param src The input is stored as numeric type data in the order of the inference data X, Y, Z, and W. The input has
-  /// the same size as the network file inputSize.
-  /// @param src_size The number of bytes of the inference data
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `dest`: The result is stored in the inference result destination buffer as numeric type data in the order of X,
+  ///   Y, Z, and W. The buffer has the same size as the network file outputSize.
+  /// - `dest_size`: The number of bytes for the destination buffer for the inference result
+  /// - `src`: The input is stored as numeric type data in the order of the inference data X, Y, Z, and W. The input has
+  ///   the same size as the network file inputSize.
+  /// - `src_size`: The number of bytes of the inference data
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaPredict(
     ffi.Pointer<AILIANetwork> net,
@@ -738,24 +623,17 @@ class ailiaVoiceFFI {
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.Void>, int,
           ffi.Pointer<ffi.Void>, int)>();
 
-  /// \~japanese
-  /// @brief 推論時の内部データ(Blob)の数を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param blob_count blobの数の格納先
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenStreamXXX呼び出し後より利用可能です。
-  /// なお、ailiaOpenStreamXXX呼び出し時は入出力Blobのみが列挙され、ailiaOpneWeightXXX呼び出し時に中間Blobの列挙が行われます。
-  /// そのためailiaOpenStreamXXX呼び出し直後とailiaOpneWeightXXX呼び出し直後で返答する数が変わる場合があります。
+  /// Gets the amount of internal data (blob) during inference.
   ///
-  /// \~english
-  /// @brief Gets the amount of internal data (blob) during inference.
-  /// @param net A network instance pointer
-  /// @param blob_count Storage location of the number of blobs
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `blob_count`: Storage location of the number of blobs
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenStreamXXX().
   /// In addition, this api returuns number of sum of inputs and outputs when after call ailiaOpenStreamXXX.
   /// And, when call ailiaOpenWeightXXX, enumerate and optimzie intermediate blobs.
@@ -777,29 +655,20 @@ class ailiaVoiceFFI {
   late final _ailiaGetBlobCount = _ailiaGetBlobCountPtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>)>();
 
-  /// \~japanese
-  /// @brief 推論時の内部データ(Blob)の形状を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param shape データの形状情報の格納先
-  /// @param blob_idx blobのインデックス (0～ ailiaGetBlobCount() -1)
-  /// @param version AILIA_SHAPE_VERSION
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、5次元以上の場合 \ref AILIA_STATUS_NDIMENSION_SHAPE 、
-  /// それ以外のエラーの場合はエラーコードを返す。
-  /// @details
-  /// 形状が5次元以上の場合は ailiaGetBlobDim() 、 ailiaGetBlobShapeND() を利用してください。
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Gets the shape of the internal data (blob) during inference.
   ///
-  /// \~english
-  /// @brief Gets the shape of the internal data (blob) during inference.
-  /// @param net A network instance pointer
-  /// @param shape Storage location of the data shape information
-  /// @param blob_idx The index of the blob (0 to  ailiaGetBlobCount() -1)
-  /// @param version AILIA_SHAPE_VERSION
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS .
-  /// And if shape has 5 or more dimension, it returns  \ref AILIA_STATUS_NDIMENSION_SHAPE , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `shape`: Storage location of the data shape information
+  /// - `blob_idx`: The index of the blob (0 to  ailiaGetBlobCount() -1)
+  /// - `version`: AILIA_SHAPE_VERSION
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] .
+  /// And if shape has 5 or more dimension, it returns  [AILIA_STATUS_NDIMENSION_SHAPE] , or an error code otherwise.
+  ///
   /// When dimension of shape is 5 or more, please use  ailiaGetBlobDim() and  ailiaGetBlobShapeND().
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaGetBlobShape(
@@ -824,24 +693,18 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<AILIANetwork>, ffi.Pointer<AILIAShape>, int, int)>();
 
-  /// \~japanese
-  /// @brief 推論時の内部データ(Blob)の次元を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param dim blobの次元の格納先
-  /// @param blob_idx blobのインデックス (0～ ailiaGetBlobCount() -1)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、それ以外のエラーの場合はエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Gets the dimension of the internal data (blob) during inference.
   ///
-  /// \~english
-  /// @brief Gets the dimension of the internal data (blob) during inference.
-  /// @param net A network instance pointer
-  /// @param dim The storage location of the dimension
-  /// @param blob_idx The index of the blob (0 to  ailiaGetBlobCount() -1)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `dim`: The storage location of the dimension
+  /// - `blob_idx`: The index of the blob (0 to  ailiaGetBlobCount() -1)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaGetBlobDim(
     ffi.Pointer<AILIANetwork> net,
@@ -865,26 +728,19 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>, int)>();
 
-  /// \~japanese
-  /// @brief 推論時の内部データ(Blob)の形状を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param shape blobの各次元の大きさの格納先配列(dim-1, dim-2, ... ,1, 0順で格納)
-  /// @param dim shapeの次元
-  /// @param blob_idx blobのインデックス (0～ ailiaGetBlobCount() -1)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、それ以外のエラーの場合はエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Gets the amount of internal data (blob) during inference.
   ///
-  /// \~english
-  /// @brief Gets the amount of internal data (blob) during inference.
-  /// @param net A network instance pointer
-  /// @param shape The storage location of the shape array. (It stores dim-1, dim-2, ... ,1, 0 order.)
-  /// @param dim The size of shape
-  /// @param blob_idx The index of the blob (0 to  ailiaGetBlobCount() -1)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `shape`: The storage location of the shape array. (It stores dim-1, dim-2, ... ,1, 0 order.)
+  /// - `dim`: The size of shape
+  /// - `blob_idx`: The index of the blob (0 to  ailiaGetBlobCount() -1)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaGetBlobShapeND(
     ffi.Pointer<AILIANetwork> net,
@@ -911,28 +767,21 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>, int, int)>();
 
-  /// \~japanese
-  /// @brief 推論時の内部データ(Blob)を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param dest 推論結果の書き出し先バッファにX,Y,Z,Wの順でnumeric型で格納
-  /// @param dest_size 推論結果の書き出し先バッファのbyte数
-  /// @param blob_idx blobのインデックス (0～ ailiaGetBlobCount() -1)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ailiaPredict() または ailiaUpdate() を一度も実行していない場合は \ref AILIA_STATUS_INVALID_STATE が返ります。
+  /// Gets the internal data (blob) during inference.
   ///
-  /// \~english
-  /// @brief Gets the internal data (blob) during inference.
-  /// @param net A network instance pointer
-  /// @param dest The result is stored in the inference result destination buffer as numeric type data in the order of X,
-  /// Y, Z, and W.
-  /// @param dest_size The number of bytes for the inference result destination buffer
-  /// @param blob_idx The index of the blob (0 to  ailiaGetBlobCount() -1)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
-  /// If  ailiaPredict()  or  ailiaUpdate()  is not run at all, the function returns  \ref AILIA_STATUS_INVALID_STATE .
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `dest`: The result is stored in the inference result destination buffer as numeric type data in the order of X,
+  ///   Y, Z, and W.
+  /// - `dest_size`: The number of bytes for the inference result destination buffer
+  /// - `blob_idx`: The index of the blob (0 to  ailiaGetBlobCount() -1)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
+  /// If  ailiaPredict()  or  ailiaUpdate()  is not run at all, the function returns  [AILIA_STATUS_INVALID_STATE] .
   int ailiaGetBlobData(
     ffi.Pointer<AILIANetwork> net,
     ffi.Pointer<ffi.Void> dest,
@@ -955,24 +804,18 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.Void>, int, int)>();
 
-  /// \~japanese
-  /// @brief 推論時の内部データ(Blob)の型を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param type データ型の書き出し先バッファ。値は AILIA_DATATYPE_XXX で定義されています。
-  /// @param blob_idx blobのインデックス (0～ ailiaGetBlobCount() -1)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Get the type of Blob.
   ///
-  /// \~english
-  /// @brief Get the type of Blob.
-  /// @param net A network instance pointer
-  /// @param blob_idx The index of the blob (0 to  ailiaGetBlobCount() -1)
-  /// @param type The type of blob is stored to it. Values are defined as AILIA_DATATYPE_XXX.
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `blob_idx`: The index of the blob (0 to  ailiaGetBlobCount() -1)
+  /// - `type`: The type of blob is stored to it. Values are defined as AILIA_DATATYPE_XXX.
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaGetBlobDataType(
     ffi.Pointer<AILIANetwork> net,
@@ -993,25 +836,18 @@ class ailiaVoiceFFI {
   late final _ailiaGetBlobDataType = _ailiaGetBlobDataTypePtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.Int>, int)>();
 
-  /// \~japanese
-  /// @brief 推論時の内部データ(Blob)のインデックスを名前で探し取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param blob_idx blobのインデックス (0～ ailiaGetBlobCount() -1)
-  /// @param name 検索するBlob名
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenStreamXXX呼び出し後より利用可能です。
-  /// なお、ailiaOpenStreamXXX呼び出し時は入出力Blobのみが検索可能です。中間Blobを検索する場合ailiaOpneWeightXXXを呼び出す必要があります。
+  /// Searches by name for the index of the internal data (blob) during inference and returns it.
   ///
-  /// \~english
-  /// @brief Searches by name for the index of the internal data (blob) during inference and returns it.
-  /// @param net A network instance pointer
-  /// @param blob_idx The index of the blob (0 to  ailiaGetBlobCount() -1)
-  /// @param name The name of the blob to search for
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `blob_idx`: The index of the blob (0 to  ailiaGetBlobCount() -1)
+  /// - `name`: The name of the blob to search for
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenStreamXXX().
   /// In addition, when call this API before call ailiaOpenWeightXXX, can only find inputs and outputs blobs.
   /// If you want find intermediate blobs, please call ailiaOpenWeightXXX before.
@@ -1038,25 +874,18 @@ class ailiaVoiceFFI {
           int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>,
               ffi.Pointer<ffi.Char>)>();
 
-  /// \~japanese
-  /// @brief 内部データ(Blob)の名前の出力に必要なバッファのサイズを取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param blob_idx blobのインデックス (0～ ailiaGetBlobCount() -1)
-  /// @param buffer_size Blob名の出力に必要なバッファのサイズ(終端null文字分を含む)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenStreamXXX呼び出し後より利用可能です。
-  /// なお、ailiaOpenStreamXXX呼び出し時は入出力Blobのみが検索可能です。中間Blobを検索する場合ailiaOpneWeightXXXを呼び出す必要があります。
+  /// Gets the size of the buffer needed for output of the name of the internal data (blob).
   ///
-  /// \~english
-  /// @brief Gets the size of the buffer needed for output of the name of the internal data (blob).
-  /// @param net A network instance pointer
-  /// @param blob_idx The index of the blob (0 to  ailiaGetBlobCount() -1)
-  /// @param buffer_size The size of the buffer needed for output of the blob name (including the null terminator)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `blob_idx`: The index of the blob (0 to  ailiaGetBlobCount() -1)
+  /// - `buffer_size`: The size of the buffer needed for output of the blob name (including the null terminator)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenStreamXXX().
   /// In addition, when call this API before call ailiaOpenWeightXXX, can only find inputs and outputs blobs.
   /// If you want find intermediate blobs, please call ailiaOpenWeightXXX before.
@@ -1081,27 +910,19 @@ class ailiaVoiceFFI {
           int Function(
               ffi.Pointer<AILIANetwork>, int, ffi.Pointer<ffi.UnsignedInt>)>();
 
-  /// \~japanese
-  /// @brief 推論時の内部データ(Blob)の名前をインデックスで探し取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param buffer Blob名の出力先バッファ
-  /// @param buffer_size バッファのサイズ(終端null文字分を含む)
-  /// @param blob_idx 検索するblobのインデックス
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenStreamXXX呼び出し後より利用可能です。
-  /// なお、ailiaOpenStreamXXX呼び出し時は入出力Blobのみが検索可能です。中間Blobを検索する場合ailiaOpneWeightXXXを呼び出す必要があります。
+  /// Searches by index for the name of the internal data (blob) during inference and returns it.
   ///
-  /// \~english
-  /// @brief Searches by index for the name of the internal data (blob) during inference and returns it.
-  /// @param net A network instance pointer
-  /// @param buffer The output destination buffer for the blob name
-  /// @param buffer_size The size of the buffer (including the null terminator)
-  /// @param blob_idx The index of the blob to search for
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `buffer`: The output destination buffer for the blob name
+  /// - `buffer_size`: The size of the buffer (including the null terminator)
+  /// - `blob_idx`: The index of the blob to search for
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenStreamXXX().
   /// In addition, when call this API before call ailiaOpenWeightXXX, can only find inputs and outputs blobs.
   /// If you want find intermediate blobs, please call ailiaOpenWeightXXX before.
@@ -1128,22 +949,17 @@ class ailiaVoiceFFI {
           int Function(
               ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.Char>, int, int)>();
 
-  /// \~japanese
-  /// @brief ネットワークSummary用に必要なバッファのサイズを取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param buffer_size バッファのサイズの格納先(終端null文字分を含む)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Gets the size of the buffer needed for the network summary.
   ///
-  /// \~english
-  /// @brief Gets the size of the buffer needed for the network summary.
-  /// @param net A network instance pointer
-  /// @param buffer_size The storage location of the buffer size (including the null terminator)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `buffer_size`: The storage location of the buffer size (including the null terminator)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaGetSummaryLength(
     ffi.Pointer<AILIANetwork> net,
@@ -1162,26 +978,19 @@ class ailiaVoiceFFI {
   late final _ailiaGetSummaryLength = _ailiaGetSummaryLengthPtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>)>();
 
-  /// \~japanese
-  /// @brief 各Blobの名前と形状を表示します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param buffer Summaryの出力先
-  /// @param buffer_size 出力バッファのサイズ(終端null文字分を含む)。 ailiaGetSummaryLength()
-  /// で取得した値を設定してください。
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Shows the name and shape of each blob.
   ///
-  /// \~english
-  /// @brief Shows the name and shape of each blob.
-  /// @param net A network instance pointer
-  /// @param buffer The output destination of the summary
-  /// @param buffer_size The size of the output buffer (including the null terminator). Set the value obtained by
-  /// ailiaGetSummaryLength() .
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `buffer`: The output destination of the summary
+  /// - `buffer_size`: The size of the output buffer (including the null terminator). Set the value obtained by
+  ///   ailiaGetSummaryLength() .
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaSummary(
     ffi.Pointer<AILIANetwork> net,
@@ -1202,24 +1011,17 @@ class ailiaVoiceFFI {
   late final _ailiaSummary = _ailiaSummaryPtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.Char>, int)>();
 
-  /// \~japanese
-  /// @brief 入力データ(Blob)の数を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param input_blob_count 入力blobの数の格納先
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenStreamXXX呼び出し後より利用可能です。
-  /// なお、入力Blobの列挙はailiaOpenStreamXXX呼び出し時に行われますが変更可能な重み(input付きinitialzier)の列挙はailiaOpneWeightXXX呼び出し時に行われます。
-  /// そのためailiaOpenStreamXXX呼び出し直後とailiaOpneWeightXXX呼び出し直後で返答する数が変わる場合があります。
+  /// Get the number of input data blobs.
   ///
-  /// \~english
-  /// @brief Get the number of input data blobs.
-  /// @param net A network instance pointer
-  /// @param input_blob_count Storage location of the number of input blobs
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `input_blob_count`: Storage location of the number of input blobs
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenStreamXXX().
   /// In addition, this api returuns number of inputs when after call ailiaOpenStreamXXX.
   /// And, when call ailiaOpenWeightXXX, enumerate and optimzie initializer with input blobs.
@@ -1241,25 +1043,18 @@ class ailiaVoiceFFI {
   late final _ailiaGetInputBlobCount = _ailiaGetInputBlobCountPtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>)>();
 
-  /// \~japanese
-  /// @brief 入力データ(Blob)のインデックスを取得します
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param blob_idx blobのインデックス(0～ ailiaGetBlobCount() -1)
-  /// @param input_blob_idx 入力blob内でのインデックス(0～ ailiaGetInputBlobCount() -1)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenStreamXXX呼び出し後より利用可能です。
-  /// なお、ailiaOpenStreamXXX呼び出し時に列挙されたinput_blob_idx及びblob_idxは保持されるためailiaOpneWeightXXX呼び出し後も同じ値が返ることが保証されます。
+  /// Get the blob index of the input data.
   ///
-  /// \~english
-  /// @brief Get the blob index of the input data.
-  /// @param net A network instance pointer
-  /// @param blob_idx index of the blob (between 0 and  ailiaGetBlobCount() -1)
-  /// @param input_blob_idx index among the input blobs (between 0 and  ailiaGetInputBlobCount() -1)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `blob_idx`: index of the blob (between 0 and  ailiaGetBlobCount() -1)
+  /// - `input_blob_idx`: index among the input blobs (between 0 and  ailiaGetInputBlobCount() -1)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenStreamXXX().
   /// In addition, we guarantee that input_blob_idx and blob_idx which enumerate when call ailiaOpenStreamXXX are not changed when call ailiaOpneWeightXXX.
   int ailiaGetBlobIndexByInputIndex(
@@ -1285,31 +1080,21 @@ class ailiaVoiceFFI {
           int Function(
               ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>, int)>();
 
-  /// \~japanese
-  /// @brief 指定したBlobに入力データを与えます。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param src 推論データ X,Y,Z,Wの順でnumeric型で格納
-  /// @param src_size 推論データのbyte数
-  /// @param blob_idx 入力するblobのインデックス
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 複数入力があるネットワークなどで入力を指定する場合に用います。
-  /// blob_idxで入力レイヤーのblob以外のものを指定した場合、 \ref AILIA_STATUS_INVALID_ARGUMENT が返ります。
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Provides the specified blob with the input data.
   ///
-  /// \~english
-  /// @brief Provides the specified blob with the input data.
-  /// @param net A network instance pointer
-  /// @param src The inference data is stored as numeric type data in the order of X, Y, Z, and W.
-  /// @param src_size The number of bytes of the inference data
-  /// @param blob_idx The index of the blob for input
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `src`: The inference data is stored as numeric type data in the order of X, Y, Z, and W.
+  /// - `src_size`: The number of bytes of the inference data
+  /// - `blob_idx`: The index of the blob for input
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This function is used to specify the input on networks with multiple inputs.
-  /// If something other than a blob in the input layer is specified for blob_idx, the function returns  \ref
-  /// AILIA_STATUS_INVALID_ARGUMENT .
+  /// If something other than a blob in the input layer is specified for blob_idx, the function returns  [AILIA_STATUS_INVALID_ARGUMENT] .
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaSetInputBlobData(
     ffi.Pointer<AILIANetwork> net,
@@ -1333,32 +1118,21 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.Void>, int, int)>();
 
-  /// \~japanese
-  /// @brief 指定したBlobの形状を変更します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param shape 入力データの形状情報
-  /// @param blob_idx 変更するblobのインデックス
-  /// @param version AILIA_SHAPE_VERSION
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 複数入力があるネットワークなどで入力形状を変更する場合に用います。
-  /// blob_idxは入力レイヤーのblob以外のものを指定した場合 \ref AILIA_STATUS_INVALID_ARGUMENT が返ります。
-  /// その他の注意点は ailiaSetInputShape() の解説を参照してください。
-  /// 入力形状のランクが5次元以上の場合は ailiaSetInputBlobShapeND() を利用してください。
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Change the shape of the blob given by its index
   ///
-  /// \~english
-  /// @brief Change the shape of the blob given by its index
-  /// @param net network object pointer
-  /// @param shape new shape of the blob
-  /// @param blob_idx index referencing the blob to reshape
-  /// @param version AILIA_SHAPE_VERSION
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and otherwise the coresponding error code.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: network object pointer
+  /// - `shape`: new shape of the blob
+  /// - `blob_idx`: index referencing the blob to reshape
+  /// - `version`: AILIA_SHAPE_VERSION
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and otherwise the coresponding error code.
+  ///
   /// This is useful to change the network input shape in a context where there are several input blobs.
-  /// If blob_idx does not correspond to an input layer,  \ref AILIA_STATUS_INVALID_ARGUMENT  is returned.
+  /// If blob_idx does not correspond to an input layer,  [AILIA_STATUS_INVALID_ARGUMENT]  is returned.
   /// For other related remarks, see the documentation of  ailiaSetInputShape().
   /// If dimension of shape has 5 or more, please use  ailiaSetInputBlobShapeND().
   /// This API can be call after call ailiaOpenWeighXXX().
@@ -1384,31 +1158,21 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<AILIANetwork>, ffi.Pointer<AILIAShape>, int, int)>();
 
-  /// \~japanese
-  /// @brief 指定したBlobの形状を変更します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param shape 入力データの各次元の大きさの配列(dim-1, dim-2, ... ,1, 0)
-  /// @param dim shapeの次元
-  /// @param blob_idx 変更するblobのインデックス
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 複数入力があるネットワークなどで入力形状を変更する場合に用います。
-  /// blob_idxは入力レイヤーのblob以外のものを指定した場合 \ref AILIA_STATUS_INVALID_ARGUMENT が返ります。
-  /// その他の注意点は ailiaSetInputShapeND() の解説を参照してください。
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Change the shape of the blob given by its index
   ///
-  /// \~english
-  /// @brief Change the shape of the blob given by its index
-  /// @param net network object pointer
-  /// @param shape An array of shape that contains size of each axis (dim-1, dim-2, ... ,1, 0)
-  /// @param dim The size of shape.
-  /// @param blob_idx index referencing the blob to reshape
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and otherwise the coresponding error code.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: network object pointer
+  /// - `shape`: An array of shape that contains size of each axis (dim-1, dim-2, ... ,1, 0)
+  /// - `dim`: The size of shape.
+  /// - `blob_idx`: index referencing the blob to reshape
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and otherwise the coresponding error code.
+  ///
   /// This is useful to change the network input shape in a context where there are several input blobs.
-  /// If blob_idx does not correspond to an input layer,  \ref AILIA_STATUS_INVALID_ARGUMENT  is returned.
+  /// If blob_idx does not correspond to an input layer,  [AILIA_STATUS_INVALID_ARGUMENT]  is returned.
   /// For other related remarks, see the documentation of  ailiaSetInputShapeND().
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaSetInputBlobShapeND(
@@ -1437,34 +1201,22 @@ class ailiaVoiceFFI {
           int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>,
               int, int)>();
 
-  /// \~japanese
-  /// @brief 指定したBlob間でデータをコピーします
+  /// Perform copies  between blobs that specified.
   ///
-  /// @param dst_net コピー先のblobが含まれるネットワークオブジェクトポインター
-  /// @param dst_blob_idx コピー先のblobのインデックス
-  /// @param src_net コピー元のblobが含まれるネットワークオブジェクトポインター
-  /// @param src_blob_idx コピー元のblobのインデックス
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 指定したネットワークのBlobをコピーします。コピー元とコピー先のネットワークは別のものを指定することができます。
-  /// コピー先のBlobは入力Blobのインデックスを、コピー元のBlobは任意のBlobのインデックスを指定してください。
-  /// コピー先にその他のBlobを指定した場合 \ref AILIA_STATUS_INVALID_ARGUMENT が返ります。
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Parameters:
   ///
-  /// \~english
-  /// @brief Perform copies  between blobs that specified.
+  /// - `dst_net`: The network object pointer that contains destination blob
+  /// - `dst_blob_idx`: The index of destination blob
+  /// - `src_net`: The network object pointer that contains source blob
+  /// - `src_blob_idx`: The index of source blob
   ///
-  /// @param dst_net The network object pointer that contains destination blob
-  /// @param dst_blob_idx The index of destination blob
-  /// @param src_net The network object pointer that contains source blob
-  /// @param src_blob_idx The index of source blob
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and otherwise the coresponding error code.
-  /// @details
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and otherwise the coresponding error code.
+  ///
   /// Perform copy blobs between specified network. It accepts copy over different network.
   /// The src_blob_index must be specify blob index that inputs of src_net, and the dst_blob_index mut be specify blob index that outputs of dst_net.
-  /// If specify index of other blob for dst_blob_idx , this function returns \ref AILIA_STATUS_INVALID_ARGUMENT .
+  /// If specify index of other blob for dst_blob_idx , this function returns [AILIA_STATUS_INVALID_ARGUMENT] .
   /// This API can be call after call ailiaOpenWeighXXX().
   int ailiaCopyBlobData(
     ffi.Pointer<AILIANetwork> dst_net,
@@ -1491,22 +1243,16 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<AILIANetwork>, int, ffi.Pointer<AILIANetwork>, int)>();
 
-  /// \~japanese
-  /// @brief 事前に指定した入力データで推論を行います。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ailiaSetInputBlobData() を用いて入力を与えた場合などに用います。
-  /// 推論結果は ailiaGetBlobData() で取得してください。
-  /// このAPIはailiaOpenWeighXXX呼び出し後より利用可能です。
+  /// Makes inferences with the input data specified in advance.
   ///
-  /// \~english
-  /// @brief Makes inferences with the input data specified in advance.
-  /// @param net A network instance pointer
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This function is used when, for example, the input is provided with  ailiaSetInputBlobData() .
   /// Get the inference result with  ailiaGetBlobData() .
   /// This API can be call after call ailiaOpenWeighXXX().
@@ -1524,22 +1270,17 @@ class ailiaVoiceFFI {
   late final _ailiaUpdate =
       _ailiaUpdatePtr.asFunction<int Function(ffi.Pointer<AILIANetwork>)>();
 
-  /// \~japanese
-  /// @brief 出力データ(Blob)の数を取得します。
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param output_blob_count 出力blobの数の格納先
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenStreamXXX呼び出し後より利用可能です。
+  /// Get the number of output data blobs.
   ///
-  /// \~english
-  /// @brief Get the number of output data blobs.
-  /// @param net A network instance pointer
-  /// @param output_blob_count Storage location for the number of output blobs.
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `output_blob_count`: Storage location for the number of output blobs.
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenStreamXXX().
   int ailiaGetOutputBlobCount(
     ffi.Pointer<AILIANetwork> net,
@@ -1558,24 +1299,18 @@ class ailiaVoiceFFI {
   late final _ailiaGetOutputBlobCount = _ailiaGetOutputBlobCountPtr.asFunction<
       int Function(ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>)>();
 
-  /// \~japanese
-  /// @brief 出力データ(Blob)のインデックスを取得します
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param blob_idx blobのインデックス(0～ ailiaGetBlobCount() -1)
-  /// @param output_blob_idx 出力blob内でのインデックス(0～ ailiaGetOutputBlobCount() -1)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// このAPIはailiaOpenStreamXXX呼び出し後より利用可能です。
+  /// Get the blob index of the input data blob.
   ///
-  /// \~english
-  /// @brief Get the blob index of the input data blob.
-  /// @param net A network instance pointer
-  /// @param blob_idx blob index (between 0 and  ailiaGetBlobCount() -1)
-  /// @param output_blob_idx index among output blobs (between 0 and  ailiaGetOutputBlobCount() -1)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `blob_idx`: blob index (between 0 and  ailiaGetBlobCount() -1)
+  /// - `output_blob_idx`: index among output blobs (between 0 and  ailiaGetOutputBlobCount() -1)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This API can be call after call ailiaOpenStreamXXX().
   int ailiaGetBlobIndexByOutputIndex(
     ffi.Pointer<AILIANetwork> net,
@@ -1600,20 +1335,12 @@ class ailiaVoiceFFI {
           int Function(
               ffi.Pointer<AILIANetwork>, ffi.Pointer<ffi.UnsignedInt>, int)>();
 
-  /// \~japanese
-  /// @brief ailiaがグローバルに確保したGPUリソース等を解放します
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返します。
-  /// @details
-  /// ailiaCreate() で作成したインスタンス全てを ailiaDestroy() で解放した状態で呼び出す必要があります。
-  /// それ以外の状態で呼び出された場合 #ref AILIA_STATUS_INVALID_STATE を返します。
-  /// Windows 環境の場合、DllMain 等からこの API を呼び出すとデッドロックする可能性があります。
+  /// Release GPU and other resources that have been globally allocated with ailia.
   ///
-  /// \~english
-  /// @brief Release GPU and other resources that have been globally allocated with ailia.
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// It must be called with all ailia instances created by ailiaCreate() released by ailiaDestroy().
   /// Otherwise, #ref AILIA_STATUS_INVALID_STATE will be returned.
   /// Call this API from DllMain() on Windows OS, there is possibility of a deadlock.
@@ -1625,24 +1352,16 @@ class ailiaVoiceFFI {
       _lookup<ffi.NativeFunction<ffi.Int Function()>>('ailiaFinalize');
   late final _ailiaFinalize = _ailiaFinalizePtr.asFunction<int Function()>();
 
-  /// \~japanese
-  /// @brief 一時キャッシュディレクトリを指定します
-  /// @param cache_dir 一時キャッシュディレクトリ
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 指定したキャッシュディレクトリは推論実行環境毎に最適化したマシンコードを生成して保存するためにシステムが利用します。
-  /// ailia の実行開始時に一度だけ呼び出してください。二回目以降の呼び出しに対しては無視して成功を返します。
-  /// 複数スレッドから呼び出された場合も内部で排他制御しているので特に問題は発生しません。
-  /// Vulkan のシェーダーキャッシュ機能など、この API を呼ぶまで利用できないものがあります。
-  /// cache_dirにはContext.getCacheDir()で取得したファイルパスを指定してください。
+  /// Specifies a temporary cache directory.
   ///
-  /// \~english
-  /// @brief Specifies a temporary cache directory.
-  /// @param cache_dir Temporary cache directory
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `cache_dir`: Temporary cache directory
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This system uses the specified cache directory to generate and store machine code optimized for each inference
   /// backend. Call only once at the start of execution of ailia. It ignores any second and subsequent calls, and
   /// automatically returns success. There is no particular problem if it is called from multiple threads, as it provides
@@ -1676,17 +1395,15 @@ class ailiaVoiceFFI {
   late final _ailiaSetTemporaryCachePathW = _ailiaSetTemporaryCachePathWPtr
       .asFunction<int Function(ffi.Pointer<ffi.WChar>)>();
 
-  /// \~japanese
-  /// @brief 利用可能な計算環境(CPU, GPU)の数を取得します
-  /// @param env_count 計算環境情報の数の格納先
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Gets the number of available computational environments (CPU, GPU).
   ///
-  /// \~english
-  /// @brief Gets the number of available computational environments (CPU, GPU).
-  /// @param env_count The storage location of the number of computational environment information
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `env_count`: The storage location of the number of computational environment information
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaGetEnvironmentCount(
     ffi.Pointer<ffi.UnsignedInt> env_count,
   ) {
@@ -1701,22 +1418,18 @@ class ailiaVoiceFFI {
   late final _ailiaGetEnvironmentCount = _ailiaGetEnvironmentCountPtr
       .asFunction<int Function(ffi.Pointer<ffi.UnsignedInt>)>();
 
-  /// \~japanese
-  /// @brief 計算環境の一覧を取得します
-  /// @param env 計算環境情報の格納先(AILIANetworkインスタンスを破棄するまで有効)
-  /// @param env_idx 計算環境情報のインデックス(0～ ailiaGetEnvironmentCount() -1)
-  /// @param version AILIA_ENVIRONMENT_VERSION
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Gets the list of computational environments.
   ///
-  /// \~english
-  /// @brief Gets the list of computational environments.
-  /// @param env The storage location of the computational environment information (valid until the AILIANetwork instance
-  /// is destroyed)
-  /// @param env_idx The index of the computational environment information (0 to  ailiaGetEnvironmentCount() -1)
-  /// @param version AILIA_ENVIRONMENT_VERSION
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `env`: The storage location of the computational environment information (valid until the AILIANetwork instance
+  ///   is destroyed)
+  /// - `env_idx`: The index of the computational environment information (0 to  ailiaGetEnvironmentCount() -1)
+  /// - `version`: AILIA_ENVIRONMENT_VERSION
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaGetEnvironment(
     ffi.Pointer<ffi.Pointer<AILIAEnvironment>> env,
     int env_idx,
@@ -1736,22 +1449,18 @@ class ailiaVoiceFFI {
   late final _ailiaGetEnvironment = _ailiaGetEnvironmentPtr.asFunction<
       int Function(ffi.Pointer<ffi.Pointer<AILIAEnvironment>>, int, int)>();
 
-  /// \~japanese
-  /// @brief 選択された計算環境を取得します
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param env 計算環境情報の格納先(AILIANetworkインスタンスを破棄するまで有効)
-  /// @param version AILIA_ENVIRONMENT_VERSION
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Gets the selected computational environment.
   ///
-  /// \~english
-  /// @brief Gets the selected computational environment.
-  /// @param net A network instance pointer
-  /// @param env The storage location of the computational environment information (valid until the AILIANetwork instance
-  /// is destroyed)
-  /// @param version AILIA_ENVIRONMENT_VERSION
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `env`: The storage location of the computational environment information (valid until the AILIANetwork instance
+  ///   is destroyed)
+  /// - `version`: AILIA_ENVIRONMENT_VERSION
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaGetSelectedEnvironment(
     ffi.Pointer<AILIANetwork> net,
     ffi.Pointer<ffi.Pointer<AILIAEnvironment>> env,
@@ -1775,33 +1484,23 @@ class ailiaVoiceFFI {
           int Function(ffi.Pointer<AILIANetwork>,
               ffi.Pointer<ffi.Pointer<AILIAEnvironment>>, int)>();
 
-  /// \~japanese
-  /// @brief 推論時のメモリの使用方針を設定します
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param mode メモリモード(論理和で複数指定可) AILIA_MEMORY_XXX (デフォルト: \ref AILIA_MEMORY_REDUCE_CONSTANT )
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// メモリの使用方針を変更します。 \ref AILIA_MEMORY_NO_OPTIMIZATION 以外を指定した場合は、
-  /// 推論時に確保する中間バッファーを開放するため、推論時のメモリ使用量を削減することができます。
-  /// ailiaCreate() の直後に指定する必要があります。ailiaOpenを呼び出した後は変更することができません。
-  /// なお、中間バッファーを開放するように指定した場合、該当するBlobに対し、 ailiaGetBlobData() を呼び出すと
-  /// \ref AILIA_STATUS_DATA_HIDDEN エラーが返ります。
+  /// Set the memory usage policy for inference
   ///
-  /// \~english
-  /// @brief Set the memory usage policy for inference
-  /// @param net A network instance pointer
-  /// @param mode Memory mode (Multiple specifications possible with logical sum) AILIA_MEMORY_XXX (Default : \ref
-  /// AILIA_MEMORY_REDUCE_CONSTANT )
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `mode`: Memory mode (Multiple specifications possible with logical sum) AILIA_MEMORY_XXX (Default : [AILIA_MEMORY_REDUCE_CONSTANT] )
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// Change the memory usage policy.
-  /// If a value other than  \ref AILIA_MEMORY_NO_OPTIMIZATION  is specified,
+  /// If a value other than  [AILIA_MEMORY_NO_OPTIMIZATION]  is specified,
   /// the intermediate buffer secured during inference will be released, so the memory usage during inference can be
   /// reduced. Must be specified immediately after  ailiaCreate() . It cannot be changed after calling ailiaOpen. If you
   /// specify to release the intermediate buffer, calling  ailiaGetBlobData()  for the corresponding blob will return an
-  /// \ref AILIA_STATUS_DATA_HIDDEN  error.
+  /// [AILIA_STATUS_DATA_HIDDEN]  error.
   int ailiaSetMemoryMode(
     ffi.Pointer<AILIANetwork> net,
     int mode,
@@ -1819,22 +1518,16 @@ class ailiaVoiceFFI {
   late final _ailiaSetMemoryMode = _ailiaSetMemoryModePtr
       .asFunction<int Function(ffi.Pointer<AILIANetwork>, int)>();
 
-  /// \~japanese
-  /// @brief 推論時のレイヤー統合を無効化します
-  /// @param net ネットワークオブジェクトポインタ
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// レイヤー統合により取得できなくなるBlobを取得する必要がある場合などに用います。
-  /// ailiaCreate() の直後に指定する必要があります。ailiaOpenを呼び出した後は変更することができません。
-  /// なお、レイヤー統合を無効化すると推論速度が低下する場合があります。
+  /// Disalbe layer fusion optimaization for inference
   ///
-  /// \~english
-  /// @brief Disalbe layer fusion optimaization for inference
-  /// @param net A network instance pointer
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This api use to get blob that remove by layer fusion optimization.
   /// Must be specified immediately after  ailiaCreate() . It cannot be changed after calling ailiaOpen.
   /// Note: When disable layer fusion optimization, inference speed may be down.
@@ -1852,24 +1545,17 @@ class ailiaVoiceFFI {
   late final _ailiaDisableLayerFusion = _ailiaDisableLayerFusionPtr
       .asFunction<int Function(ffi.Pointer<AILIANetwork>)>();
 
-  /// \~japanese
-  /// @brief プロファイルモードをセットします
-  /// @param net          ネットワークオブジェクトポインタ
-  /// @param mode         プロファイルモード
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// プロファイルモードを指定します。デフォルトは無効です。
-  /// ailiaOpenStreamXXXを呼び出したあとに呼び出してください。
-  /// プロファイルモードを有効にした場合、 ailiaSummary() の出力にプロファイル結果が追加されます。
+  /// Set the profile mode.
   ///
-  /// \~english
-  /// @brief Set the profile mode.
-  /// @param net          The network instance pointer
-  /// @param mode         Profile mode AILIA_PROFILE_XXX (Default : \ref AILIA_PROFILE_DISABLE )
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: The network instance pointer
+  /// - `mode`: Profile mode AILIA_PROFILE_XXX (Default : [AILIA_PROFILE_DISABLE] )
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// Set the profile mode. The default is profile disabled.
   /// Call it after calling ailiaOpenStreamXXX.
   /// When profile mode is enabled, you can get profile result via  ailiaSummary() .
@@ -1890,23 +1576,17 @@ class ailiaVoiceFFI {
   late final _ailiaSetProfileMode = _ailiaSetProfileModePtr
       .asFunction<int Function(ffi.Pointer<AILIANetwork>, int)>();
 
-  /// \~japanese
-  /// @brief ステータスコードに対応する文字列を返します。
-  /// @param status_code   ステータスコード
-  /// @return
-  /// ステータスコードに対応する文字列。
-  /// @details
-  /// 返値は解放する必要はありません。
-  /// 返された文字列は ailia のライブラリ(ailia.dll, libailia.so 等)をアンロードするまで有効です。
-  /// AILIANetwork のインスタンスがある場合は ailiaGetErrorDetail() でエラーの詳細を取得できます。
+  /// Returns the string describing given status code.
   ///
-  /// \~english
-  /// @brief Returns the string describing given status code.
-  /// @param status_code    Status code
-  /// @return
+  /// Parameters:
+  ///
+  /// - `status_code`: Status code
+  ///
+  /// Returns:
+  ///
   /// String describing given status code.
   /// Retuned string is valid until the library of ailia (ailia.dll, libailia.so, etc) is unloaded.
-  /// @details
+  ///
   /// The return value does not have to be released.
   /// If an instance of AILIANetwork is exist, ailiaGetErrorDetail() can be used to get the detail of the error.
   ffi.Pointer<ffi.Char> ailiaGetStatusString(
@@ -1923,22 +1603,16 @@ class ailiaVoiceFFI {
   late final _ailiaGetStatusString = _ailiaGetStatusStringPtr
       .asFunction<ffi.Pointer<ffi.Char> Function(int)>();
 
-  /// \~japanese
-  /// @brief エラーの詳細を返します
-  /// @param net   ネットワークオブジェクトポインタ
-  /// @return
-  /// エラー詳細
-  /// @details
-  /// 返値は解放する必要はありません。
-  /// 文字列の有効期間は次にailiaのAPIを呼ぶまでです。
-  /// モデルが暗号化されている場合は空文字を返します。
+  /// Returns the details of errors.
   ///
-  /// \~english
-  /// @brief Returns the details of errors.
-  /// @param net   The network instance pointer
-  /// @return
+  /// Parameters:
+  ///
+  /// - `net`: The network instance pointer
+  ///
+  /// Returns:
+  ///
   /// Error details
-  /// @details
+  ///
   /// The return value does not have to be released.
   /// The string is valid until the next ailia API function is called.
   /// If model is encrypted, this function returns empty string.
@@ -1957,18 +1631,12 @@ class ailiaVoiceFFI {
   late final _ailiaGetErrorDetail = _ailiaGetErrorDetailPtr
       .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<AILIANetwork>)>();
 
-  /// \~japanese
-  /// @brief ライブラリバージョンを取得します
-  /// @return
-  /// バージョン番号
-  /// @details
-  /// 返値は解放する必要はありません。
+  /// Get the version of the library.
   ///
-  /// \~english
-  /// @brief Get the version of the library.
-  /// @return
+  /// Returns:
+  ///
   /// Version number
-  /// @details
+  ///
   /// The return value does not have to be released.
   ffi.Pointer<ffi.Char> ailiaGetVersion() {
     return _ailiaGetVersion();
@@ -1980,24 +1648,18 @@ class ailiaVoiceFFI {
   late final _ailiaGetVersion =
       _ailiaGetVersionPtr.asFunction<ffi.Pointer<ffi.Char> Function()>();
 
-  /// \~japanese
-  /// @brief 入力値を対数スケールに変換します。
-  /// @param dst 出力データポインタ、float 型、長さ src_n
-  /// @param src 入力データポインタ、float 型、長さ src_n
-  /// @param src_n 計算対象の要素数
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// dst = log_e(1.0 + src) を計算します。
+  /// Convert the input values to a logarithmic scale.
   ///
-  /// \~english
-  /// @brief Convert the input values to a logarithmic scale.
-  /// @param dst pointer to the output data, of float format, and of length src_n
-  /// @param src pointer to the input data, of float format, and of length src_n
-  /// @param src_n number of elements to be calculated
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, and of length src_n
+  /// - `src`: pointer to the input data, of float format, and of length src_n
+  /// - `src_n`: number of elements to be calculated
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// dst = log_e(1.0 + src)
   int ailiaAudioLog1p(
     ffi.Pointer<ffi.Void> dst,
@@ -2018,26 +1680,19 @@ class ailiaVoiceFFI {
   late final _ailiaAudioLog1p = _ailiaAudioLog1pPtr.asFunction<
       int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)>();
 
-  /// \~japanese
-  /// @brief 非負の入力値をデシベルスケールに変換します。
-  /// @param dst 出力データポインタ、float 型、長さ src_n
-  /// @param src 入力データポインタ、float 型、要素数 src_n
-  /// @param src_n 計算対象の要素数
-  /// @param top_db 出力の最大値から出力下限の閾値までを定める値 (>= 0.0)、負数の場合は処理は閾値を設定しない
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// librosa.power_to_dbと互換性があります。
+  /// Convert non-negative input values to decibel scale.
   ///
-  /// \~english
-  /// @brief Convert non-negative input values to decibel scale.
-  /// @param dst pointer to the output data, of float format, and of length src_n
-  /// @param src pointer to the input data, of float format, and of length src_n
-  /// @param src_n number of elements to be calculated
-  /// @param top_db float >= 0.0
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, and of length src_n
+  /// - `src`: pointer to the input data, of float format, and of length src_n
+  /// - `src_n`: number of elements to be calculated
+  /// - `top_db`: float >= 0.0
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// Output compatible with librosa.power_to_db.
   /// dst = trimlow( 10 * log10(src / ref) )
   /// where ref is the max of 1e-10 and of positive values of src,
@@ -2066,38 +1721,25 @@ class ailiaVoiceFFI {
           int Function(
               ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int, double)>();
 
-  /// \~japanese
-  /// @brief STFTで生成される時間フレーム長を取得します。
-  /// @param frame_n フレーム長出力先ポインタ
-  /// @param sample_n STFTを適用するサンプル数
-  /// @param fft_n FFT点数
-  /// @param hop_n 窓のシフト数
-  /// @param center AILIA_AUDIO_STFT_CENTER_* のいずれか
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// STFT実行前のバッファサイズの決定に使用します。
-  /// \ref AILIA_AUDIO_STFT_CENTER_NONE  の場合 hop_n ずつ区切り、sample_n の前後に padding を行いません。
-  /// \ref AILIA_AUDIO_STFT_CENTER_ENABLE  の場合 sample_n の前後に fft_n/2 の padding(reflect) を行います。
-  /// \ref AILIA_AUDIO_STFT_CENTER_SCIPY_DEFAULT の場合、sample_n の前後に fft_n/2 の padding(zero)
-  /// を行い、hop_nの倍数になるようにpadding(zero)を行います
+  /// Get the number of frames generated by the STFT.
   ///
-  /// \~english
-  /// @brief Get the number of frames generated by the STFT.
-  /// @param frame_n pointer to the destination where to write the output (the number of frames)
-  /// @param sample_n count of samples on which the STFT is performed
-  /// @param fft_n size of the FFT at each frame (i.e. number of frequency bins at each frame)
-  /// @param hop_n stride of each window shift (in number of samples). This is the quantum of time for the time axis of the
-  /// STFT output.
-  /// @param center any of the AILIA_AUDIO_STFT_CENTER_* constants
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `frame_n`: pointer to the destination where to write the output (the number of frames)
+  /// - `sample_n`: count of samples on which the STFT is performed
+  /// - `fft_n`: size of the FFT at each frame (i.e. number of frequency bins at each frame)
+  /// - `hop_n`: stride of each window shift (in number of samples). This is the quantum of time for the time axis of the
+  ///   STFT output.
+  /// - `center`: any of the AILIA_AUDIO_STFT_CENTER_* constants
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// Before executing the STFT, use this function to determine the space required for the output buffer.
-  /// If  \ref AILIA_AUDIO_STFT_CENTER_NONE  is used, the sample_n samples are cut in packets of size hop_n, and no
-  /// padding occurs before the first sample nor after the last sample. If  \ref AILIA_AUDIO_STFT_CENTER_ENABLE  is used, a
-  /// reflection padding of length fft_n/n is performed before the first sample and after the last sample. If  \ref
-  /// AILIA_AUDIO_STFT_CENTER_ENABLE  is used, a zero padding of length fft_n/n is performed before the first sample and
+  /// If  [AILIA_AUDIO_STFT_CENTER_NONE]  is used, the sample_n samples are cut in packets of size hop_n, and no
+  /// padding occurs before the first sample nor after the last sample. If  [AILIA_AUDIO_STFT_CENTER_ENABLE]  is used, a
+  /// reflection padding of length fft_n/n is performed before the first sample and after the last sample. If  [AILIA_AUDIO_STFT_CENTER_ENABLE]  is used, a zero padding of length fft_n/n is performed before the first sample and
   /// after the last sample, and moreover an additional zero padding is performed to ensure that the total length is a
   /// multiple of hop_n.
   int ailiaAudioGetFrameLen(
@@ -2123,34 +1765,24 @@ class ailiaVoiceFFI {
   late final _ailiaAudioGetFrameLen = _ailiaAudioGetFrameLenPtr
       .asFunction<int Function(ffi.Pointer<ffi.Int>, int, int, int, int)>();
 
-  /// \~japanese
-  /// @brief ISTFTで生成されるサンプル数を取得します。
-  /// @param sample_n サンプル数出力先ポインタ
-  /// @param frame_n STFTデータの時間フレーム長
-  /// @param fft_n FFT点数
-  /// @param hop_n 窓のシフト数
-  /// @param center AILIA_AUDIO_STFT_CENTER_* のいずれか
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ISTFT実行前のバッファサイズの決定に使用します。
-  /// \ref AILIA_AUDIO_STFT_CENTER_NONE  の場合 前後の切り捨てを行いません。
-  /// \ref AILIA_AUDIO_STFT_CENTER_NONE  以外の場合 前後の切り捨てを行います。
+  /// Get the number of samples generated by the ISTFT.
   ///
-  /// \~english
-  /// @brief Get the number of samples generated by the ISTFT.
-  /// @param sample_n pointer to the destination where to write the output (the number of samples)
-  /// @param frame_n length of the STFT data, expressed in number of frames
-  /// @param fft_n size of the FFT at each frame (i.e. number of frequency bins at each frame)
-  /// @param hop_n stride of each window shift (in number of samples). This is the quantum of time for the time axis of the
-  /// STFT output.
-  /// @param center any of the AILIA_AUDIO_STFT_CENTER_* constants
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `sample_n`: pointer to the destination where to write the output (the number of samples)
+  /// - `frame_n`: length of the STFT data, expressed in number of frames
+  /// - `fft_n`: size of the FFT at each frame (i.e. number of frequency bins at each frame)
+  /// - `hop_n`: stride of each window shift (in number of samples). This is the quantum of time for the time axis of the
+  ///   STFT output.
+  /// - `center`: any of the AILIA_AUDIO_STFT_CENTER_* constants
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// Before executing the ISTFT, use this function to determine the space required for the output buffer.
-  /// If  \ref AILIA_AUDIO_STFT_CENTER_NONE  is used, no truncation is performed at the beginning nor at the end.
-  /// If  \ref AILIA_AUDIO_STFT_CENTER_NONE  is not used, a truncation is performed at the beginning and at the end.
+  /// If  [AILIA_AUDIO_STFT_CENTER_NONE]  is used, no truncation is performed at the beginning nor at the end.
+  /// If  [AILIA_AUDIO_STFT_CENTER_NONE]  is not used, a truncation is performed at the beginning and at the end.
   int ailiaAudioGetSampleLen(
     ffi.Pointer<ffi.Int> sample_n,
     int frame_n,
@@ -2174,24 +1806,18 @@ class ailiaVoiceFFI {
   late final _ailiaAudioGetSampleLen = _ailiaAudioGetSampleLenPtr
       .asFunction<int Function(ffi.Pointer<ffi.Int>, int, int, int, int)>();
 
-  /// \~japanese
-  /// @brief 窓関数の係数を取得します。
-  /// @param dst 出力データのポインタ、float 型、要素数 window_n
-  /// @param window_n 窓の長さ（サンプル数）
-  /// @param win_type 窓関数の種類、AILIA_AUDIO_WIN_TYPE_* のいずれか
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 窓関数はhann窓とhamming窓のみ対応しています。
+  /// Get the window function.
   ///
-  /// \~english
-  /// @brief Get the window function.
-  /// @param dst pointer to the output data, of float format, and of length window_n
-  /// @param window_n length of the window (in number of samples)
-  /// @param win_type type of the window function: any of the AILIA_AUDIO_WIN_TYPE_* constants
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, and of length window_n
+  /// - `window_n`: length of the window (in number of samples)
+  /// - `win_type`: type of the window function: any of the AILIA_AUDIO_WIN_TYPE_* constants
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// Only the Hann and the Hamming window functions are supported.
   int ailiaAudioGetWindow(
     ffi.Pointer<ffi.Void> dst,
@@ -2212,26 +1838,19 @@ class ailiaVoiceFFI {
   late final _ailiaAudioGetWindow = _ailiaAudioGetWindowPtr
       .asFunction<int Function(ffi.Pointer<ffi.Void>, int, int)>();
 
-  /// \~japanese
-  /// @brief FFTを実行します。
-  /// @param dst 出力データのポインタ、float 型、外側から fft_n, 2(実部、虚部) 順のメモリレイアウト
-  /// @param src 入力データのポインタ、float 型、要素数 fft_n
-  /// @param fft_n FFT点数
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// FFT点数が2の累乗の場合、高速アルゴリズムで動作します。
-  /// 出力データは実部と虚部の交互信号であり、長さは fft_n*2 です。
+  /// Execute the FFT.
   ///
-  /// \~english
-  /// @brief Execute the FFT.
-  /// @param dst pointer to the output data, of float format, of length 2*fft_n, and which memory layout is a sequence of
-  /// fft_n pairs [real part, imaginary part]. Memory layout, using the row-major convention: (fft_n, 2).
-  /// @param src pointer to the input data, of float format, and of length fft_n
-  /// @param fft_n count of FFT values (i.e. of frequency bins)
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, of length 2*fft_n, and which memory layout is a sequence of
+  ///   fft_n pairs [real part, imaginary part]. Memory layout, using the row-major convention: (fft_n, 2).
+  /// - `src`: pointer to the input data, of float format, and of length fft_n
+  /// - `fft_n`: count of FFT values (i.e. of frequency bins)
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// If fft_n is a power of 2, this function uses a faster algorithm.
   /// As the output data alternates real and imaginary parts, its length is 2*fft_n.
   int ailiaAudioFFT(
@@ -2253,27 +1872,20 @@ class ailiaVoiceFFI {
   late final _ailiaAudioFFT = _ailiaAudioFFTPtr.asFunction<
       int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)>();
 
-  /// \~japanese
-  /// @brief IFFTを実行します。
-  /// @param dst 出力データのポインタ、float 型、外側から fft_n, 2(実部、虚部) 順のメモリレイアウト
-  /// @param src 入力データのポインタ、float 型、外側から fft_n, 2(実部、虚部) 順のメモリレイアウト
-  /// @param fft_n FFT点数
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// FFT点数が2の累乗の場合、高速アルゴリズムで動作します。
-  /// 出力データは実部と虚部の交互信号であり、長さは fft_n*2 です。
+  /// Execute the IFFT.
   ///
-  /// \~english
-  /// @brief Execute the IFFT.
-  /// @param dst pointer to the output data, of float format, of length 2*fft_n, and which memory layout is a sequence of
-  /// fft_n pairs [real part, imaginary part]. Memory layout, using the row-major convention: (fft_n, 2).
-  /// @param src pointer to the input data, of float format, of length 2*fft_n, and which memory layout is a sequence of
-  /// fft_n pairs [real part, imaginary part]. Memory layout, using the row-major convention: (fft_n, 2).
-  /// @param fft_n count of FFT values (i.e. of frequency bins)
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, of length 2*fft_n, and which memory layout is a sequence of
+  ///   fft_n pairs [real part, imaginary part]. Memory layout, using the row-major convention: (fft_n, 2).
+  /// - `src`: pointer to the input data, of float format, of length 2*fft_n, and which memory layout is a sequence of
+  ///   fft_n pairs [real part, imaginary part]. Memory layout, using the row-major convention: (fft_n, 2).
+  /// - `fft_n`: count of FFT values (i.e. of frequency bins)
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// If fft_n is a power of 2, this function uses a faster algorithm.
   /// As the output data alternates real and imaginary parts, its length is 2*fft_n.
   int ailiaAudioIFFT(
@@ -2295,49 +1907,32 @@ class ailiaVoiceFFI {
   late final _ailiaAudioIFFT = _ailiaAudioIFFTPtr.asFunction<
       int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)>();
 
-  /// \~japanese
-  /// @brief 音響信号からスペクトログラムを生成します。
-  /// @param dst 出力データのポインタ、float 型、外側から freq_n, frame_n, 2(複素数: 実部, 虚部) 順のメモリレイアウト
-  /// @param src 入力データのポインタ、float 型、要素数 sample_n
-  /// @param sample_n 入力データのサンプル数
-  /// @param fft_n FFT点数
-  /// @param hop_n フレームのシフト数
-  /// @param win_n 窓関数の長さ
-  /// @param win_type 窓関数の種類、AILIA_AUDIO_WIN_TYPE_* のいずれか
-  /// @param max_frame_n 出力データの時間フレーム数の最大値
-  /// @param center 入力データの前後へのパディングの有無、AILIA_AUDIO_STFT_CENTER_* のいずれか
-  /// @param power スペクトログラムの乗数（>= 0.0） 0.0: 複素スペクトログラム、1.0: 振幅スペクトログラム、2.0:
-  /// パワースペクトログラム、その他: 任意の累乗値の出力に相当
-  /// @param norm_type FFT後の正規化処理、AILIA_AUDIO_FFT_NORMALIZE_* のいずれか
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 時間フレームごとにFFT→正規化処理→累乗（振幅・パワーに変換）の順で処理を実行します。
-  /// 出力データは実部と虚部の交互信号であり、長さは(fft_n/2+1)*時間フレーム長*2です。
-  /// powerが0.0以外の場合は虚部の値を全て0.0として出力します。
+  /// Generate the spectrogram from the audio signal.
   ///
-  /// \~english
-  /// @brief Generate the spectrogram from the audio signal.
-  /// @param dst pointer to the output data, of float format, of length (2 * freq_n * frame_n), and which memory layout is
-  /// a sequence of pairs [real part, imaginary part]. (where freq_n = fft_n/2+1). Memory layout, using the row-major
-  /// convention: (freq_n, frame_n, 2).
-  /// @param src pointer to the input data, of float format, and of length sample_n
-  /// @param sample_n count of samples in the input data
-  /// @param fft_n size of the FFT at each frame (i.e. number of frequency bins at each frame)
-  /// @param hop_n stride of each window shift (in number of samples). This is the size of the time increment for the
-  /// spectrogram.
-  /// @param win_n size of the window function
-  /// @param win_type type of the window function: any of the AILIA_AUDIO_WIN_TYPE_* constants
-  /// @param max_frame_n maximum value of the time frame index in the outputted data
-  /// @param center whether to pad or not (and the type of padding) before and after the input data: any of the
-  /// AILIA_AUDIO_STFT_CENTER_* constants
-  /// @param power exponent to apply to the spectrogram (> = 0.0). A special case is for 0.0: complex spectrogram. For
-  /// other cases the amplitude is just exponentiated accordingly: 1.0: amplitude spectrogram, 2.0: power spectrogram, etc,
-  /// any other positive exponent value is allowed.
-  /// @param norm_type normalization after the FFT: any of the AILIA_AUDIO_FFT_NORMALIZE_* constants
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, of length (2 * freq_n * frame_n), and which memory layout is
+  ///   a sequence of pairs [real part, imaginary part]. (where freq_n = fft_n/2+1). Memory layout, using the row-major
+  ///   convention: (freq_n, frame_n, 2).
+  /// - `src`: pointer to the input data, of float format, and of length sample_n
+  /// - `sample_n`: count of samples in the input data
+  /// - `fft_n`: size of the FFT at each frame (i.e. number of frequency bins at each frame)
+  /// - `hop_n`: stride of each window shift (in number of samples). This is the size of the time increment for the
+  ///   spectrogram.
+  /// - `win_n`: size of the window function
+  /// - `win_type`: type of the window function: any of the AILIA_AUDIO_WIN_TYPE_* constants
+  /// - `max_frame_n`: maximum value of the time frame index in the outputted data
+  /// - `center`: whether to pad or not (and the type of padding) before and after the input data: any of the
+  ///   AILIA_AUDIO_STFT_CENTER_* constants
+  /// - `power`: exponent to apply to the spectrogram (> = 0.0). A special case is for 0.0: complex spectrogram. For
+  ///   other cases the amplitude is just exponentiated accordingly: 1.0: amplitude spectrogram, 2.0: power spectrogram, etc,
+  ///   any other positive exponent value is allowed.
+  /// - `norm_type`: normalization after the FFT: any of the AILIA_AUDIO_FFT_NORMALIZE_* constants
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// For each time frame, the operations are processed in this order: FFT -> normalization -> power exponentiation.
   /// As the output data alternates real and imaginary parts, its length is 2*(fft_n/2+1)*frame_n. (where frame_n is the
   /// number of time frames outputted) When the power argument is a non-zero value, all the complex parts are set to 0 in
@@ -2389,42 +1984,28 @@ class ailiaVoiceFFI {
           int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int, int,
               int, int, int, int, int, double, int)>();
 
-  /// \~japanese
-  /// @brief 複素スペクトログラムから音響信号を生成します。
-  /// @param dst 出力データのポインタ、float 型、要素数 sample_n
-  /// @param src 入力データのポインタ、float 型、外側から freq_n, frame_n, 2(複素数: 実部, 虚部) 順のメモリレイアウト
-  /// @param frame_n 入力データの時間フレーム数
-  /// @param freq_n 周波数（fft_n/2+1）
-  /// @param hop_n フレームのシフト数
-  /// @param win_n 窓関数の長さ
-  /// @param win_type 窓関数の種類、AILIA_AUDIO_WIN_TYPE_* のいずれか
-  /// @param max_sample_n 出力データのサンプル数の最大値
-  /// @param center 入力データ生成時の前後へのパディングの有無、AILIA_AUDIO_STFT_CENTER_* のいずれか
-  /// @param norm_type 入力データ生成時の正規化処理、AILIA_AUDIO_FFT_NORMALIZE_* のいずれか
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 時間フレームごとにIFFTを行い、最後に正規化処理を実行します。
-  /// 複素スペクトログラムのみに対応しています。
+  /// Generate an audio signal from a complex spectrogram.
   ///
-  /// \~english
-  /// @brief Generate an audio signal from a complex spectrogram.
-  /// @param dst pointer to the output data, of float format, and of length sample_n
-  /// @param src pointer to the input data, of float format, of length (2 * freq_n * frame_n), and which memory layout is a
-  /// sequence of pairs [real part, imaginary part]. Memory layout, using the row-major convention: (freq_n, frame_n, 2).
-  /// @param frame_n number of time frames in the input data
-  /// @param freq_n number of frequencies bins for each time frame (freq_n = fft_n/2+1)
-  /// @param hop_n step size of the time frame increment (expressed in number of samples) for the inputted spectrogram.
-  /// @param win_n size of the window function
-  /// @param win_type type of the window function: any of the AILIA_AUDIO_WIN_TYPE_* constants
-  /// @param max_sample_n maximum value of the sample index in the outputted data
-  /// @param center whether padding (before and after) was used or not (and its type) during the generation of the input
-  /// data: any of the AILIA_AUDIO_STFT_CENTER_* constants
-  /// @param norm_type normalization type that was used during the generation of the input data: any of the
-  /// AILIA_AUDIO_FFT_NORMALIZE_* constants
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, and of length sample_n
+  /// - `src`: pointer to the input data, of float format, of length (2 * freq_n * frame_n), and which memory layout is a
+  ///   sequence of pairs [real part, imaginary part]. Memory layout, using the row-major convention: (freq_n, frame_n, 2).
+  /// - `frame_n`: number of time frames in the input data
+  /// - `freq_n`: number of frequencies bins for each time frame (freq_n = fft_n/2+1)
+  /// - `hop_n`: step size of the time frame increment (expressed in number of samples) for the inputted spectrogram.
+  /// - `win_n`: size of the window function
+  /// - `win_type`: type of the window function: any of the AILIA_AUDIO_WIN_TYPE_* constants
+  /// - `max_sample_n`: maximum value of the sample index in the outputted data
+  /// - `center`: whether padding (before and after) was used or not (and its type) during the generation of the input
+  ///   data: any of the AILIA_AUDIO_STFT_CENTER_* constants
+  /// - `norm_type`: normalization type that was used during the generation of the input data: any of the
+  ///   AILIA_AUDIO_FFT_NORMALIZE_* constants
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// For each time frame the normalization is executed at the end of the IFFT.
   /// Only accepts a complex spectrogram in input.
   int ailiaAudioGetInverseSpectrogram(
@@ -2471,33 +2052,24 @@ class ailiaVoiceFFI {
           int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int, int,
               int, int, int, int, int, int)>();
 
-  /// \~japanese
-  /// @brief メルフィルタバンクの係数を計算します。
-  /// @param dst 出力データのポインタ、float 型、外側から mel_n, freq_n  順のメモリレイアウト
-  /// @param freq_n 周波数のインデックス数
-  /// @param f_min 周波数の最小値
-  /// @param f_max 周波数の最大値
-  /// @param mel_n メル周波数のインデックス数（ < freq_n）
-  /// @param sample_rate サンプリング周波数
-  /// @param mel_norm 出力される係数の正規化の有無、AILIA_AUDIO_MEL_NORMALIZE_* のいずれか
-  /// @param mel_formula MEL尺度の形式、AILIA_AUDIO_MEL_SCALE_FORMULA_* のいずれか
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Create a mel filter-bank.
   ///
-  /// \~english
-  /// @brief Create a mel filter-bank.
-  /// @param dst pointer to the output data, of float format, and of length (mel_n * freq_n). (memory layout, using the
-  /// row-major convention: (mel_n, freq_n))
-  /// @param freq_n number of frequency indices for the FFT (1+fft_n/2)
-  /// @param f_min lowest frequency
-  /// @param f_max highest frequency
-  /// @param mel_n number of mel frequency bins in the output (< freq_n)
-  /// @param sample_rate sampling rate for the signal that will be inputted to this filter
-  /// @param mel_norm whether to normalize the output (and the type of the normalization): any of the
-  /// AILIA_AUDIO_MEL_NORMALIZE_* constants
-  /// @param mel_formula mel scale format: any of the AILIA_AUDIO_MEL_SCALE_FORMULA_* constants
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, and of length (mel_n * freq_n). (memory layout, using the
+  ///   row-major convention: (mel_n, freq_n))
+  /// - `freq_n`: number of frequency indices for the FFT (1+fft_n/2)
+  /// - `f_min`: lowest frequency
+  /// - `f_max`: highest frequency
+  /// - `mel_n`: number of mel frequency bins in the output (< freq_n)
+  /// - `sample_rate`: sampling rate for the signal that will be inputted to this filter
+  /// - `mel_norm`: whether to normalize the output (and the type of the normalization): any of the
+  ///   AILIA_AUDIO_MEL_NORMALIZE_* constants
+  /// - `mel_formula`: mel scale format: any of the AILIA_AUDIO_MEL_SCALE_FORMULA_* constants
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
   int ailiaAudioGetFBMatrix(
     ffi.Pointer<ffi.Void> dst,
     int freq_n,
@@ -2528,59 +2100,37 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<ffi.Void>, int, double, double, int, int, int, int)>();
 
-  /// \~japanese
-  /// @brief 音響信号からメルスペクトログラムを生成します。
-  /// @param dst 出力データのポインタ、float 型、外側から mel_n, frame_n 順のメモリレイアウト
-  /// @param src 入力データのポインタ、float 型、モノラル PCM データ
-  /// @param sample_n 入力データのサンプル数
-  /// @param sample_rate サンプリング周波数
-  /// @param fft_n FFT点数
-  /// @param hop_n フレームのシフト数
-  /// @param win_n 1フレームに含むサンプル数
-  /// @param win_type 窓関数の種類、AILIA_AUDIO_WIN_TYPE_* のいずれか
-  /// @param max_frame_n 出力データの時間フレーム数の最大値
-  /// @param center 入力データの前後へのパディングの有無、AILIA_AUDIO_STFT_CENTER_* のいずれか
-  /// @param power スペクトログラムの乗数（ > 0.0）1.0: 振幅スペクトログラム、2.0: パワースペクトログラム、その他:
-  /// 任意の累乗値の出力に相当
-  /// @param fft_norm_type FFT後の正規化処理、AILIA_AUDIO_FFT_NORMALIZE_* のいずれか
-  /// @param f_min 周波数の最小値
-  /// @param f_max 周波数の最大値
-  /// @param mel_n メル周波数のインデックス数（ < freq_n）
-  /// @param mel_norm_type MELスペクトログラムの正規化の有無、AILIA_AUDIO_MEL_NORMALIZE_* のいずれか
-  /// @param mel_formula MEL尺度の形式、AILIA_AUDIO_MEL_SCALE_FORMULA_* のいずれか
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 時間フレームごとにFFT(STFT)→正規化処理→累乗（振幅・パワーに変換→メルフィルタバンクの係数取得→メル尺度への変換
-  /// の順で処理を実行します。 出力データは実数の信号であり、長さはmel_n*時間フレーム長です。
+  /// Generate the mel spectrogram from the audio signal.
   ///
-  /// \~english
-  /// @brief Generate the mel spectrogram from the audio signal.
-  /// @param dst pointer to the output data, of float format, and of length (mel_n * frame_n) (with frame_n the number of
-  /// time frames outputted). (memory layout, using the row-major convention: (mel_n, frame_n))
-  /// @param src pointer to the input data, of float format, monoral PCM audio data.
-  /// @param sample_n count of samples in the input data
-  /// @param sample_rate sampling rate of the input signal
-  /// @param fft_n number of FFT components
-  /// @param hop_n stride of each window shift (in number of samples). This is the size of the time increment for the
-  /// spectrogram.
-  /// @param win_n size of the window function (in number of samples)
-  /// @param win_type type of the window function: any of the AILIA_AUDIO_WIN_TYPE_* constants
-  /// @param max_frame_n maximum value of the time frame index in the outputted data
-  /// @param center whether to pad or not (and the type of padding) before and after the input data: any of the
-  /// AILIA_AUDIO_STFT_CENTER_* constants
-  /// @param power exponent to apply to the spectrogram (> 0.0). 1.0: amplitude spectrogram, 2.0: power spectrogram, etc,
-  /// any other positive exponent value is allowed.
-  /// @param fft_norm_type normalization after the FFT: any of the AILIA_AUDIO_FFT_NORMALIZE_* constants
-  /// @param f_min lowest frequency
-  /// @param f_max highest frequency
-  /// @param mel_n number of mel frequency bins in the output (< freq_n)
-  /// @param mel_norm whether to normalize the mel spectrogram (and the type of the normalization): any of the
-  /// AILIA_AUDIO_MEL_NORMALIZE_* constants
-  /// @param mel_formula mel scale format: any of the AILIA_AUDIO_MEL_SCALE_FORMULA_* constants
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, and of length (mel_n * frame_n) (with frame_n the number of
+  ///   time frames outputted). (memory layout, using the row-major convention: (mel_n, frame_n))
+  /// - `src`: pointer to the input data, of float format, monoral PCM audio data.
+  /// - `sample_n`: count of samples in the input data
+  /// - `sample_rate`: sampling rate of the input signal
+  /// - `fft_n`: number of FFT components
+  /// - `hop_n`: stride of each window shift (in number of samples). This is the size of the time increment for the
+  ///   spectrogram.
+  /// - `win_n`: size of the window function (in number of samples)
+  /// - `win_type`: type of the window function: any of the AILIA_AUDIO_WIN_TYPE_* constants
+  /// - `max_frame_n`: maximum value of the time frame index in the outputted data
+  /// - `center`: whether to pad or not (and the type of padding) before and after the input data: any of the
+  ///   AILIA_AUDIO_STFT_CENTER_* constants
+  /// - `power`: exponent to apply to the spectrogram (> 0.0). 1.0: amplitude spectrogram, 2.0: power spectrogram, etc,
+  ///   any other positive exponent value is allowed.
+  /// - `fft_norm_type`: normalization after the FFT: any of the AILIA_AUDIO_FFT_NORMALIZE_* constants
+  /// - `f_min`: lowest frequency
+  /// - `f_max`: highest frequency
+  /// - `mel_n`: number of mel frequency bins in the output (< freq_n)
+  /// - `mel_norm`: whether to normalize the mel spectrogram (and the type of the normalization): any of the
+  ///   AILIA_AUDIO_MEL_NORMALIZE_* constants
+  /// - `mel_formula`: mel scale format: any of the AILIA_AUDIO_MEL_SCALE_FORMULA_* constants
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// For each time frame, the operations are processed in this order:
   /// FFT(STFT) -> normalization -> power exponentiation -> get the mel filter-bank coefficients -> convert to the mel
   /// scale. The output is real values, and its length is mel_n*frame_n (with frame_n the number of time frames outputted).
@@ -2665,45 +2215,31 @@ class ailiaVoiceFFI {
               int,
               int)>();
 
-  /// \~japanese
-  /// @brief スペクトログラムから振幅と位相を計算します。
-  /// @param dst_mag 振幅の出力先ポインタ、外側から freq_n, frame_n 順のメモリレイアウト
-  /// @param dst_phase 位相の出力先ポインタ、外側から freq_n, frame_n, 2(実部、虚部) 順のメモリレイアウト
-  /// @param src 入力データのポインタ、frame_n, freq_n, 2(実部、虚部) 順のメモリレイアウト
-  /// @param freq_n 周波数のインデックス数
-  /// @param frame_n 時間フレームの数
-  /// @param power 振幅スペクトルの乗数 ( > 0.0)、1.0: 振幅スペクトログラム、2.0: パワースペクトログラムに相当
-  /// @param phase_form 位相の出力形式、AILIA_AUDIO_PHASE_FORM_* のいずれか
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// librosaのデフォルト値と互換の条件: phase_form =  \ref AILIA_AUDIO_PHASE_FORM_COMPLEX , power = 1.0
-  /// PyTorchのデフォルト値と互換の条件: phase_form =  \ref AILIA_AUDIO_PHASE_FORM_REAL , power = 1.0
-  /// phase_formによってdst_phaseの出力が変わります。
-  /// -  \ref AILIA_AUDIO_PHASE_FORM_COMPLEX  : 実部と虚部の交互信号、サイズは freq_n * frame_n * 2
-  /// -  \ref AILIA_AUDIO_PHASE_FORM_REAL  : 実部のみの信号、サイズは freq_n * frame_n
+  /// Get the amplitude and the phase from the spectrogram.
   ///
-  /// \~english
-  /// @brief Get the amplitude and the phase from the spectrogram.
-  /// @param dst_mag pointer to the outputted amplitudes, an array of length (freq_n * frame_n). (memory layout, using the
-  /// row-major convention: (freq_n, frame_n))
-  /// @param dst_phase pointer to the outputted phases, an array of length (2 * freq_n * frame_n) (sequence of complex
-  /// pairs [real part, imaginary part]). (memory layout, using the row-major convention: (freq_n, frame_n, 2))
-  /// @param src pointer to the input data, of length (2 * frame_n * freq_n) (a sequence of complex pairs [real,
-  /// imaginary]). (memory layout, using the row-major convention: (frame_n, freq_n, 2))
-  /// @param freq_n number of frequency indices
-  /// @param frame_n number of time frames
-  /// @param power exponent to apply to the spectrogram (> 0.0). 1.0: amplitude spectrogram, 2.0: power spectrogram, etc,
-  /// any other positive exponent value is allowed.
-  /// @param phase_form format of the outputted phase: any of the AILIA_AUDIO_PHASE_FORM_* constants
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
-  /// To be compatible with librosa, use: phase_form =  \ref AILIA_AUDIO_PHASE_FORM_COMPLEX , power = 1.0
-  /// To be compatible with PyTorch, use: phase_form =  \ref AILIA_AUDIO_PHASE_FORM_REAL , power = 1.0
+  /// Parameters:
+  ///
+  /// - `dst_mag`: pointer to the outputted amplitudes, an array of length (freq_n * frame_n). (memory layout, using the
+  ///   row-major convention: (freq_n, frame_n))
+  /// - `dst_phase`: pointer to the outputted phases, an array of length (2 * freq_n * frame_n) (sequence of complex
+  ///   pairs [real part, imaginary part]). (memory layout, using the row-major convention: (freq_n, frame_n, 2))
+  /// - `src`: pointer to the input data, of length (2 * frame_n * freq_n) (a sequence of complex pairs [real,
+  ///   imaginary]). (memory layout, using the row-major convention: (frame_n, freq_n, 2))
+  /// - `freq_n`: number of frequency indices
+  /// - `frame_n`: number of time frames
+  /// - `power`: exponent to apply to the spectrogram (> 0.0). 1.0: amplitude spectrogram, 2.0: power spectrogram, etc,
+  ///   any other positive exponent value is allowed.
+  /// - `phase_form`: format of the outputted phase: any of the AILIA_AUDIO_PHASE_FORM_* constants
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
+  /// To be compatible with librosa, use: phase_form =  [AILIA_AUDIO_PHASE_FORM_COMPLEX] , power = 1.0
+  /// To be compatible with PyTorch, use: phase_form =  [AILIA_AUDIO_PHASE_FORM_REAL] , power = 1.0
   /// The dst_phase output depends on phase_form:
-  /// -  \ref AILIA_AUDIO_PHASE_FORM_COMPLEX  : signal with real and imaginary parts, of size (freq_n * frame_n * 2)
-  /// -  \ref AILIA_AUDIO_PHASE_FORM_REAL  : real signal, of size (freq_n * frame_n)
+  /// -  [AILIA_AUDIO_PHASE_FORM_COMPLEX]  : signal with real and imaginary parts, of size (freq_n * frame_n * 2)
+  /// -  [AILIA_AUDIO_PHASE_FORM_REAL]  : real signal, of size (freq_n * frame_n)
   int ailiaAudioMagPhase(
     ffi.Pointer<ffi.Void> dst_mag,
     ffi.Pointer<ffi.Void> dst_phase,
@@ -2738,25 +2274,18 @@ class ailiaVoiceFFI {
       int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>,
           ffi.Pointer<ffi.Void>, int, int, double, int)>();
 
-  /// \~japanese
-  /// @brief 実数の信号に対して標準化を実行します。
-  /// @param dst 出力データのポインタ、float 型、要素数 src_n
-  /// @param src 入力データのポインタ、float 型、要素数 src_n
-  /// @param src_n 入力データの要素数
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 入力データの平均0、分散1になるよう標準化を行う。
-  /// dst = (src - mean(src)) / std(src)
+  /// Standardize a real signal.
   ///
-  /// \~english
-  /// @brief Standardize a real signal.
-  /// @param dst pointer to the output data, of float format, and of length src_n
-  /// @param src pointer to the input data, of float format, and of length src_n
-  /// @param src_n length of the input data
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, and of length src_n
+  /// - `src`: pointer to the input data, of float format, and of length src_n
+  /// - `src_n`: length of the input data
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// Standardize the input data so that its average value becomes 0 and its variance 1.
   /// dst = (src - mean(src)) / std(src)
   int ailiaAudioStandardize(
@@ -2778,30 +2307,20 @@ class ailiaVoiceFFI {
   late final _ailiaAudioStandardize = _ailiaAudioStandardizePtr.asFunction<
       int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)>();
 
-  /// \~japanese
-  /// @brief 複素数のノルムを算出します
-  /// @param dst 出力データのポインタ、float 型、要素数 src_n
-  /// @param src 入力データのポインタ、float 型、外側から src_n, 2(実部、虚部) 順のメモリレイアウト
-  /// @param src_n 入力データの要素数
-  /// @param power 累乗値( > 0.0 )、1.0で複素数絶対値に相当
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 入力データのノルムを算出します
-  /// src_cmp = src[0] + src[1] i において
-  /// tmp_dst = pow(src[0],2.0) + pow(src[1],2.0)
-  /// dst[0] = pow(tmp_dst,0.5*power);
+  /// Get the norm of the complex signal.
   ///
-  /// \~english
-  /// @brief Get the norm of the complex signal.
-  /// @param dst pointer to the output data, of float format, and of length src_n
-  /// @param src pointer to the input data, of float format, an array of length (2 * src_n) (sequence of complex pairs
-  /// [real part, imaginary part]). (memory layout, using the row-major convention: (src_n, 2))
-  /// @param src_n length of the input data
-  /// @param power exponent to apply to the spectrogram (> 0.0). 1.0: amplitude spectrogram
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, and of length src_n
+  /// - `src`: pointer to the input data, of float format, an array of length (2 * src_n) (sequence of complex pairs
+  ///   [real part, imaginary part]). (memory layout, using the row-major convention: (src_n, 2))
+  /// - `src_n`: length of the input data
+  /// - `power`: exponent to apply to the spectrogram (> 0.0). 1.0: amplitude spectrogram
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// Compute the norm of the input data.
   /// For each src_cmp = src[0] + i * src[1],
   /// tmp_dst = pow(src[0],2.0) + pow(src[1],2.0)
@@ -2828,34 +2347,24 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int, double)>();
 
-  /// \~japanese
-  /// @brief 実数STFT結果をメル尺度に変換する
-  /// @param dst 出力データのポインタ、float 型、外側から mel_n, frame_n 順のメモリレイアウト
-  /// @param src 入力データのポインタ、float 型、外側から freq_n, frame_n 順のメモリレイアウト
-  /// @param fb_mtrx メルフィルタバンク、float 型、外側から mel_n, freq_n  順のメモリレイアウト
-  /// @param freq_n 周波数のインデックス数
-  /// @param frame_n 入力データの時間フレームの数
-  /// @param mel_n メル周波数のインデックス数
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 入力された実数スペクトログラムをメル尺度に変換します
-  /// fb_mtrxには ailiaAudioGetFBMatrix() で取得した係数を与える事が出来ます
+  /// Convert the real output of the STFT to the mel scale.
   ///
-  /// \~english
-  /// @brief Convert the real output of the STFT to the mel scale.
-  /// @param dst pointer to the output data, of float format, of length (mel_n * frame_n), and of memory layout (in
-  /// row-major convention) (mel_n, frame_n).
-  /// @param src pointer to the input data, of float format, of length (freq_n * frame_n), and of memory layout (in
-  /// row-major convention) (freq_n, frame_n).
-  /// @param fb_mtrx the mel filter-bank, of float format, of length (mel_n * freq_n), and of memory layout (in row-major
-  /// convention) (mel_n, freq_n).
-  /// @param freq_n number of frequency indices
-  /// @param frame_n number of time frames in the input data
-  /// @param mel_n number of mel frequency indices
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, of length (mel_n * frame_n), and of memory layout (in
+  ///   row-major convention) (mel_n, frame_n).
+  /// - `src`: pointer to the input data, of float format, of length (freq_n * frame_n), and of memory layout (in
+  ///   row-major convention) (freq_n, frame_n).
+  /// - `fb_mtrx`: the mel filter-bank, of float format, of length (mel_n * freq_n), and of memory layout (in row-major
+  ///   convention) (mel_n, freq_n).
+  /// - `freq_n`: number of frequency indices
+  /// - `frame_n`: number of time frames in the input data
+  /// - `mel_n`: number of mel frequency indices
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// Converts the real spectrogram given in input to the mel scale.
   /// The argument fb_mtrx can take the coefficients outputted by  ailiaAudioGetFBMatrix() .
   int ailiaAudioConvertToMel(
@@ -2889,33 +2398,23 @@ class ailiaVoiceFFI {
       int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>,
           ffi.Pointer<ffi.Void>, int, int, int)>();
 
-  /// \~japanese
-  /// @brief 実数スペクトログラム/メルスペクトログラムの時間フレーム数を調整します。
-  /// @param dst 出力データのポインタ、freq_n, dst_frame_n 順のメモリレイアウト
-  /// @param src 入力データのポインタ、freq_n, src_frame_n 順のメモリレイアウト
-  /// @param freq_n 周波数のインデックス数
-  /// @param dst_frame_n 出力データの時間フレームの数
-  /// @param src_frame_n 入力データの時間フレームの数
-  /// @param pad_data パディング（dst_frame_n > src_frame_n の場合に使用）
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// dst_frame_n > src_frame_n : 不足する時間フレームのデータを pad_data のデータで埋める。
-  /// dst_frame_n <= src_frame_n : 先頭から dst_frame_n のデータのみを切り出す。
+  /// Fix the number of time frames of a real-valued spectrogram/mel-spectrogram.
   ///
-  /// \~english
-  /// @brief Fix the number of time frames of a real-valued spectrogram/mel-spectrogram.
-  /// @param dst pointer to the output data, of length (freq_n * dst_frame_n), and of memory layout (in row-major
-  /// convention) (freq_n, dst_frame_n).
-  /// @param src pointer to the input data, of length (freq_n * src_frame_n), and of memory layout (in row-major
-  /// convention) (freq_n, src_frame_n).
-  /// @param freq_n number of frequency indices
-  /// @param dst_frame_n number of time frames in the output data
-  /// @param src_frame_n number of time frames in the input data
-  /// @param pad_data value inserted for padding (used when dst_frame_n > src_frame_n)
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of length (freq_n * dst_frame_n), and of memory layout (in row-major
+  ///   convention) (freq_n, dst_frame_n).
+  /// - `src`: pointer to the input data, of length (freq_n * src_frame_n), and of memory layout (in row-major
+  ///   convention) (freq_n, src_frame_n).
+  /// - `freq_n`: number of frequency indices
+  /// - `dst_frame_n`: number of time frames in the output data
+  /// - `src_frame_n`: number of time frames in the input data
+  /// - `pad_data`: value inserted for padding (used when dst_frame_n > src_frame_n)
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// dst_frame_n > src_frame_n : missing time frames are added and filled with the value pad_data.
   /// dst_frame_n <= src_frame_n : only keeps the first dst_frame_n data.
   int ailiaAudioFixFrameLen(
@@ -2944,32 +2443,21 @@ class ailiaVoiceFFI {
       int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int, int, int,
           double)>();
 
-  /// \~japanese
-  /// @brief 信号をリサンプルします
-  /// @param dst 出力データのポインタ、float 型、要素数 dst_n
-  /// @param src 入力データのポインタ、float 型、要素数 src_n
-  /// @param dst_sample_rate 変換後のサンプリングレート
-  /// @param dst_n データ出力先の確保要素数（dst_n >= max_resample_n）
-  /// @param src_sample_rate 入力データのサンプリングレート
-  /// @param src_n 入力データの要素数
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 最大出力数max_resample_nは ailiaAudioGetResampleLen() で取得できます。
-  /// dst_n <  max_resample_n : 先頭からdst_nに入る部分のみ出力
-  /// dst_n >= max_resample_n : 出力要素数はmax_resample_n
+  /// Resample the signal.
   ///
-  /// \~english
-  /// @brief Resample the signal.
-  /// @param dst pointer to the output data, of float format, and of length dst_n
-  /// @param src pointer to the input data, of float format, and of length src_n
-  /// @param dst_sample_rate sampling rate after the resampling
-  /// @param dst_n length (in number of samples) reserved in the output buffer（dst_n >= max_resample_n）
-  /// @param src_sample_rate sampling rate of the input signal
-  /// @param src_n number of samples in the input signal
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, and of length dst_n
+  /// - `src`: pointer to the input data, of float format, and of length src_n
+  /// - `dst_sample_rate`: sampling rate after the resampling
+  /// - `dst_n`: length (in number of samples) reserved in the output buffer（dst_n >= max_resample_n）
+  /// - `src_sample_rate`: sampling rate of the input signal
+  /// - `src_n`: number of samples in the input signal
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// The max number of samples in the output, max_resample_n, can be obtained from  ailiaAudioGetResampleLen() .
   /// dst_n <  max_resample_n : only the first dst_n samples are outputted
   /// dst_n >= max_resample_n : max_resample_n samples are outputted
@@ -2999,23 +2487,18 @@ class ailiaVoiceFFI {
       int Function(
           ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int, int, int, int)>();
 
-  /// \~japanese
-  /// @brief リサンプル後のサンプル数を計算します
-  /// @param dst_sample_n リサンプル後サンプル数出力先ポインタ
-  /// @param dst_sample_rate 変換後のサンプリングレート
-  /// @param src_sample_n 入力データのサンプル数
-  /// @param src_sample_rate 入力データのサンプリングレート
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Get the number of samples after the resampling.
   ///
-  /// \~english
-  /// @brief Get the number of samples after the resampling.
-  /// @param dst_sample_n pointer to the destination where to write the output (the number of samples after resampling)
-  /// @param dst_sample_rate sampling rate after the resampling
-  /// @param src_sample_n number of samples in the input signal
-  /// @param src_sample_rate sampling rate of the input signal
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
+  /// Parameters:
+  ///
+  /// - `dst_sample_n`: pointer to the destination where to write the output (the number of samples after resampling)
+  /// - `dst_sample_rate`: sampling rate after the resampling
+  /// - `src_sample_n`: number of samples in the input signal
+  /// - `src_sample_rate`: sampling rate of the input signal
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
   int ailiaAudioGetResampleLen(
     ffi.Pointer<ffi.Int> dst_sample_n,
     int dst_sample_rate,
@@ -3037,43 +2520,26 @@ class ailiaVoiceFFI {
   late final _ailiaAudioGetResampleLen = _ailiaAudioGetResampleLenPtr
       .asFunction<int Function(ffi.Pointer<ffi.Int>, int, int, int)>();
 
-  /// \~japanese
-  /// @brief 信号にフィルタ処理を適用します
-  /// @param dst 出力データのポインタ、float 型、要素数 dst_n
-  /// @param src 入力データのポインタ、float 型、要素数 src_n
-  /// @param n_coef フィルタ分子係数のポインタ、float 型、要素数 n_coef_n
-  /// @param d_coef フィルタ分母係数のポインタ、float 型、要素数 d_coef_n
-  /// @param zi 遅延状態のポインタ、float 型、要素数 zi_n (zi_n = max(n_coef_n,d_coef_n)-1)、nullptrを許容
-  /// @param dst_n データ出力先の確保要素数（dst_n >= src_n）
-  /// @param src_n 入力データの要素数
-  /// @param n_coef_n フィルタ分子係数の要素数
-  /// @param d_coef_n フィルタ分母係数の要素数
-  /// @param zi_n 遅延状態の要素数 (zi_n >= max(n_coef_n,d_coef_n)-1)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// dstへの出力数はmin(dst_m,src_n)となります。
-  /// ziへは初期遅延状態を渡します。処理後には最終遅延状態に上書きされます。
-  /// zi_nはmax(n_coef_n,d_coef_n)-1が必要となります。不足の場合、不足分は0でパディングし、最終遅延状態は返しません。
-  /// ziにnullptrを与えた場合は、初期遅延状態を0とします。最終遅延状態も返しません。zi_nは無視されます。
-  /// n_coef_nとd_coef_nは大きいほうを基準とし、不足分は0でパディングします。
+  /// Apply a filter to the signal.
   ///
-  /// \~english
-  /// @brief Apply a filter to the signal.
-  /// @param dst pointer to the output data, of float format, and of length dst_n
-  /// @param src pointer to the input data, of float format, and of length src_n
-  /// @param n_coef pointer to the numerator coefficients of the filter, of float format, and length n_coef_n
-  /// @param d_coef pointer to the denominator coefficients of the filter, of float format, and length d_coef_n
-  /// @param zi pointer to the initial delayed values to be used, of float format, and of length zi_n (zi_n =
-  /// max(n_coef_n,d_coef_n)-1). nullptr is allowed.
-  /// @param dst_n size, in number of samples, reserved in the output buffer (dst_n >= src_n)
-  /// @param src_n number of samples in the input signal
-  /// @param n_coef_n number of numerator coefficients of the filter
-  /// @param d_coef_n number of denominator coefficients of the filter
-  /// @param zi_n number of initial delayed values provided (zi_n >= max(n_coef_n,d_coef_n)-1)
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, and of length dst_n
+  /// - `src`: pointer to the input data, of float format, and of length src_n
+  /// - `n_coef`: pointer to the numerator coefficients of the filter, of float format, and length n_coef_n
+  /// - `d_coef`: pointer to the denominator coefficients of the filter, of float format, and length d_coef_n
+  /// - `zi`: pointer to the initial delayed values to be used, of float format, and of length zi_n (zi_n =
+  ///   max(n_coef_n,d_coef_n)-1). nullptr is allowed.
+  /// - `dst_n`: size, in number of samples, reserved in the output buffer (dst_n >= src_n)
+  /// - `src_n`: number of samples in the input signal
+  /// - `n_coef_n`: number of numerator coefficients of the filter
+  /// - `d_coef_n`: number of denominator coefficients of the filter
+  /// - `zi_n`: number of initial delayed values provided (zi_n >= max(n_coef_n,d_coef_n)-1)
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// The number of samples outputted to dst is min(dst_m,src_n).
   /// Use zi to provide the initial delayed values. During processing, this array is overriden with the new delayed
   /// values. Out of the zi_n, the number of delayed values used is max(n_coef_n,d_coef_n)-1. If there are less than that,
@@ -3132,35 +2598,22 @@ class ailiaVoiceFFI {
           int,
           int)>();
 
-  /// \~japanese
-  /// @brief フィルタ処理用の初期遅延係数を算出します
-  /// @param dst_zi 出力する初期遅延状態のポインタ、float 型、要素数 dst_n (dst_n >= max(n_coef_n,d_coef_n)-1)
-  /// @param n_coef フィルタ分子係数のポインタ、float 型、要素数 n_coef_n
-  /// @param d_coef フィルタ分母係数のポインタ、float 型、要素数 d_coef_n
-  /// @param dst_n 出力先の確保要素数 (dst_n >= max(n_coef_n,d_coef_n)-1)
-  /// @param n_coef_n フィルタ分子係数の要素数
-  /// @param d_coef_n フィルタ分母係数の要素数
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 一般に、得られた係数に入力信号の先頭を乗じたものを、初期遅延状態として ailiaAudioLinerFilter() に与えます。
-  /// dst_nはmax(n_coef_n,d_coef_n)-1が必要となります。
-  /// 不足の場合は、確保分だけ出力します。
-  /// 超える部分は、0で埋めます。
-  /// n_coef_nとd_coef_nは大きいほうを基準とし、不足分は0でパディングします。
+  /// Calculate the initial delay coefficients for filtering
   ///
-  /// \~english
-  /// @brief Calculate the initial delay coefficients for filtering
-  /// @param dst_zi pointer to the output (initial delay coefficients), of float format, and of length dst_n (dst_n >=
-  /// max(n_coef_n,d_coef_n)-1)
-  /// @param n_coef pointer to the numerator coefficients of the filter, of float format, and length n_coef_n
-  /// @param d_coef pointer to the denominator coefficients of the filter, of float format, and length d_coef_n
-  /// @param dst_n size, in number of samples, reserved in the output buffer (dst_n >= max(n_coef_n,d_coef_n)-1)
-  /// @param n_coef_n number of numerator coefficients of the filter
-  /// @param d_coef_n number of denominator coefficients of the filter
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst_zi`: pointer to the output (initial delay coefficients), of float format, and of length dst_n (dst_n >=
+  ///   max(n_coef_n,d_coef_n)-1)
+  /// - `n_coef`: pointer to the numerator coefficients of the filter, of float format, and length n_coef_n
+  /// - `d_coef`: pointer to the denominator coefficients of the filter, of float format, and length d_coef_n
+  /// - `dst_n`: size, in number of samples, reserved in the output buffer (dst_n >= max(n_coef_n,d_coef_n)-1)
+  /// - `n_coef_n`: number of numerator coefficients of the filter
+  /// - `d_coef_n`: number of denominator coefficients of the filter
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// These initial delay coefficients dst_zi, once multiplied with the early values of the signal, can be passed as
   /// initial delayed values, the zi argument, to  ailiaAudioLinerFilter() . Of the dst_n reserved length of the output
   /// buffer, the length used is max(n_coef_n,d_coef_n)-1. If dst_n is less than that, only the corresponding first values
@@ -3198,40 +2651,26 @@ class ailiaVoiceFFI {
           int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>,
               ffi.Pointer<ffi.Void>, int, int, int)>();
 
-  /// \~japanese
-  /// @brief 信号にゼロ位相フィルタ処理を適用します
-  /// @param dst 出力データのポインタ、float 型、要素数 dst_n
-  /// @param src 入力データのポインタ、float 型、要素数 src_n
-  /// @param n_coef フィルタ分子係数のポインタ、float 型、要素数 n_coef_n
-  /// @param d_coef フィルタ分母係数のポインタ、float 型、要素数 d_coef_n
-  /// @param dst_n データ出力先の確保要素数（dst_n >= src_n）
-  /// @param src_n 入力データの要素数
-  /// @param n_coef_n フィルタ分子係数の要素数
-  /// @param d_coef_n フィルタ分母係数の要素数
-  /// @param pad_type 入力信号に対する両端パディング処理方法、	AILIA_AUDIO_FILTFILT_PAD_* のいずれか
-  /// @param pad_len 入力信号に対する両端パディング数
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// dstへの出力数はmin(dst_m,src_n)となります。
-  /// n_coef_nとd_coef_nは大きいほうを基準とし、不足分は0でパディングします。
+  /// Apply a zero-phase filter to the signal.
   ///
-  /// \~english
-  /// @brief Apply a zero-phase filter to the signal.
-  /// @param dst pointer to the output data, of float format, and of length dst_n
-  /// @param src pointer to the input data, of float format, and of length src_n
-  /// @param n_coef pointer to the numerator coefficients of the filter, of float format, and length n_coef_n
-  /// @param d_coef pointer to the denominator coefficients of the filter, of float format, and length d_coef_n
-  /// @param dst_n length (in number of samples) reserved in the output buffer (dst_n >= src_n)
-  /// @param src_n number of samples in the input signal
-  /// @param n_coef_n number of numerator coefficients of the filter
-  /// @param d_coef_n number of denominator coefficients of the filter
-  /// @param pad_type type of padding to apply at the start and at the end of the input signal: any of the
-  /// AILIA_AUDIO_FILTFILT_PAD_* constants
-  /// @param pad_len length of the padding applied to the start and to the end of the input signal
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `dst`: pointer to the output data, of float format, and of length dst_n
+  /// - `src`: pointer to the input data, of float format, and of length src_n
+  /// - `n_coef`: pointer to the numerator coefficients of the filter, of float format, and length n_coef_n
+  /// - `d_coef`: pointer to the denominator coefficients of the filter, of float format, and length d_coef_n
+  /// - `dst_n`: length (in number of samples) reserved in the output buffer (dst_n >= src_n)
+  /// - `src_n`: number of samples in the input signal
+  /// - `n_coef_n`: number of numerator coefficients of the filter
+  /// - `d_coef_n`: number of denominator coefficients of the filter
+  /// - `pad_type`: type of padding to apply at the start and at the end of the input signal: any of the
+  ///   AILIA_AUDIO_FILTFILT_PAD_* constants
+  /// - `pad_len`: length of the padding applied to the start and to the end of the input signal
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// The number of values written to the output dst is min(dst_m,src_n).
   /// The largest of n_coef_n and d_coef_n is taken as reference and zeros are added for padding where necessary.
   int ailiaAudioFilterFilter(
@@ -3286,35 +2725,25 @@ class ailiaVoiceFFI {
           int,
           int)>();
 
-  /// \~japanese
-  /// @brief 信号の入力前後の無音域を除いた領域を検出します
-  /// @param dst_start_pos 有音域の先頭サンプル位置出力先ポインタ、int 型
-  /// @param dst_length 有音域の長さ出力先ポインタ、int 型
-  /// @param src 入力データのポインタ、float 型、要素数 sample_n
-  /// @param sample_n 入力データのサンプル数
-  /// @param win_n 1フレームに含むサンプル数
-  /// @param hop_n フレームのシフト数
-  /// @param thr_db 有音を判断するdB (thr_db > 0)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 全域が無音の場合、*dst_start_pos = -1,*dst_length = 0となります。
-  ///
-  /// \~english
-  /// @brief Find the region of the signal between the first and the last non-silence samples. Detects the area excluding
+  /// Find the region of the signal between the first and the last non-silence samples. Detects the area excluding
   /// the silent range before and after the signal input
-  /// @param dst_start_pos pointer to the destination where to write the outputted start position of the non-silence area,
-  /// of int format
-  /// @param dst_length pointer to the destination where to write the outputted length of the non-silence area, of int
-  /// format
-  /// @param src pointer to the input data, of float format, and of length sample_n
-  /// @param sample_n count of samples in the input data
-  /// @param win_n size of the window function
-  /// @param hop_n stride of each window shift (in number of samples)
-  /// @param thr_db threshold (in dB) above which the signal is considered non-silence (thr_db > 0)
-  /// @return
-  /// In case of success,  \ref AILIA_STATUS_SUCCESS , and else an error code is returned.
-  /// @details
+  ///
+  /// Parameters:
+  ///
+  /// - `dst_start_pos`: pointer to the destination where to write the outputted start position of the non-silence area,
+  ///   of int format
+  /// - `dst_length`: pointer to the destination where to write the outputted length of the non-silence area, of int
+  ///   format
+  /// - `src`: pointer to the input data, of float format, and of length sample_n
+  /// - `sample_n`: count of samples in the input data
+  /// - `win_n`: size of the window function
+  /// - `hop_n`: stride of each window shift (in number of samples)
+  /// - `thr_db`: threshold (in dB) above which the signal is considered non-silence (thr_db > 0)
+  ///
+  /// Returns:
+  ///
+  /// In case of success,  [AILIA_STATUS_SUCCESS] , and else an error code is returned.
+  ///
   /// In case the whole signal is considered silence, the following happens: *dst_start_pos = -1, *dst_length = 0
   int ailiaAudioGetNonSilentPos(
     ffi.Pointer<ffi.Int> dst_start_pos,
@@ -3351,33 +2780,23 @@ class ailiaVoiceFFI {
           int Function(ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>,
               ffi.Pointer<ffi.Void>, int, int, int, double)>();
 
-  /// \~japanese
-  /// @brief ボイスオブジェクトを作成します。
-  /// @param net ボイスオブジェクトポインタへのポインタ
-  /// @param env_id 計算に利用する推論実行環境のID( ailiaGetEnvironment() で取得)  \ref AILIA_ENVIRONMENT_ID_AUTO にした場合は自動で選択する
-  /// @param num_thread スレッド数の上限(  \ref AILIA_MULTITHREAD_AUTO  にした場合は自動で設定)
-  /// @param memory_mode メモリモード(AILIA_MEMORY_MODE_*)
-  /// @param flag AILIA_VOICE_FLAG_*の論理和
-  /// @param api_callback ailiaのAPIへのコールバック
-  /// @param version AILIA_VOICE_API_CALLBACK_VERSION
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ボイスオブジェクトを作成します。
+  /// Creates a Voice instance.
   ///
-  /// \~english
-  /// @brief Creates a Voice instance.
-  /// @param net A pointer to the Voice instance pointer
-  /// @param env_id The ID of the inference backend used for computation (obtained by  ailiaGetEnvironment() ). It is selected automatically if  \ref AILIA_ENVIRONMENT_ID_AUTO  is specified.
-  /// @param num_thread The upper limit on the number of threads (It is set automatically if  \ref AILIA_MULTITHREAD_AUTO
-  /// @param memory_mode The memory mode (AILIA_MEMORY_MODE_*)
-  /// @param flag OR of AILIA_VOICE_FLAG_*
-  /// @param api_callback The callback for ailia API
-  /// @param version AILIA_VOICE_API_CALLBACK_VERSION
-  /// is specified.)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A pointer to the Voice instance pointer
+  /// - `env_id`: The ID of the inference backend used for computation (obtained by  ailiaGetEnvironment() ). It is selected automatically if  [AILIA_ENVIRONMENT_ID_AUTO]  is specified.
+  /// - `num_thread`: The upper limit on the number of threads (It is set automatically if  [AILIA_MULTITHREAD_AUTO]
+  /// - `memory_mode`: The memory mode (AILIA_MEMORY_MODE_*)
+  /// - `flag`: OR of AILIA_VOICE_FLAG_*
+  /// - `api_callback`: The callback for ailia API
+  /// - `version`: AILIA_VOICE_API_CALLBACK_VERSION
+  ///   is specified.)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// Creates a Voice instance.
   int ailiaVoiceCreate(
     ffi.Pointer<ffi.Pointer<AILIAVoice>> net,
@@ -3413,24 +2832,18 @@ class ailiaVoiceFFI {
       int Function(ffi.Pointer<ffi.Pointer<AILIAVoice>>, int, int, int, int,
           AILIAVoiceApiCallback, int)>();
 
-  /// \~japanese
-  /// @brief ユーザ辞書を指定します。(MBSC)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param dictionary_path ユーザ辞書ファイルのパス名(MBSC)
-  /// @param dictionary_type AILIA_VOICE_DICTIONARY_TYPE_*
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ailiaVoiceOpenDictionaryFileAの前に呼び出す必要があります。
+  /// Set user dictionary into a network instance.
   ///
-  /// \~english
-  /// @brief Set user dictionary into a network instance.
-  /// @param net A network instance pointer
-  /// @param dictionary_path The path name to the user dictionary file (MBSC)
-  /// @param dictionary_type AILIA_VOICE_DICTIONARY_TYPE_*
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `dictionary_path`: The path name to the user dictionary file (MBSC)
+  /// - `dictionary_type`: AILIA_VOICE_DICTIONARY_TYPE_*
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// You need to call before ailiaVoiceOpenDictionaryFileA.
   int ailiaVoiceSetUserDictionaryFileA(
     ffi.Pointer<AILIAVoice> net,
@@ -3452,24 +2865,18 @@ class ailiaVoiceFFI {
       _ailiaVoiceSetUserDictionaryFileAPtr.asFunction<
           int Function(ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.Char>, int)>();
 
-  /// \~japanese
-  /// @brief ユーザ辞書を指定します。(UTF16)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param dictionary_path ユーザ辞書ファイルのパス名(UTF16)
-  /// @param dictionary_type AILIA_VOICE_DICTIONARY_TYPE_*
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ailiaVoiceOpenDictionaryFileWの前に呼び出す必要があります。
+  /// Set user dictionary into a network instance.
   ///
-  /// \~english
-  /// @brief Set user dictionary into a network instance.
-  /// @param net A network instance pointer
-  /// @param dictionary_path The path name to the user dictionary file (UTF16)
-  /// @param dictionary_type AILIA_VOICE_DICTIONARY_TYPE_*
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `dictionary_path`: The path name to the user dictionary file (UTF16)
+  /// - `dictionary_type`: AILIA_VOICE_DICTIONARY_TYPE_*
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// You need to call before ailiaVoiceOpenDictionaryFileW.
   int ailiaVoiceSetUserDictionaryFileW(
     ffi.Pointer<AILIAVoice> net,
@@ -3491,30 +2898,21 @@ class ailiaVoiceFFI {
       _ailiaVoiceSetUserDictionaryFileWPtr.asFunction<
           int Function(ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.WChar>, int)>();
 
-  /// \~japanese
-  /// @brief 辞書を指定します。(MBSC)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param dictionary_path 辞書フォルダのパス名(MBSC)
-  /// @param dictionary_type AILIA_VOICE_DICTIONARY_TYPE_*
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 中国語を使用する場合、GPT-SoVITS V1では \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN のみ必要です。
-  /// GPT-SoVITS V2およびV3では \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN と
-  /// \ref AILIA_VOICE_DICTIONARY_TYPE_G2PW の両方が必要です。
-  /// G2PWを使用する場合、先にG2P_CNを読み込んでください。
+  /// Set dictionary into a network instance.
   ///
-  /// \~english
-  /// @brief Set dictionary into a network instance.
-  /// @param net A network instance pointer
-  /// @param dictionary_path The path name to the dictionary folder (MBSC)
-  /// @param dictionary_type AILIA_VOICE_DICTIONARY_TYPE_*
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
-  /// For Chinese, GPT-SoVITS V1 requires only \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN .
-  /// GPT-SoVITS V2 and V3 require both \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN and
-  /// \ref AILIA_VOICE_DICTIONARY_TYPE_G2PW .
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `dictionary_path`: The path name to the dictionary folder (MBSC)
+  /// - `dictionary_type`: AILIA_VOICE_DICTIONARY_TYPE_*
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
+  /// For Chinese, GPT-SoVITS V1 requires only [AILIA_VOICE_DICTIONARY_TYPE_G2P_CN] .
+  /// GPT-SoVITS V2 and V3 require both [AILIA_VOICE_DICTIONARY_TYPE_G2P_CN] and
+  /// [AILIA_VOICE_DICTIONARY_TYPE_G2PW] .
   /// When using G2PW, load G2P_CN first.
   int ailiaVoiceOpenDictionaryFileA(
     ffi.Pointer<AILIAVoice> net,
@@ -3536,30 +2934,21 @@ class ailiaVoiceFFI {
       _ailiaVoiceOpenDictionaryFileAPtr.asFunction<
           int Function(ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.Char>, int)>();
 
-  /// \~japanese
-  /// @brief 辞書を指定します。(UTF16)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param dictionary_path 辞書フォルダのパス名(UTF16)
-  /// @param dictionary_type AILIA_VOICE_DICTIONARY_TYPE_*
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 中国語を使用する場合、GPT-SoVITS V1では \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN のみ必要です。
-  /// GPT-SoVITS V2およびV3では \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN と
-  /// \ref AILIA_VOICE_DICTIONARY_TYPE_G2PW の両方が必要です。
-  /// G2PWを使用する場合、先にG2P_CNを読み込んでください。
+  /// Set dictionary into a network instance.
   ///
-  /// \~english
-  /// @brief Set dictionary into a network instance.
-  /// @param net A network instance pointer
-  /// @param dictionary_path The path name to the dictionary folder (UTF16)
-  /// @param dictionary_type AILIA_VOICE_DICTIONARY_TYPE_*
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
-  /// For Chinese, GPT-SoVITS V1 requires only \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN .
-  /// GPT-SoVITS V2 and V3 require both \ref AILIA_VOICE_DICTIONARY_TYPE_G2P_CN and
-  /// \ref AILIA_VOICE_DICTIONARY_TYPE_G2PW .
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `dictionary_path`: The path name to the dictionary folder (UTF16)
+  /// - `dictionary_type`: AILIA_VOICE_DICTIONARY_TYPE_*
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
+  /// For Chinese, GPT-SoVITS V1 requires only [AILIA_VOICE_DICTIONARY_TYPE_G2P_CN] .
+  /// GPT-SoVITS V2 and V3 require both [AILIA_VOICE_DICTIONARY_TYPE_G2P_CN] and
+  /// [AILIA_VOICE_DICTIONARY_TYPE_G2PW] .
   /// When using G2PW, load G2P_CN first.
   int ailiaVoiceOpenDictionaryFileW(
     ffi.Pointer<AILIAVoice> net,
@@ -3581,35 +2970,23 @@ class ailiaVoiceFFI {
       _ailiaVoiceOpenDictionaryFileWPtr.asFunction<
           int Function(ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.WChar>, int)>();
 
-  /// \~japanese
-  /// @brief モデルを指定します。(MBSC)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param encoder_path onnxファイルのパス名(MBSC)
-  /// @param decoder1_path onnxファイルのパス名(MBSC)
-  /// @param decoder2_path onnxファイルのパス名(MBSC)
-  /// @param wave_path onnxファイルのパス名(MBSC)
-  /// @param ssl_path onnxファイルのパス名(MBSC)
-  /// @param model_type AILIA_VOICE_MODEL_TYPE_*
-  /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// この関数は非推奨です。代わりにailiaVoiceOpenTacotron2ModelFileA、ailiaVoiceOpenGPTSoVITSV1ModelFileA、
-  /// ailiaVoiceOpenGPTSoVITSV2ModelFileAを使用してください。
+  /// Set models into a network instance.
   ///
-  /// \~english
-  /// @brief Set models into a network instance.
-  /// @param net A network instance pointer
-  /// @param encoder The path name to the onnx file (MBSC)
-  /// @param decoder1 The path name to the onnx file (MBSC)
-  /// @param decoder2 The path name to the onnx file (MBSC)
-  /// @param wave The path name to the onnx file (MBSC)
-  /// @param ssl The path name to the onnx file (MBSC)
-  /// @param model_type AILIA_VOICE_MODEL_TYPE_*
-  /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `encoder`: The path name to the onnx file (MBSC)
+  /// - `decoder1`: The path name to the onnx file (MBSC)
+  /// - `decoder2`: The path name to the onnx file (MBSC)
+  /// - `wave`: The path name to the onnx file (MBSC)
+  /// - `ssl`: The path name to the onnx file (MBSC)
+  /// - `model_type`: AILIA_VOICE_MODEL_TYPE_*
+  /// - `cleaner_type`: AILIA_VOICE_CLEANER_TYPE_*
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This function is deprecated. Use ailiaVoiceOpenTacotron2ModelFileA, ailiaVoiceOpenGPTSoVITSV1ModelFileA,
   /// ailiaVoiceOpenGPTSoVITSV2ModelFileA instead.
   int ailiaVoiceOpenModelFileA(
@@ -3657,35 +3034,23 @@ class ailiaVoiceFFI {
               int,
               int)>();
 
-  /// \~japanese
-  /// @brief モデルを指定します。(UTF16)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param encoder onnxファイルのパス名(UTF16)
-  /// @param decoder1 onnxファイルのパス名(UTF16)
-  /// @param decoder2 onnxファイルのパス名(UTF16)
-  /// @param wave onnxファイルのパス名(UTF16)
-  /// @param ssl onnxファイルのパス名(UTF16)
-  /// @param model_type AILIA_VOICE_MODEL_TYPE_*
-  /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// この関数は非推奨です。代わりにailiaVoiceOpenTacotron2ModelFileW、ailiaVoiceOpenGPTSoVITSV1ModelFileW、
-  /// ailiaVoiceOpenGPTSoVITSV2ModelFileWを使用してください。
+  /// Set models into a network instance.
   ///
-  /// \~english
-  /// @brief Set models into a network instance.
-  /// @param net A network instance pointer
-  /// @param encoder The path name to the onnx file (UTF16)
-  /// @param decoder1 The path name to the onnx file (UTF16)
-  /// @param decoder2 The path name to the onnx file (UTF16)
-  /// @param wave The path name to the onnx file (UTF16)
-  /// @param ssl The path name to the onnx file (UTF16)
-  /// @param model_type AILIA_VOICE_MODEL_TYPE_*
-  /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `encoder`: The path name to the onnx file (UTF16)
+  /// - `decoder1`: The path name to the onnx file (UTF16)
+  /// - `decoder2`: The path name to the onnx file (UTF16)
+  /// - `wave`: The path name to the onnx file (UTF16)
+  /// - `ssl`: The path name to the onnx file (UTF16)
+  /// - `model_type`: AILIA_VOICE_MODEL_TYPE_*
+  /// - `cleaner_type`: AILIA_VOICE_CLEANER_TYPE_*
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// This function is deprecated. Use ailiaVoiceOpenTacotron2ModelFileW, ailiaVoiceOpenGPTSoVITSV1ModelFileW,
   /// ailiaVoiceOpenGPTSoVITSV2ModelFileW instead.
   int ailiaVoiceOpenModelFileW(
@@ -3733,27 +3098,20 @@ class ailiaVoiceFFI {
               int,
               int)>();
 
-  /// \~japanese
-  /// @brief Tacotron2向けのモデルを指定します。(MBSC)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param encoder onnxファイルのパス名 (encoder.onnx) (MBSC)
-  /// @param decoder1 onnxファイルのパス名 (decoder_iter.onnx) (MBSC)
-  /// @param decoder2 onnxファイルのパス名 (postnet.onnx) (MBSC)
-  /// @param wave onnxファイルのパス名 (waveglow.onnx) (MBSC)
-  /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Set Tacotron2 models into a network instance.
   ///
-  /// \~english
-  /// @brief Set Tacotron2 models into a network instance.
-  /// @param net A network instance pointer
-  /// @param encoder The path name to the onnx file (encoder.onnx) (MBSC)
-  /// @param decoder1 The path name to the onnx file (decoder_iter.onnx) (MBSC)
-  /// @param decoder2 The path name to the onnx file (postnet.onnx) (MBSC)
-  /// @param wave The path name to the onnx file (waveglow.onnx) (MBSC)
-  /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `encoder`: The path name to the onnx file (encoder.onnx) (MBSC)
+  /// - `decoder1`: The path name to the onnx file (decoder_iter.onnx) (MBSC)
+  /// - `decoder2`: The path name to the onnx file (postnet.onnx) (MBSC)
+  /// - `wave`: The path name to the onnx file (waveglow.onnx) (MBSC)
+  /// - `cleaner_type`: AILIA_VOICE_CLEANER_TYPE_*
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceOpenTacotron2ModelFileA(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.Char> encoder,
@@ -3791,27 +3149,20 @@ class ailiaVoiceFFI {
               ffi.Pointer<ffi.Char>,
               int)>();
 
-  /// \~japanese
-  /// @brief Tacotron2向けのモデルを指定します。(UTF16)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param encoder onnxファイルのパス名 (encoder.onnx) (UTF16)
-  /// @param decoder1 onnxファイルのパス名 (decoder_iter.onnx) (UTF16)
-  /// @param decoder2 onnxファイルのパス名 (postnet.onnx) (UTF16)
-  /// @param wave onnxファイルのパス名 (waveglow.onnx) (UTF16)
-  /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Set Tacotron2 models into a network instance.
   ///
-  /// \~english
-  /// @brief Set Tacotron2 models into a network instance.
-  /// @param net A network instance pointer
-  /// @param encoder The path name to the onnx file (encoder.onnx) (UTF16)
-  /// @param decoder1 The path name to the onnx file (decoder_iter.onnx) (UTF16)
-  /// @param decoder2 The path name to the onnx file (postnet.onnx) (UTF16)
-  /// @param wave The path name to the onnx file (waveglow.onnx) (UTF16)
-  /// @param cleaner_type AILIA_VOICE_CLEANER_TYPE_*
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `encoder`: The path name to the onnx file (encoder.onnx) (UTF16)
+  /// - `decoder1`: The path name to the onnx file (decoder_iter.onnx) (UTF16)
+  /// - `decoder2`: The path name to the onnx file (postnet.onnx) (UTF16)
+  /// - `wave`: The path name to the onnx file (waveglow.onnx) (UTF16)
+  /// - `cleaner_type`: AILIA_VOICE_CLEANER_TYPE_*
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceOpenTacotron2ModelFileW(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.WChar> encoder,
@@ -3849,27 +3200,20 @@ class ailiaVoiceFFI {
               ffi.Pointer<ffi.WChar>,
               int)>();
 
-  /// \~japanese
-  /// @brief GPT-SoVITS V1向けのモデルを指定します。(MBSC)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (MBSC)
-  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (MBSC)
-  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (MBSC)
-  /// @param wave onnxファイルのパス名 (vits.onnx) (MBSC)
-  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (MBSC)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Set GPT-SoVITS V1 models into a network instance.
   ///
-  /// \~english
-  /// @brief Set GPT-SoVITS V1 models into a network instance.
-  /// @param net A network instance pointer
-  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (MBSC)
-  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (MBSC)
-  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (MBSC)
-  /// @param wave The path name to the onnx file (vits.onnx) (MBSC)
-  /// @param ssl The path name to the onnx file (cnhubert.onnx) (MBSC)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `encoder`: The path name to the onnx file (t2s_encoder.onnx) (MBSC)
+  /// - `decoder1`: The path name to the onnx file (t2s_fsdec.onnx) (MBSC)
+  /// - `decoder2`: The path name to the onnx file (t2s_sdec.onnx) (MBSC)
+  /// - `wave`: The path name to the onnx file (vits.onnx) (MBSC)
+  /// - `ssl`: The path name to the onnx file (cnhubert.onnx) (MBSC)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceOpenGPTSoVITSV1ModelFileA(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.Char> encoder,
@@ -3907,27 +3251,20 @@ class ailiaVoiceFFI {
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>)>();
 
-  /// \~japanese
-  /// @brief GPT-SoVITS V1向けのモデルを指定します。(UTF16)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (UTF16)
-  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (UTF16)
-  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (UTF16)
-  /// @param wave onnxファイルのパス名 (vits.onnx) (UTF16)
-  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (UTF16)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Set GPT-SoVITS V1 models into a network instance.
   ///
-  /// \~english
-  /// @brief Set GPT-SoVITS V1 models into a network instance.
-  /// @param net A network instance pointer
-  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (UTF16)
-  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (UTF16)
-  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (UTF16)
-  /// @param wave The path name to the onnx file (vits.onnx) (UTF16)
-  /// @param ssl The path name to the onnx file (cnhubert.onnx) (UTF16)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `encoder`: The path name to the onnx file (t2s_encoder.onnx) (UTF16)
+  /// - `decoder1`: The path name to the onnx file (t2s_fsdec.onnx) (UTF16)
+  /// - `decoder2`: The path name to the onnx file (t2s_sdec.onnx) (UTF16)
+  /// - `wave`: The path name to the onnx file (vits.onnx) (UTF16)
+  /// - `ssl`: The path name to the onnx file (cnhubert.onnx) (UTF16)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceOpenGPTSoVITSV1ModelFileW(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.WChar> encoder,
@@ -3965,31 +3302,22 @@ class ailiaVoiceFFI {
               ffi.Pointer<ffi.WChar>,
               ffi.Pointer<ffi.WChar>)>();
 
-  /// \~japanese
-  /// @brief GPT-SoVITS V2向けのモデルを指定します。(MBSC)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (MBSC)
-  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (MBSC)
-  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (MBSC)
-  /// @param wave onnxファイルのパス名 (vits.onnx) (MBSC)
-  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (MBSC)
-  /// @param chinese_bert onnxファイルのパス名 (chinese-roberta.onnx) (MBSC)（NULLの場合はBERTを使用しない）
-  /// @param vocab vocab.txtのパス名 (MBSC)（NULLの場合はBERTを使用しない）
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Set GPT-SoVITS V2 models into a network instance.
   ///
-  /// \~english
-  /// @brief Set GPT-SoVITS V2 models into a network instance.
-  /// @param net A network instance pointer
-  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (MBSC)
-  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (MBSC)
-  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (MBSC)
-  /// @param wave The path name to the onnx file (vits.onnx) (MBSC)
-  /// @param ssl The path name to the onnx file (cnhubert.onnx) (MBSC)
-  /// @param chinese_bert The path name to the onnx file (chinese-roberta.onnx) (MBSC) (NULL to disable BERT)
-  /// @param vocab The path name to the vocab file (vocab.txt) (MBSC) (NULL to disable BERT)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `encoder`: The path name to the onnx file (t2s_encoder.onnx) (MBSC)
+  /// - `decoder1`: The path name to the onnx file (t2s_fsdec.onnx) (MBSC)
+  /// - `decoder2`: The path name to the onnx file (t2s_sdec.onnx) (MBSC)
+  /// - `wave`: The path name to the onnx file (vits.onnx) (MBSC)
+  /// - `ssl`: The path name to the onnx file (cnhubert.onnx) (MBSC)
+  /// - `chinese_bert`: The path name to the onnx file (chinese-roberta.onnx) (MBSC) (NULL to disable BERT)
+  /// - `vocab`: The path name to the vocab file (vocab.txt) (MBSC) (NULL to disable BERT)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceOpenGPTSoVITSV2ModelFileA(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.Char> encoder,
@@ -4035,31 +3363,22 @@ class ailiaVoiceFFI {
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>)>();
 
-  /// \~japanese
-  /// @brief GPT-SoVITS V2向けのモデルを指定します。(UTF16)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (UTF16)
-  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (UTF16)
-  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (UTF16)
-  /// @param wave onnxファイルのパス名 (vits.onnx) (UTF16)
-  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (UTF16)
-  /// @param chinese_bert onnxファイルのパス名 (chinese-roberta.onnx) (UTF16)（NULLの場合はBERTを使用しない）
-  /// @param vocab vocab.txtのパス名 (UTF16)（NULLの場合はBERTを使用しない）
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Set GPT-SoVITS V2 models into a network instance.
   ///
-  /// \~english
-  /// @brief Set GPT-SoVITS V2 models into a network instance.
-  /// @param net A network instance pointer
-  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (UTF16)
-  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (UTF16)
-  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (UTF16)
-  /// @param wave The path name to the onnx file (vits.onnx) (UTF16)
-  /// @param ssl The path name to the onnx file (cnhubert.onnx) (UTF16)
-  /// @param chinese_bert The path name to the onnx file (chinese-roberta.onnx) (UTF16) (NULL to disable BERT)
-  /// @param vocab The path name to the vocab file (vocab.txt) (UTF16) (NULL to disable BERT)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `encoder`: The path name to the onnx file (t2s_encoder.onnx) (UTF16)
+  /// - `decoder1`: The path name to the onnx file (t2s_fsdec.onnx) (UTF16)
+  /// - `decoder2`: The path name to the onnx file (t2s_sdec.onnx) (UTF16)
+  /// - `wave`: The path name to the onnx file (vits.onnx) (UTF16)
+  /// - `ssl`: The path name to the onnx file (cnhubert.onnx) (UTF16)
+  /// - `chinese_bert`: The path name to the onnx file (chinese-roberta.onnx) (UTF16) (NULL to disable BERT)
+  /// - `vocab`: The path name to the vocab file (vocab.txt) (UTF16) (NULL to disable BERT)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceOpenGPTSoVITSV2ModelFileW(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.WChar> encoder,
@@ -4105,35 +3424,24 @@ class ailiaVoiceFFI {
               ffi.Pointer<ffi.WChar>,
               ffi.Pointer<ffi.WChar>)>();
 
-  /// \~japanese
-  /// @brief GPT-SoVITS V3向けのモデルを指定します。(MBSC)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param encoder_path onnxファイルのパス名 (t2s_encoder.onnx) (MBSC)
-  /// @param decoder1_path onnxファイルのパス名 (t2s_fsdec.onnx) (MBSC)
-  /// @param decoder2_path onnxファイルのパス名 (t2s_sdec.onnx) (MBSC)
-  /// @param ssl_path onnxファイルのパス名 (cnhubert.onnx) (MBSC)
-  /// @param vq_path onnxファイルのパス名 (vq_model.onnx) (MBSC)
-  /// @param cfm_path onnxファイルのパス名 (vq_cfm.onnx) (MBSC)
-  /// @param bigvgan_path onnxファイルのパス名 (bigvgan_model.onnx) (MBSC)
-  /// @param chinese_bert onnxファイルのパス名 (chinese-roberta.onnx) (MBSC)（NULLの場合はBERTを使用しない）
-  /// @param vocab vocab.txtのパス名 (MBSC)（NULLの場合はBERTを使用しない）
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Set GPT-SoVITS V3 models into a network instance.
   ///
-  /// \~english
-  /// @brief Set GPT-SoVITS V3 models into a network instance.
-  /// @param net A network instance pointer
-  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (MBSC)
-  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (MBSC)
-  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (MBSC)
-  /// @param ssl The path name to the onnx file (cnhubert.onnx) (MBSC)
-  /// @param vq The path name to the onnx file (vq_model.onnx) (MBSC)
-  /// @param cfm The path name to the onnx file (vq_cfm.onnx) (MBSC)
-  /// @param bigvgan The path name to the onnx file (bigvgan_model.onnx) (MBSC)
-  /// @param chinese_bert The path name to the onnx file (chinese-roberta.onnx) (MBSC) (NULL to disable BERT)
-  /// @param vocab The path name to the vocab file (vocab.txt) (MBSC) (NULL to disable BERT)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `encoder`: The path name to the onnx file (t2s_encoder.onnx) (MBSC)
+  /// - `decoder1`: The path name to the onnx file (t2s_fsdec.onnx) (MBSC)
+  /// - `decoder2`: The path name to the onnx file (t2s_sdec.onnx) (MBSC)
+  /// - `ssl`: The path name to the onnx file (cnhubert.onnx) (MBSC)
+  /// - `vq`: The path name to the onnx file (vq_model.onnx) (MBSC)
+  /// - `cfm`: The path name to the onnx file (vq_cfm.onnx) (MBSC)
+  /// - `bigvgan`: The path name to the onnx file (bigvgan_model.onnx) (MBSC)
+  /// - `chinese_bert`: The path name to the onnx file (chinese-roberta.onnx) (MBSC) (NULL to disable BERT)
+  /// - `vocab`: The path name to the vocab file (vocab.txt) (MBSC) (NULL to disable BERT)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceOpenGPTSoVITSV3ModelFileA(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.Char> encoder,
@@ -4187,35 +3495,24 @@ class ailiaVoiceFFI {
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>)>();
 
-  /// \~japanese
-  /// @brief GPT-SoVITS V3向けのモデルを指定します。(UTF16)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (UTF16)
-  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (UTF16)
-  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (UTF16)
-  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (UTF16)
-  /// @param vq onnxファイルのパス名 (vq_model.onnx) (UTF16)
-  /// @param cfm onnxファイルのパス名 (vq_cfm.onnx) (UTF16)
-  /// @param bigvgan onnxファイルのパス名 (bigvgan_model.onnx) (UTF16)
-  /// @param chinese_bert onnxファイルのパス名 (chinese-roberta.onnx) (UTF16)（NULLの場合はBERTを使用しない）
-  /// @param vocab vocab.txtのパス名 (UTF16)（NULLの場合はBERTを使用しない）
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Set GPT-SoVITS V3 models into a network instance.
   ///
-  /// \~english
-  /// @brief Set GPT-SoVITS V3 models into a network instance.
-  /// @param net A network instance pointer
-  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (UTF16)
-  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (UTF16)
-  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (UTF16)
-  /// @param ssl The path name to the onnx file (cnhubert.onnx) (UTF16)
-  /// @param vq The path name to the onnx file (vq_model.onnx) (UTF16)
-  /// @param cfm The path name to the onnx file (vq_cfm.onnx) (UTF16)
-  /// @param bigvgan The path name to the onnx file (bigvgan_model.onnx) (UTF16)
-  /// @param chinese_bert The path name to the onnx file (chinese-roberta.onnx) (UTF16) (NULL to disable BERT)
-  /// @param vocab The path name to the vocab file (vocab.txt) (UTF16) (NULL to disable BERT)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `encoder`: The path name to the onnx file (t2s_encoder.onnx) (UTF16)
+  /// - `decoder1`: The path name to the onnx file (t2s_fsdec.onnx) (UTF16)
+  /// - `decoder2`: The path name to the onnx file (t2s_sdec.onnx) (UTF16)
+  /// - `ssl`: The path name to the onnx file (cnhubert.onnx) (UTF16)
+  /// - `vq`: The path name to the onnx file (vq_model.onnx) (UTF16)
+  /// - `cfm`: The path name to the onnx file (vq_cfm.onnx) (UTF16)
+  /// - `bigvgan`: The path name to the onnx file (bigvgan_model.onnx) (UTF16)
+  /// - `chinese_bert`: The path name to the onnx file (chinese-roberta.onnx) (UTF16) (NULL to disable BERT)
+  /// - `vocab`: The path name to the vocab file (vocab.txt) (UTF16) (NULL to disable BERT)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceOpenGPTSoVITSV3ModelFileW(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.WChar> encoder,
@@ -4269,33 +3566,23 @@ class ailiaVoiceFFI {
               ffi.Pointer<ffi.WChar>,
               ffi.Pointer<ffi.WChar>)>();
 
-  /// \~japanese
-  /// @brief GPT-SoVITS V2-Pro向けのモデルを指定します。(MBSC)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (MBSC)
-  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (MBSC)
-  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (MBSC)
-  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (MBSC)
-  /// @param vits onnxファイルのパス名 (vits.onnx) (MBSC)
-  /// @param sv onnxファイルのパス名 (sv.onnx) (MBSC)
-  /// @param chinese_bert onnxファイルのパス名 (chinese-roberta.onnx) (MBSC)（NULLの場合はBERTを使用しない）
-  /// @param vocab vocab.txtのパス名 (MBSC)（NULLの場合はBERTを使用しない）
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Set GPT-SoVITS V2-Pro models into a network instance.
   ///
-  /// \~english
-  /// @brief Set GPT-SoVITS V2-Pro models into a network instance.
-  /// @param net A network instance pointer
-  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (MBSC)
-  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (MBSC)
-  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (MBSC)
-  /// @param ssl The path name to the onnx file (cnhubert.onnx) (MBSC)
-  /// @param vits The path name to the onnx file (vits.onnx) (MBSC)
-  /// @param sv The path name to the onnx file (sv.onnx) (MBSC)
-  /// @param chinese_bert The path name to the onnx file (chinese-roberta.onnx) (MBSC) (NULL to disable BERT)
-  /// @param vocab The path name to the vocab file (vocab.txt) (MBSC) (NULL to disable BERT)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `encoder`: The path name to the onnx file (t2s_encoder.onnx) (MBSC)
+  /// - `decoder1`: The path name to the onnx file (t2s_fsdec.onnx) (MBSC)
+  /// - `decoder2`: The path name to the onnx file (t2s_sdec.onnx) (MBSC)
+  /// - `ssl`: The path name to the onnx file (cnhubert.onnx) (MBSC)
+  /// - `vits`: The path name to the onnx file (vits.onnx) (MBSC)
+  /// - `sv`: The path name to the onnx file (sv.onnx) (MBSC)
+  /// - `chinese_bert`: The path name to the onnx file (chinese-roberta.onnx) (MBSC) (NULL to disable BERT)
+  /// - `vocab`: The path name to the vocab file (vocab.txt) (MBSC) (NULL to disable BERT)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceOpenGPTSoVITSV2ProModelFileA(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.Char> encoder,
@@ -4346,33 +3633,23 @@ class ailiaVoiceFFI {
               ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>)>();
 
-  /// \~japanese
-  /// @brief GPT-SoVITS V2-Pro向けのモデルを指定します。(UTF16)
-  /// @param net ネットワークオブジェクトポインタ
-  /// @param encoder onnxファイルのパス名 (t2s_encoder.onnx) (UTF16)
-  /// @param decoder1 onnxファイルのパス名 (t2s_fsdec.onnx) (UTF16)
-  /// @param decoder2 onnxファイルのパス名 (t2s_sdec.onnx) (UTF16)
-  /// @param ssl onnxファイルのパス名 (cnhubert.onnx) (UTF16)
-  /// @param vits onnxファイルのパス名 (vits.onnx) (UTF16)
-  /// @param sv onnxファイルのパス名 (sv.onnx) (UTF16)
-  /// @param chinese_bert onnxファイルのパス名 (chinese-roberta.onnx) (UTF16)（NULLの場合はBERTを使用しない）
-  /// @param vocab vocab.txtのパス名 (UTF16)（NULLの場合はBERTを使用しない）
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Set GPT-SoVITS V2-Pro models into a network instance.
   ///
-  /// \~english
-  /// @brief Set GPT-SoVITS V2-Pro models into a network instance.
-  /// @param net A network instance pointer
-  /// @param encoder The path name to the onnx file (t2s_encoder.onnx) (UTF16)
-  /// @param decoder1 The path name to the onnx file (t2s_fsdec.onnx) (UTF16)
-  /// @param decoder2 The path name to the onnx file (t2s_sdec.onnx) (UTF16)
-  /// @param ssl The path name to the onnx file (cnhubert.onnx) (UTF16)
-  /// @param vits The path name to the onnx file (vits.onnx) (UTF16)
-  /// @param sv The path name to the onnx file (sv.onnx) (UTF16)
-  /// @param chinese_bert The path name to the onnx file (chinese-roberta.onnx) (UTF16) (NULL to disable BERT)
-  /// @param vocab The path name to the vocab file (vocab.txt) (UTF16) (NULL to disable BERT)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A network instance pointer
+  /// - `encoder`: The path name to the onnx file (t2s_encoder.onnx) (UTF16)
+  /// - `decoder1`: The path name to the onnx file (t2s_fsdec.onnx) (UTF16)
+  /// - `decoder2`: The path name to the onnx file (t2s_sdec.onnx) (UTF16)
+  /// - `ssl`: The path name to the onnx file (cnhubert.onnx) (UTF16)
+  /// - `vits`: The path name to the onnx file (vits.onnx) (UTF16)
+  /// - `sv`: The path name to the onnx file (sv.onnx) (UTF16)
+  /// - `chinese_bert`: The path name to the onnx file (chinese-roberta.onnx) (UTF16) (NULL to disable BERT)
+  /// - `vocab`: The path name to the vocab file (vocab.txt) (UTF16) (NULL to disable BERT)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceOpenGPTSoVITSV2ProModelFileW(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.WChar> encoder,
@@ -4423,24 +3700,18 @@ class ailiaVoiceFFI {
               ffi.Pointer<ffi.WChar>,
               ffi.Pointer<ffi.WChar>)>();
 
-  /// \~japanese
-  /// @brief G2Pを行います。
-  /// @param net ボイスオブジェクトポインタ
-  /// @param text テキスト(UTF8)
-  /// @param g2p_type AILIA_VOICE_G2P_TYPE_*
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 認識した結果はailiaVoiceGetFeatures APIで取得します。
+  /// Perform g2p
   ///
-  /// \~english
-  /// @brief Perform g2p
-  /// @param net A Voice instance pointer
-  /// @param text Text(UTF8)
-  /// @param g2p_type AILIA_VOICE_G2P_TYPE_*
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A Voice instance pointer
+  /// - `text`: Text(UTF8)
+  /// - `g2p_type`: AILIA_VOICE_G2P_TYPE_*
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// Get the result with ailiaVoiceGetFeatures API.
   int ailiaVoiceGraphemeToPhoneme(
     ffi.Pointer<AILIAVoice> net,
@@ -4462,22 +3733,17 @@ class ailiaVoiceFFI {
       _ailiaVoiceGraphemeToPhonemePtr.asFunction<
           int Function(ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.Char>, int)>();
 
-  /// \~japanese
-  /// @brief ExtractFullContextを行います。
-  /// @param net ボイスオブジェクトポインタ
-  /// @param text テキスト(UTF8)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 認識した結果はailiaVoiceGetFeaturesAPIで取得します。
+  /// Perform ExtractFullContext
   ///
-  /// \~english
-  /// @brief Perform ExtractFullContext
-  /// @param net A Voice instance pointer
-  /// @param text Text (UTF8)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A Voice instance pointer
+  /// - `text`: Text (UTF8)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// Get the result with ailiaVoiceGetFeatures API.
   int ailiaVoiceExtractFullContext(
     ffi.Pointer<AILIAVoice> net,
@@ -4497,19 +3763,16 @@ class ailiaVoiceFFI {
       _ailiaVoiceExtractFullContextPtr.asFunction<
           int Function(ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.Char>)>();
 
-  /// \~japanese
-  /// @brief フィーチャーの長さを取得します。(NULL文字含む)
-  /// @param net   ボイスオブジェクトポインタ
-  /// @param len  フィーチャーの長さ
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Gets the size of features. (Include null)
   ///
-  /// \~english
-  /// @brief Gets the size of features. (Include null)
-  /// @param net   A Voice instance pointer
-  /// @param len  The length of features
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A Voice instance pointer
+  /// - `len`: The length of features
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceGetFeatureLength(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.UnsignedInt> len,
@@ -4529,25 +3792,19 @@ class ailiaVoiceFFI {
           int Function(
               ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.UnsignedInt>)>();
 
-  /// \~japanese
-  /// @brief フィーチャーを取得します。
-  /// @param net   ボイスオブジェクトポインタ
-  /// @param features  フィーチャー(UTF8)
-  /// @param len フィーチャーの長さ
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ailiaVoiceGraphemeToPhoneme() もしくは ailiaVoiceExtractFullContext() を一度も実行していない場合は \ref AILIA_STATUS_INVALID_STATE が返ります。
+  /// Gets the decoded features.
   ///
-  /// \~english
-  /// @brief Gets the decoded features.
-  /// @param net   A Voice instance pointer
-  /// @param features  Features(UTF8)
-  /// @param len  The length of features
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
-  /// If  ailiaVoiceGraphemeToPhoneme()  or ailiaVoiceExtractFullContext() is not run at all, the function returns  \ref AILIA_STATUS_INVALID_STATE .
+  /// Parameters:
+  ///
+  /// - `net`: A Voice instance pointer
+  /// - `features`: Features(UTF8)
+  /// - `len`: The length of features
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
+  /// If  ailiaVoiceGraphemeToPhoneme()  or ailiaVoiceExtractFullContext() is not run at all, the function returns  [AILIA_STATUS_INVALID_STATE] .
   int ailiaVoiceGetFeatures(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.Char> features,
@@ -4567,28 +3824,20 @@ class ailiaVoiceFFI {
   late final _ailiaVoiceGetFeatures = _ailiaVoiceGetFeaturesPtr.asFunction<
       int Function(ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.Char>, int)>();
 
-  /// \~japanese
-  /// @brief 0ショット音声合成のリファレンスとなる波形とテキストを設定します。
-  /// @param net   ボイスオブジェクトポインタ
-  /// @param buf  PCM波形 (0 - 1で正規化)
-  /// @param buf_size バッファサイズ（byte単位）
-  /// @param channels チャンネル数
-  /// @param sampling_rate サンプリングレート
-  /// @param features フィーチャー(UTF8)
+  /// Set the waveform and text as references for zero-shot voice synthesis.
   ///
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Parameters:
   ///
-  /// \~english
-  /// @brief Set the waveform and text as references for zero-shot voice synthesis.
-  /// @param net   A Voice instance pointer
-  /// @param buf   PCM Wave (Normalized by 0 - 1)
-  /// @param buf_size buffer size (byte unit)
-  /// @param channels num channels
-  /// @param sampling_rate sampling rate
-  /// @param features Feature (UTF8)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// - `net`: A Voice instance pointer
+  /// - `buf`: PCM Wave (Normalized by 0 - 1)
+  /// - `buf_size`: buffer size (byte unit)
+  /// - `channels`: num channels
+  /// - `sampling_rate`: sampling rate
+  /// - `features`: Feature (UTF8)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceSetReference(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.Float> buf,
@@ -4620,19 +3869,16 @@ class ailiaVoiceFFI {
       int Function(ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.Float>, int, int,
           int, ffi.Pointer<ffi.Char>)>();
 
-  /// \~japanese
-  /// @brief GPT-SoVITS v3のCFMサンプリングステップ数を設定します。
-  /// @param net ボイスオブジェクトポインタ
-  /// @param steps CFMのEuler ODEステップ数(デフォルト4)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Set the number of CFM sampling steps for GPT-SoVITS v3.
   ///
-  /// \~english
-  /// @brief Set the number of CFM sampling steps for GPT-SoVITS v3.
-  /// @param net A Voice instance pointer
-  /// @param steps Number of Euler ODE steps for CFM (default 4)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A Voice instance pointer
+  /// - `steps`: Number of Euler ODE steps for CFM (default 4)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceSetSampleSteps(
     ffi.Pointer<AILIAVoice> net,
     int steps,
@@ -4650,22 +3896,17 @@ class ailiaVoiceFFI {
   late final _ailiaVoiceSetSampleSteps = _ailiaVoiceSetSampleStepsPtr
       .asFunction<int Function(ffi.Pointer<AILIAVoice>, int)>();
 
-  /// \~japanese
-  /// @brief 音声合成の速度を設定します。
-  /// @param net ボイスオブジェクトポインタ
-  /// @param speed 速度(デフォルト1.0、0より大きい値)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// GPT-SoVITS V2およびV3で使用できます。V1では無効です。
+  /// Set the speech speed for synthesis.
   ///
-  /// \~english
-  /// @brief Set the speech speed for synthesis.
-  /// @param net A Voice instance pointer
-  /// @param speed Speed value (default 1.0, must be greater than 0)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A Voice instance pointer
+  /// - `speed`: Speed value (default 1.0, must be greater than 0)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// Supported by GPT-SoVITS V2 and V3. Not effective for V1.
   int ailiaVoiceSetSpeed(
     ffi.Pointer<AILIAVoice> net,
@@ -4684,23 +3925,17 @@ class ailiaVoiceFFI {
   late final _ailiaVoiceSetSpeed = _ailiaVoiceSetSpeedPtr
       .asFunction<int Function(ffi.Pointer<AILIAVoice>, double)>();
 
-  /// \~japanese
-  /// @brief G2Pで使用するモデルタイプを設定します。
-  /// @param net ボイスオブジェクトポインタ
-  /// @param model_type モデルタイプ（AILIA_VOICE_MODEL_TYPE_GPT_SOVITS, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V2, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V3, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V2_PRO）
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// G2Pを単独で使用する際に、モデルファイルを与えずにモデルタイプを設定することに使用します。
-  /// ailiaVoiceOpenModelFileAまたはailiaVoiceOpenGPTSoVITSV3ModelFileAを呼び出した場合は自動的に設定されるため、本APIの呼び出しは不要です。
+  /// Set the model type used for G2P processing.
   ///
-  /// \~english
-  /// @brief Set the model type used for G2P processing.
-  /// @param net A Voice instance pointer
-  /// @param model_type Model type (AILIA_VOICE_MODEL_TYPE_GPT_SOVITS, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V2, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V3, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V2_PRO)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A Voice instance pointer
+  /// - `model_type`: Model type (AILIA_VOICE_MODEL_TYPE_GPT_SOVITS, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V2, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V3, AILIA_VOICE_MODEL_TYPE_GPT_SOVITS_V2_PRO)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// Used to set the model type when using G2P standalone without opening model files.
   /// If ailiaVoiceOpenModelFileA or ailiaVoiceOpenGPTSoVITSV3ModelFileA is called, the model type is set automatically, so calling this API is not required.
   int ailiaVoiceSetModelType(
@@ -4720,22 +3955,17 @@ class ailiaVoiceFFI {
   late final _ailiaVoiceSetModelType = _ailiaVoiceSetModelTypePtr
       .asFunction<int Function(ffi.Pointer<AILIAVoice>, int)>();
 
-  /// \~japanese
-  /// @brief 推論を行います。
-  /// @param net ボイスオブジェクトポインタ
-  /// @param text テキスト(UTF8)
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// 音声合成した結果はailiaVoiceGetWave APIで取得します。
+  /// Perform inference
   ///
-  /// \~english
-  /// @brief Perform inference
-  /// @param net A Voice instance pointer
-  /// @param text Text(UTF8)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
+  /// Parameters:
+  ///
+  /// - `net`: A Voice instance pointer
+  /// - `text`: Text(UTF8)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
   /// Get the result with ailiaVoiceGetWave API.
   int ailiaVoiceInference(
     ffi.Pointer<AILIAVoice> net,
@@ -4754,23 +3984,18 @@ class ailiaVoiceFFI {
   late final _ailiaVoiceInference = _ailiaVoiceInferencePtr.asFunction<
       int Function(ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.Char>)>();
 
-  /// \~japanese
-  /// @brief 波形の情報を取得します。
-  /// @param net   ボイスオブジェクトポインタ
-  /// @param samples  サンプル数（チャンネル単位）
-  /// @param channels  チャンネル数
-  /// @param sampling_rate  サンプリングレート
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
+  /// Gets the information of wave.
   ///
-  /// \~english
-  /// @brief Gets the information of wave.
-  /// @param net   A Voice instance pointer
-  /// @param samples  Number of samples (per channel)
-  /// @param channels  Number of channels
-  /// @param sampling_rate  Sampling rate
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
+  /// Parameters:
+  ///
+  /// - `net`: A Voice instance pointer
+  /// - `samples`: Number of samples (per channel)
+  /// - `channels`: Number of channels
+  /// - `sampling_rate`: Sampling rate
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
   int ailiaVoiceGetWaveInfo(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.UnsignedInt> samples,
@@ -4796,25 +4021,19 @@ class ailiaVoiceFFI {
       int Function(ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.UnsignedInt>,
           ffi.Pointer<ffi.UnsignedInt>, ffi.Pointer<ffi.UnsignedInt>)>();
 
-  /// \~japanese
-  /// @brief 波形を取得します。
-  /// @param net   ボイスオブジェクトポインタ
-  /// @param buf  PCM波形 (0 - 1で正規化)
-  /// @param buf_size バッファサイズ（byte単位）
-  /// @return
-  /// 成功した場合は \ref AILIA_STATUS_SUCCESS 、そうでなければエラーコードを返す。
-  /// @details
-  /// ailiaVoiceInference() を一度も実行していない場合は \ref AILIA_STATUS_INVALID_STATE が返ります。
+  /// Gets the decoded features.
   ///
-  /// \~english
-  /// @brief Gets the decoded features.
-  /// @param net   A Voice instance pointer
-  /// @param buf   PCM Wave (Normalized by 0 - 1)
-  /// @param buf_size  Buffer size (Byte unit)
-  /// @return
-  /// If this function is successful, it returns  \ref AILIA_STATUS_SUCCESS , or an error code otherwise.
-  /// @details
-  /// If  ailiaVoiceInference() is not run at all, the function returns  \ref AILIA_STATUS_INVALID_STATE .
+  /// Parameters:
+  ///
+  /// - `net`: A Voice instance pointer
+  /// - `buf`: PCM Wave (Normalized by 0 - 1)
+  /// - `buf_size`: Buffer size (Byte unit)
+  ///
+  /// Returns:
+  ///
+  /// If this function is successful, it returns  [AILIA_STATUS_SUCCESS] , or an error code otherwise.
+  ///
+  /// If  ailiaVoiceInference() is not run at all, the function returns  [AILIA_STATUS_INVALID_STATE] .
   int ailiaVoiceGetWave(
     ffi.Pointer<AILIAVoice> net,
     ffi.Pointer<ffi.Float> buf,
@@ -4834,13 +4053,11 @@ class ailiaVoiceFFI {
   late final _ailiaVoiceGetWave = _ailiaVoiceGetWavePtr.asFunction<
       int Function(ffi.Pointer<AILIAVoice>, ffi.Pointer<ffi.Float>, int)>();
 
-  /// \~japanese
-  /// @brief ボイスオブジェクトを破棄します。
-  /// @param net ボイスオブジェクトポインタ
+  /// It destroys the Voice instance.
   ///
-  /// \~english
-  /// @brief It destroys the Voice instance.
-  /// @param net A Voice instance pointer
+  /// Parameters:
+  ///
+  /// - `net`: A Voice instance pointer
   void ailiaVoiceDestroy(
     ffi.Pointer<AILIAVoice> net,
   ) {
@@ -4855,21 +4072,16 @@ class ailiaVoiceFFI {
   late final _ailiaVoiceDestroy = _ailiaVoiceDestroyPtr
       .asFunction<void Function(ffi.Pointer<AILIAVoice>)>();
 
-  /// \~japanese
-  /// @brief エラーの詳細を返します
-  /// @param net   ネットワークオブジェクトポインタ
-  /// @return
-  /// エラー詳細
-  /// @details
-  /// 返値は解放する必要はありません。
-  /// 文字列の有効期間は次にailiaVoiceのAPIを呼ぶまでです。
+  /// Returns the details of errors.
   ///
-  /// \~english
-  /// @brief Returns the details of errors.
-  /// @param net   The network instance pointer
-  /// @return
+  /// Parameters:
+  ///
+  /// - `net`: The network instance pointer
+  ///
+  /// Returns:
+  ///
   /// Error details
-  /// @details
+  ///
   /// The return value does not have to be released.
   /// The string is valid until the next ailiaVoice API function is called.
   ffi.Pointer<ffi.Char> ailiaVoiceGetErrorDetail(
@@ -4994,17 +4206,14 @@ final class _ailiaFileCallback extends ffi.Struct {
   external AILIA_USER_API_FCLOSE fclose;
 }
 
-/// \~japanese
-/// @brief ファイルを開きます
-/// @param const void *   ailiaOpenStreamEx() もしくは ailiaOpenWeightEx() に与えたfopen_args
-/// @return
-/// 成功した場合、ユーザ定義ファイルポインタを返す。
-/// 失敗した場合、NULLを返す。
+/// Opens a file.
 ///
-/// \~english
-/// @brief Opens a file.
-/// @param const void *  fopen_args given to  ailiaOpenStreamEx()  or ailiaOpenWeightEx
-/// @return
+/// Parameters:
+///
+/// - `const`: void *  fopen_args given to  ailiaOpenStreamEx()  or ailiaOpenWeightEx
+///
+/// Returns:
+///
 /// This function returns a user-defined file pointer if successful.
 /// It returns NULL if it fails.
 typedef AILIA_USER_API_FOPEN
@@ -5012,21 +4221,17 @@ typedef AILIA_USER_API_FOPEN
 typedef AILIA_USER_API_FOPENFunction = ffi.Pointer<ffi.Void> Function(
     ffi.Pointer<ffi.Void>);
 
-/// \~japanese
-/// @brief ファイルをシークします
-/// @param void *                     ユーザ定義ファイルポインタ
-/// @param  \ref AILIA_FSIZE_RETURN_TYPE     ファイル先頭からのオフセットバイト
-/// @return
-/// 成功した場合、 \ref AILIA_USER_API_SUCCESS を返す。
-/// 失敗した場合、 \ref AILIA_USER_API_FAILED を返す。
+/// It seeks the file specified.
 ///
-/// \~english
-/// @brief It seeks the file specified.
-/// @param void *                     A user-defined file pointer
-/// @param  \ref AILIA_FSIZE_RETURN_TYPE     Offset in bytes from the beginning of the file
-/// @return
-/// This function returns  \ref AILIA_USER_API_SUCCESS  if successful.
-/// It returns  \ref AILIA_USER_API_FAILED  if it fails.
+/// Parameters:
+///
+/// - `void`: *                     A user-defined file pointer
+/// - `Offset`: in bytes from the beginning of the file
+///
+/// Returns:
+///
+/// This function returns  [AILIA_USER_API_SUCCESS]  if successful.
+/// It returns  [AILIA_USER_API_FAILED]  if it fails.
 typedef AILIA_USER_API_FSEEK
     = ffi.Pointer<ffi.NativeFunction<AILIA_USER_API_FSEEKFunction>>;
 typedef AILIA_USER_API_FSEEKFunction = ffi.Int Function(
@@ -5034,17 +4239,14 @@ typedef AILIA_USER_API_FSEEKFunction = ffi.Int Function(
 typedef DartAILIA_USER_API_FSEEKFunction = int Function(
     ffi.Pointer<ffi.Void>, int);
 
-/// \~japanese
-/// @brief ファイルの現在位置を取得します
-/// @param void * ユーザ定義ファイルポインタ
-/// @return
-/// 成功した場合、ファイルポインタの位置をバイト単位で返す。
-/// 失敗した場合、-1を返す。
+/// Gets the current position in the file.
 ///
-/// \~english
-/// @brief Gets the current position in the file.
-/// @param void * A user-defined file pointer
-/// @return
+/// Parameters:
+///
+/// - `void`: * A user-defined file pointer
+///
+/// Returns:
+///
 /// This function returns the position, in bytes, the file pointer points to if successful.
 /// It returns -1 if it fails.
 typedef AILIA_USER_API_FTELL
@@ -5053,24 +4255,18 @@ typedef AILIA_USER_API_FTELLFunction = ffi.LongLong Function(
     ffi.Pointer<ffi.Void>);
 typedef DartAILIA_USER_API_FTELLFunction = int Function(ffi.Pointer<ffi.Void>);
 
-/// \~japanese
-/// @brief ファイルからデータを読み込みます
-/// @param void *                     読み込みデータ格納先のポインタ
-/// @param  \ref AILIA_FSIZE_RETURN_TYPE     読み込みデータのバイト長さ
-/// @param void *                     ユーザ定義ファイルポインタ
-/// @return
-/// 成功した場合、 \ref AILIA_USER_API_SUCCESS を返す。
-/// 失敗した場合、 \ref AILIA_USER_API_FAILED を返す。
-/// 標準APIとは異なり、返値はAILIA_USER_API_*になりますのでご注意ください。
+/// Reads data from the file.
 ///
-/// \~english
-/// @brief Reads data from the file.
-/// @param void *                     A pointer to the storage location of the data to be read
-/// @param  \ref AILIA_FSIZE_RETURN_TYPE     The length in bytes of the data to be read
-/// @param void *                     A user-defined file pointer
-/// @return
-/// This function returns  \ref AILIA_USER_API_SUCCESS  if successful.
-/// It returns  \ref AILIA_USER_API_FAILED  if it fails.
+/// Parameters:
+///
+/// - `void`: *                     A pointer to the storage location of the data to be read
+/// - `The`: length in bytes of the data to be read
+/// - `void`: *                     A user-defined file pointer
+///
+/// Returns:
+///
+/// This function returns  [AILIA_USER_API_SUCCESS]  if successful.
+/// It returns  [AILIA_USER_API_FAILED]  if it fails.
 /// Note that unlike the standard API, the return value will be AILIA_USER_API_*.
 typedef AILIA_USER_API_FREAD
     = ffi.Pointer<ffi.NativeFunction<AILIA_USER_API_FREADFunction>>;
@@ -5079,17 +4275,14 @@ typedef AILIA_USER_API_FREADFunction = ffi.Int Function(
 typedef DartAILIA_USER_API_FREADFunction = int Function(
     ffi.Pointer<ffi.Void>, int, ffi.Pointer<ffi.Void>);
 
-/// \~japanese
-/// @brief ファイルのサイズを取得します
-/// @param void * ユーザ定義ファイルポインタ
-/// @return
-/// 成功した場合、ファイルのサイズをバイト単位で返す。
-/// 失敗した場合、-1を返す。
+/// Gets the size of the file.
 ///
-/// \~english
-/// @brief Gets the size of the file.
-/// @param void * A user-defined file pointer
-/// @return
+/// Parameters:
+///
+/// - `void`: * A user-defined file pointer
+///
+/// Returns:
+///
 /// This function returns the size of the file in bytes if successful.
 /// It returns -1 if it fails.
 typedef AILIA_USER_API_FSIZE
@@ -5098,19 +4291,16 @@ typedef AILIA_USER_API_FSIZEFunction = ffi.LongLong Function(
     ffi.Pointer<ffi.Void>);
 typedef DartAILIA_USER_API_FSIZEFunction = int Function(ffi.Pointer<ffi.Void>);
 
-/// \~japanese
-/// @brief ファイルを閉じます
-/// @param void *  ユーザ定義ファイルポインタ
-/// @return
-/// 成功した場合、 \ref AILIA_USER_API_SUCCESS を返す。
-/// 失敗した場合、 \ref AILIA_USER_API_FAILED を返す。
+/// Closes the file.
 ///
-/// \~english
-/// @brief Closes the file.
-/// @param void *  A user-defined file pointer
-/// @return
-/// This function returns  \ref AILIA_USER_API_SUCCESS  if successful.
-/// It returns  \ref AILIA_USER_API_FAILED  if it fails.
+/// Parameters:
+///
+/// - `void`: *  A user-defined file pointer
+///
+/// Returns:
+///
+/// This function returns  [AILIA_USER_API_SUCCESS]  if successful.
+/// It returns  [AILIA_USER_API_FAILED]  if it fails.
 typedef AILIA_USER_API_FCLOSE
     = ffi.Pointer<ffi.NativeFunction<AILIA_USER_API_FCLOSEFunction>>;
 typedef AILIA_USER_API_FCLOSEFunction = ffi.Int Function(ffi.Pointer<ffi.Void>);
@@ -5120,42 +4310,22 @@ typedef DartAILIA_USER_API_FCLOSEFunction = int Function(ffi.Pointer<ffi.Void>);
 final class AILIANetwork extends ffi.Opaque {}
 
 final class _AILIAShape extends ffi.Struct {
-  /// \~japanese
-  /// X軸のサイズ
-  ///
-  /// \~english
   /// Size along the X axis
   @ffi.UnsignedInt()
   external int x;
 
-  /// \~japanese
-  /// Y軸のサイズ
-  ///
-  /// \~english
   /// Size along the Y axis
   @ffi.UnsignedInt()
   external int y;
 
-  /// \~japanese
-  /// Z軸のサイズ
-  ///
-  /// \~english
   /// Size along the Z axis
   @ffi.UnsignedInt()
   external int z;
 
-  /// \~japanese
-  /// W軸のサイズ
-  ///
-  /// \~english
   /// Size along the W axis
   @ffi.UnsignedInt()
   external int w;
 
-  /// \~japanese
-  /// 次元情報
-  ///
-  /// \~english
   /// Dimension information
   @ffi.UnsignedInt()
   external int dim;
@@ -5165,41 +4335,21 @@ typedef ailiaFileCallback = _ailiaFileCallback;
 typedef AILIAShape = _AILIAShape;
 
 final class _AILIAEnvironment extends ffi.Struct {
-  /// \~japanese
-  /// 環境を識別するID( ailiaCreate() の引数に与える)
-  ///
-  /// \~english
   /// The ID to identify the inference backend (passed to  ailiaCreate()  as an argument)
   @ffi.Int()
   external int id;
 
-  /// \~japanese
-  /// 環境の種別( \ref AILIA_ENVIRONMENT_TYPE_CPU  or BLAS or GPU)
-  ///
-  /// \~english
-  /// The type of the inference backend ( \ref AILIA_ENVIRONMENT_TYPE_CPU , BLAS, or GPU)
+  /// The type of the inference backend ( [AILIA_ENVIRONMENT_TYPE_CPU] , BLAS, or GPU)
   @ffi.Int()
   external int type;
 
-  /// \~japanese
-  /// デバイス名(シングルトンで保持されており開放不要)(ASCII)
-  ///
-  /// \~english
   /// The device name. It is valid until the AILIANetwork instance is destroyed.
   external ffi.Pointer<ffi.Char> name;
 
-  /// \~japanese
-  /// 環境のバックエンド (AILIA_ENVIRONMENT_BACKEND_*)
-  ///
-  /// \~english
   /// Computational (hardware) backend enabled by this environment (AILIA_ENVIRONMENT_BACKEND_*)
   @ffi.Int()
   external int backend;
 
-  /// \~japanese
-  /// 環境の特性などを示す(AILIA_ENVIRONMENT_PROPERTY_* の論理和)
-  ///
-  /// \~english
   /// Additional property (low-power etc) of the environment (Logical-OR of AILIA_ENVIRONMENT_PROPERTY_*)
   @ffi.Int()
   external int props;

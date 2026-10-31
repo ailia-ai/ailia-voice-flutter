@@ -27,12 +27,12 @@ dependencies:
 
   ailia:
     git:
-      url: https://github.com/axinc-ai/ailia-sdk-flutter.git
+      url: https://github.com/ailia-ai/ailia-sdk-flutter.git
       ref: main
 
   ailia_audio:
     git:
-      url: https://github.com/axinc-ai/ailia-audio-flutter.git
+      url: https://github.com/ailia-ai/ailia-audio-flutter.git
       ref: main
   
   wav:
